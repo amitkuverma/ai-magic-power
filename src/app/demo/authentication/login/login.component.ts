@@ -1,6 +1,6 @@
 // angular import
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -25,4 +25,10 @@ export default class LoginComponent {
       name: 'Facebook'
     }
   ];
+
+  constructor(private router: Router){}
+
+  login(){
+    this.router.navigate(['/dashboard/default'])
+  }
 }

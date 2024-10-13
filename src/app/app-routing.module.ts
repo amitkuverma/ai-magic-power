@@ -20,10 +20,6 @@ const routes: Routes = [
       {
         path: 'home',
         loadComponent: () => import('./demo/ui-component/home/home.component').then((c) => c.HomeComponent)
-      },
-      {
-        path: 'register',
-        loadComponent: () => import('./demo/authentication/register/register.component')
       }
     ]
   },
