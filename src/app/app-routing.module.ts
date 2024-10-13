@@ -5,17 +5,32 @@ import { RouterModule, Routes } from '@angular/router';
 // Project import
 import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.component';
 import { GuestComponent } from './theme/layouts/guest/guest.component';
+import { HomeComponent } from './demo/ui-component/home/home.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AdminComponent,
+    component: HomeComponent,
     children: [
       {
         path: '',
-        redirectTo: '/dashboard/default',
+        redirectTo: '/home',
         pathMatch: 'full'
       },
+      {
+        path: 'home',
+        loadComponent: () => import('./demo/ui-component/home/home.component').then((c) => c.HomeComponent)
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('./demo/authentication/register/register.component')
+      }
+    ]
+  },
+  {
+    path: '',
+    component: AdminComponent,
+    children: [
       {
         path: 'dashboard/default',
         loadComponent: () => import('./demo/default/dashboard/dashboard.component').then((c) => c.DefaultComponent)
