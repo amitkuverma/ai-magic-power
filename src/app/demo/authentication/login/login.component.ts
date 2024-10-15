@@ -1,11 +1,16 @@
 // angular import
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from 'src/services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, HttpClientModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -25,10 +30,45 @@ export default class LoginComponent {
       name: 'Facebook'
     }
   ];
+  loginForm: FormGroup;
+  loading = false;
+  errorMessage = '';
+  successMessage = '';
 
-  constructor(private router: Router){}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+    });
+  }
 
-  login(){
-    this.router.navigate(['/dashboard/default'])
+  login() {
+    if (this.loginForm.invalid) {
+      return;
+    }
+
+    this.loading = true; // Start loading
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.authService.login(this.loginForm.value).subscribe(
+      (response) => {
+        this.loading = false; // Stop loading
+        this.successMessage = 'Login successful!';
+        console.log('Login successful:', response);
+        setTimeout(() => {
+          this.router.navigate(['/dashboard/default']); // Navigate after success
+        }, 2000);
+      },
+      (error) => {
+        this.loading = false; // Stop loading
+        this.errorMessage = 'Invalid login credentials';
+        console.error('Login failed:', error);
+      }
+    );
   }
 }
