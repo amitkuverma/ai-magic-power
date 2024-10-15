@@ -35,7 +35,7 @@ export class CookieService {
   decodeToken(): any {
     try {
       const token:any = this.getCookie('token');
-      return jwt_decode(token);  // Use .default when using namespace import
+      return token;  // Use .default when using namespace import
     } catch (error) {
       console.error('Token decoding failed', error);
       return null;

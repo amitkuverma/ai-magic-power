@@ -37,6 +37,23 @@ export const NavigationItems: NavigationItem[] = [
     ]
   },
   {
+    id: 'users',
+    title: 'Users',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'userList',
+        title: 'User List',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/user',
+        icon: 'user',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
     id: 'authentication',
     title: 'Authentication',
     type: 'group',

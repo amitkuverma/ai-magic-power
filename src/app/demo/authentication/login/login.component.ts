@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from 'src/services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
+import { CookieService } from 'src/services/cookie.service';
 
 
 @Component({
@@ -38,7 +39,8 @@ export default class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cookieService: CookieService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -58,6 +60,7 @@ export default class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe(
       (response) => {
         this.loading = false; // Stop loading
+        this.cookieService.setCookie('token', response.token, 1);
         this.successMessage = 'Login successful!';
         console.log('Login successful:', response);
         setTimeout(() => {
