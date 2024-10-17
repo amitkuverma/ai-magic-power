@@ -36,6 +36,10 @@ const routes: Routes = [
         loadComponent: () => import('./demo/users/user-table/user-table.component').then((c) => c.UserTableComponent)
       },
       {
+        path: 'friends',
+        loadComponent: () => import('./demo/users/user-tree/user-tree.component').then((c) => c.UserTreeComponent)
+      },
+      {
         path: 'typography',
         loadComponent: () => import('./demo/ui-component/typography/typography.component')
       },

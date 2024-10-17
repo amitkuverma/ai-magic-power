@@ -1,0 +1,22 @@
+<div *ngIf="isLoading" class="loader-container">
+    <div class="loader"></div>
+  </div>
+  
+  <div *ngIf="message" class="message">
+    {{ message }}
+  </div>
+  
+  <div *ngIf="!isLoading && userReferrals">
+    <h3>User Referrals</h3>
+    <ul>
+      <li *ngFor="let referral of userReferrals.referrals">
+        {{ referral.user.name }} ({{ referral.user.email }})
+        <ul *ngIf="referral.referrals.length">
+          <li *ngFor="let subReferral of referral.referrals">
+            {{ subReferral.user.name }} ({{ subReferral.user.email }})
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  
