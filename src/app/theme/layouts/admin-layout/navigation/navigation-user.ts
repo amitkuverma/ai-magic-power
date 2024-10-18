@@ -30,29 +30,29 @@ export const NavigationUserItems: NavigationItem[] = [
         title: 'Default',
         type: 'item',
         classes: 'nav-item',
-        url: '/dashboard/default',
+        url: '/dashboard',
         icon: 'dashboard',
         breadcrumbs: false
       }
     ]
   },
-  {
-    id: 'users',
-    title: 'Users',
-    type: 'group',
-    icon: 'icon-navigation',
-    children: [
-      {
-        id: 'users',
-        title: 'Users',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/users',
-        icon: 'user',
-        breadcrumbs: false
-      }
-    ]
-  },
+  // {
+  //   id: 'users',
+  //   title: 'Users',
+  //   type: 'group',
+  //   icon: 'icon-navigation',
+  //   children: [
+  //     {
+  //       id: 'users',
+  //       title: 'Users',
+  //       type: 'item',
+  //       classes: 'nav-item',
+  //       url: '/users',
+  //       icon: 'user',
+  //       breadcrumbs: false
+  //     }
+  //   ]
+  // },
   {
     id: 'transaction',
     title: 'Transactions',

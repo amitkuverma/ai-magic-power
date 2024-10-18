@@ -32,6 +32,10 @@ const routes: Routes = [
         loadComponent: () => import('./demo/default/dashboard/dashboard.component').then((c) => c.DefaultComponent)
       },
       {
+        path: 'dashboard',
+        loadComponent: () => import('./demo/user/user-dashboard/user-dashboard.component').then((c) => c.UserDashboardComponent)
+      },
+      {
         path: 'users',
         loadComponent: () => import('./demo/users/user-table/user-table.component').then((c) => c.UserTableComponent)
       },
