@@ -65,7 +65,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/manage-account',
-        icon: 'account',
+        icon: 'ant-design',
         breadcrumbs: false
       },
       {

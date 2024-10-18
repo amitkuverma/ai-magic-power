@@ -1,100 +1,99 @@
 <div class="manage-account-container">
-    <!-- Loader while fetching or saving account details -->
-    <div *ngIf="isLoading" class="loader-container">
-      <div class="spinner"></div>
-      <p>Loading...</p>
-    </div>
-  
-    <!-- If no accountDetailsList are present, show the 'Add Account' message and button -->
-    <div *ngIf="!accountDetailsList.length && !isEditing && !isLoading" class="no-account-card">
-      <h3>No Account Found</h3>
-      <p>No account details available. Please add a new account.</p>
-    </div>
-  
-    <!-- Display existing accounts -->
-    <div class="container">
-      <div class="row">
-        <div *ngFor="let account of accountDetailsList" class="account-card col-md-6">
-          <div class="account-details" *ngIf="!isEditing">
-            <h4>Account Details</h4>
-            <table>
-              <tr>
-                <td>Bank Name:</td>
-                <td>{{ account.bankName }}</td>
-              </tr>
-              <tr>
-                <td>Account Number:</td>
-                <td>{{ account.accountNumber }}</td>
-              </tr>
-              <tr>
-                <td>Branch Name:</td>
-                <td>{{ account.branchName }}</td>
-              </tr>
-              <tr>
-                <td>Account Type:</td>
-                <td>{{ account.accountType }}</td>
-              </tr>
-            </table>
-            <div class="account-actions">
-              <button (click)="editAccount(account)">Edit</button>
-              <button (click)="deleteAccount(account.accId)">Delete</button>
-            </div>
+  <!-- Loader while fetching or saving account details -->
+  <div *ngIf="isLoading" class="loader-container">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+  <!-- If no accountDetailsList are present, show the 'Add Account' message and button -->
+  <div *ngIf="!accountDetailsList.length && !isEditing && !isLoading" class="no-account-card">
+    <h3>No Account Found</h3>
+    <p>No account details available. Please add a new account.</p>
+  </div>
+
+  <!-- Display existing accounts -->
+  <div class="container">
+    <div class="row">
+      <div *ngFor="let account of accountDetailsList" class="account-card col-md-6">
+        <div class="account-details" *ngIf="!isEditing">
+          <h4>Account Details</h4>
+          <table>
+            <tr>
+              <th>Bank Name:</th>
+              <td>{{ account.bankName }}</td>
+            </tr>
+            <tr>
+              <th>Account Number:</th>
+              <td>{{ account.accountNumber }}</td>
+            </tr>
+            <tr>
+              <th>Branch Name:</th>
+              <td>{{ account.branchName }}</td>
+            </tr>
+            <tr>
+              <th>Account Type:</th>
+              <td>{{ account.accountType }}</td>
+            </tr>
+          </table>
+          <div class="account-actions">
+            <button (click)="editAccount(account)">Edit</button>
+            <button (click)="deleteAccount(account.accId)">Delete</button>
           </div>
         </div>
       </div>
     </div>
-  
-    <!-- Form for adding or editing account -->
-    <div *ngIf="isEditing && !isLoading" class="account-form">
-      <h3>{{ formType }} Account</h3>
-      <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
-        <!-- Bank Name Field -->
-        <div class="form-field">
-          <label>Bank Name</label>
-          <input type="text" formControlName="bankName" />
-        </div>
-  
-        <!-- Account Number Field -->
-        <div class="form-field">
-          <label>Account Number</label>
-          <input type="text" formControlName="accountNumber" />
-        </div>
-  
-        <!-- IFSC Code Field -->
-        <div class="form-field">
-          <label>IFSC Code</label>
-          <input type="text" formControlName="ifscCode" />
-        </div>
-  
-        <!-- Branch Name Field -->
-        <div class="form-field">
-          <label>Branch Name</label>
-          <input type="text" formControlName="branchName" />
-        </div>
-  
-        <!-- Account Holder Name Field -->
-        <div class="form-field">
-          <label>Account Holder Name</label>
-          <input type="text" formControlName="accountHolderName" />
-        </div>
-  
-        <!-- Account Type Field -->
-        <div class="form-field">
-          <label>Account Type</label>
-          <input type="text" formControlName="accountType" />
-        </div>
-  
-        <!-- Form buttons -->
-        <div class="form-actions">
-          <button type="submit">{{ formType }}</button>
-          <button type="button" (click)="cancelEdit()">Cancel</button>
-        </div>
-      </form>
-    </div>
-  
-    <!-- Add Account Button -->
-    <div class="add-account-container" *ngIf="!isEditing">
-      <button (click)="addNewAccount()">Add Account</button>
-    </div>
   </div>
-  
+
+  <!-- Form for adding or editing account -->
+  <div *ngIf="isEditing && !isLoading" class="account-form card p-3 p-md-4">
+    <h3>{{ formType }} Account</h3>
+    <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+      <!-- Bank Name Field -->
+      <div class="form-group">
+        <label class="form-label">Bank Name</label>
+        <input class="form-control" type="text" formControlName="bankName" />
+      </div>
+
+      <!-- Account Number Field -->
+      <div class="form-group">
+        <label class="form-label">Account Number</label>
+        <input class="form-control" type="text" formControlName="accountNumber" />
+      </div>
+
+      <!-- IFSC Code Field -->
+      <div class="form-group">
+        <label class="form-label">IFSC Code</label>
+        <input class="form-control" type="text" formControlName="ifscCode" />
+      </div>
+
+      <!-- Branch Name Field -->
+      <div class="form-group">
+        <label class="form-label">Branch Name</label>
+        <input class="form-control" type="text" formControlName="branchName" />
+      </div>
+
+      <!-- Account Holder Name Field -->
+      <div class="form-group">
+        <label class="form-label">Account Holder Name</label>
+        <input class="form-control" type="text" formControlName="accountHolderName" />
+      </div>
+
+      <!-- Account Type Field -->
+      <div class="form-group">
+        <label class="form-label">Account Type</label>
+        <input class="form-control" type="text" formControlName="accountType" />
+      </div>
+
+      <!-- Form buttons -->
+      <div class="form-actions">
+        <button type="submit">{{ formType }}</button>
+        <button type="button" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Add Account Button -->
+  <div class="add-account-container" *ngIf="!isEditing">
+    <button (click)="addNewAccount()">Add Account</button>
+  </div>
+</div>

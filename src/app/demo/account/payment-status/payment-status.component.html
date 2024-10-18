@@ -1,0 +1,54 @@
+<div *ngIf="paymentDetails && !isLoading" class="payment-details">
+    <h3 class="txt-clrb7">Payment Details</h3>
+
+    <div class="payment-content">
+        <table class="account-details-table">
+            <tbody>
+                <tr>
+                    <td>Date</td>
+                    <td>{{ paymentDetails.createdAt | date:"short" }}</td>
+                </tr>
+                <tr>
+                    <td>Pay Amount</td>
+                    <td>{{ paymentDetails.totalAmount }}</td>
+                </tr>
+                <tr>
+                    <td>Receipt</td>
+                    <td>
+                        <a [href]="imageUrl + paymentDetails.filepath" target="_blank">View Receipt</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="actions">
+        <button *ngIf="this.paymentDetails.status !== 'live'" class="submit-btn mr-3" type="submit" [disabled]="isLoading"
+                (click)="updateStatus(userId, 'active')">
+            <span *ngIf="!isLoading">{{ 'active' }}</span>
+        </button>
+        <button *ngIf="this.paymentDetails.status === 'live'" (click)="openShareDialog()" class="half-width-button">
+            Add coin
+        </button>
+    </div>
+</div>
+
+<!-- Modal for Share Options -->
+<div *ngIf="showDialog" class="dialog-overlay">
+    <div class="dialog-content">
+        <h2>Add coin in user wallet, If you receive the money!</h2>
+        <div class="form-group">
+            <label for="addCoinInput">Add coin</label>
+            <input id="addCoinInput" [(ngModel)]="paymentDetails.totalAmount" placeholder="Add coin" />
+        </div>
+        <div class="dialog-actions">
+            <button (click)="closeDialog()" class="mr-2">Close</button>
+            <button (click)="addPayment()">Add coin</button>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Message -->
+<div *ngIf="message" class="notification">
+    {{ message }}
+</div>

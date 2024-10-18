@@ -56,6 +56,10 @@ const routes: Routes = [
         loadComponent: () => import('./demo/account/withdraw-request/withdraw-request.component').then((c) => c.WithdrawRequestComponent)
       },
       {
+        path: 'payment-status/:userId',
+        loadComponent: () => import('./demo/account/payment-status/payment-status.component').then((c) => c.PaymentStatusComponent)
+      },
+      {
         path: 'typography',
         loadComponent: () => import('./demo/ui-component/typography/typography.component')
       },

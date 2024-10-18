@@ -1,0 +1,23 @@
+.pending {
+  background-color: #ffc107 !important;
+}
+
+.badge-circle {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.user-details {
+  p {
+    display: flex;
+    b {
+      display: flex;
+      width: 40%;
+    }
+  }
+}
+.dropdown-toggle,
+.dropdown-item{
+    cursor: pointer;
+}

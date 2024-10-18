@@ -28,6 +28,8 @@ import {
   ArrowRightOutline,
   GithubOutline
 } from '@ant-design/icons-angular/icons';
+import { UsersService } from 'src/services/users.service';
+import { CookieService } from 'src/services/cookie.service';
 
 @Component({
   selector: 'app-nav-right',
@@ -42,7 +44,7 @@ export class NavRightComponent {
   windowWidth: number;
   screenFull: boolean = true;
 
-  constructor(private iconService: IconService) {
+  constructor(private iconService: IconService, public cookies: CookieService) {
     this.windowWidth = window.innerWidth;
     this.iconService.addIcon(
       ...[
