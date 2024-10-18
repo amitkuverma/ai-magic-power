@@ -32,12 +32,28 @@ const routes: Routes = [
         loadComponent: () => import('./demo/default/dashboard/dashboard.component').then((c) => c.DefaultComponent)
       },
       {
-        path: 'user',
+        path: 'users',
         loadComponent: () => import('./demo/users/user-table/user-table.component').then((c) => c.UserTableComponent)
       },
       {
-        path: 'friends',
+        path: 'friends/:userId',  // Define a route with a parameter
         loadComponent: () => import('./demo/users/user-tree/user-tree.component').then((c) => c.UserTreeComponent)
+      },      
+      {
+        path: 'user-profile/:userId',
+        loadComponent: () => import('./demo/users/user-profile/user-profile.component').then((c) => c.UserProfileComponent)
+      },
+      {
+        path: 'view-profile/:userId',
+        loadComponent: () => import('./demo/users/view-profile/view-profile.component').then((c) => c.ViewProfileComponent)
+      },
+      {
+        path: 'manage-account',
+        loadComponent: () => import('./demo/account/account/account.component').then((c) => c.AccountComponent)
+      },
+      {
+        path: 'withdrawal-requests',
+        loadComponent: () => import('./demo/account/withdraw-request/withdraw-request.component').then((c) => c.WithdrawRequestComponent)
       },
       {
         path: 'typography',

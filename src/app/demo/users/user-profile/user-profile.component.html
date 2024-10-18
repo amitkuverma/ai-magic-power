@@ -1,0 +1,110 @@
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3>My Profile</h3>
+                <ul class="nav nav-tabs" data-tabs="tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" routerLink="#profile" (click)="setActiveTab('profile')">Edit Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="#changePassword" (click)="setActiveTab('changePassword')">Change Password</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="#idPrint" (click)="setActiveTab('idPrint')">ID Print</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="#addBanks" (click)="setActiveTab('addBanks')">Add Banks</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-body">
+                <div class="tab-content">
+                    <!-- Edit Profile Tab Content -->
+                    <div *ngIf="activeTab === 'profile'">
+                        <div *ngIf="loading">Loading...</div>
+                        <div *ngIf="!loading">
+                            <!-- Image Upload Section -->
+                            <div *ngIf="!isImageUploaded && !user?.filepath">
+                                <input type="file" (change)="onFileSelected($event)" />
+                                <button (click)="upload()" [disabled]="!selectedImage">Upload Profile</button>
+                            </div>
+                            <div *ngIf="isImageUploaded || imagePreviewUrl || user?.filepath">
+                                <img [src]="imagePreviewUrl ? imagePreviewUrl : imageUrl + user?.filepath"
+                                    alt="Profile Image" />
+                            </div>
+
+                            <!-- Edit Profile Form -->
+                            <form [formGroup]="editProfileForm" (ngSubmit)="onSubmitEditProfile()">
+                                <div>
+                                    <label>Name:</label>
+                                    <input formControlName="name" readonly />
+                                </div>
+
+                                <div>
+                                    <label>Email:</label>
+                                    <input formControlName="email" type="email" readonly />
+                                </div>
+
+                                <div>
+                                    <label>Mobile:</label>
+                                    <input formControlName="mobile" type="tel" />
+                                </div>
+
+                                <div>
+                                    <label>Referral Code:</label>
+                                    <input formControlName="referralCode" readonly />
+                                </div>
+
+                                <button type="submit" [disabled]="editProfileForm.invalid">Save Changes</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Change Password Tab Content -->
+                    <div *ngIf="activeTab === 'changePassword'">
+                        <form [formGroup]="changePasswordForm" (ngSubmit)="onChangePassword()">
+                            <div>
+                                <label>Old Password:</label>
+                                <input formControlName="oldPassword" type="password" />
+                            </div>
+
+                            <div>
+                                <label>New Password:</label>
+                                <input formControlName="newPassword" type="password" />
+                            </div>
+
+                            <div>
+                                <label>Confirm New Password:</label>
+                                <input formControlName="confirmPassword" type="password" />
+                            </div>
+
+                            <button type="submit">Change Password</button>
+                        </form>
+                    </div>
+
+                    <!-- ID Print Tab Content -->
+                    <div *ngIf="activeTab === 'idPrint'">
+                        <div class="id-card">
+                            <img [src]="imageUrl + user?.filepath || 'default-profile.png'" alt="User Photo" />
+                            <div>
+                                <h2>{{ user?.name }}</h2>
+                                <p><strong>User ID:</strong> {{ user?.userId }}</p>
+                                <p><strong>Email:</strong> {{ user?.email }}</p>
+                                <p><strong>Mobile:</strong> {{ user?.mobile }}</p>
+                                <p><strong>Status:</strong> {{ user?.status }}</p>
+                            </div>
+                        </div>
+                        <button (click)="printId()">Print ID</button>
+                    </div>
+
+                    <!-- Add Banks Tab Content -->
+                    <div *ngIf="activeTab === 'addBanks'">
+                        <!-- <app-manage-account></app-manage-account> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -24,6 +24,8 @@ import {
   BgColorsOutline,
   AntDesignOutline
 } from '@ant-design/icons-angular/icons';
+import { CookieService } from 'src/services/cookie.service';
+import { NavigationUserItems } from '../navigation-user';
 
 @Component({
   selector: 'app-nav-content',
@@ -49,7 +51,8 @@ export class NavContentComponent implements OnInit {
   constructor(
     private location: Location,
     private locationStrategy: LocationStrategy,
-    private iconService: IconService
+    private iconService: IconService,
+    private cookieService: CookieService
   ) {
     this.iconService.addIcon(
       ...[
@@ -64,7 +67,11 @@ export class NavContentComponent implements OnInit {
         QuestionOutline
       ]
     );
-    this.navigations = NavigationItems;
+    if (this.cookieService.isAdmin()) {
+      this.navigations = NavigationItems;
+    } else {
+      this.navigations = NavigationUserItems;
+    }
   }
 
   // Life cycle events

@@ -18,7 +18,7 @@ export interface NavigationItem {
   path?: string;
 }
 
-export const NavigationItems: NavigationItem[] = [
+export const NavigationUserItems: NavigationItem[] = [
   {
     id: 'dashboard',
     title: 'Dashboard',
@@ -43,7 +43,7 @@ export const NavigationItems: NavigationItem[] = [
     icon: 'icon-navigation',
     children: [
       {
-        id: 'userList',
+        id: 'users',
         title: 'Users',
         type: 'item',
         classes: 'nav-item',
@@ -60,20 +60,11 @@ export const NavigationItems: NavigationItem[] = [
     icon: 'icon-navigation',
     children: [
       {
-        id: 'manageAccount',
-        title: 'Manage Account',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/manage-account',
-        icon: 'account',
-        breadcrumbs: false
-      },
-      {
-        id: 'withdrawal',
+        id: 'userList',
         title: 'Withdrawal Requests',
         type: 'item',
         classes: 'nav-item',
-        url: '/withdrawal-requests',
+        url: '/withdrawal',
         icon: 'wallet',
         breadcrumbs: false
       }

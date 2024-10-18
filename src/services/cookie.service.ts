@@ -1,6 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
+
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class CookieService {
   decodeToken(): any {
     try {
       const token:any = this.getCookie('token');
-      return token;  // Use .default when using namespace import
+      return jwtDecode(token);;  // Use .default when using namespace import
     } catch (error) {
       console.error('Token decoding failed', error);
       return null;
@@ -43,6 +44,7 @@ export class CookieService {
   }
 
   isAdmin(){
+    console.log(this.decodeToken())
     if(this.decodeToken().isAdmin){
       return true;
     }
