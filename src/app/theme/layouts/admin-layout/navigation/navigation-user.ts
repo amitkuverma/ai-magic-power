@@ -70,11 +70,37 @@ export const NavigationUserItems: NavigationItem[] = [
     children: [
       {
         id: 'account',
-        title: 'Bank Details',
+        title: 'BEP20',
         type: 'item',
         classes: 'nav-item',
         url: '/manage-account',
         icon: 'bank',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
+    id: 'income',
+    title: 'Income',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'userList',
+        title: 'Super Rewards',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/withdrawal',
+        icon: 'wallet',
+        breadcrumbs: false
+      },
+      {
+        id: 'userList',
+        title: 'Royalty Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/withdrawal-history',
+        icon: 'history',
         breadcrumbs: false
       }
     ]
@@ -86,7 +112,7 @@ export const NavigationUserItems: NavigationItem[] = [
     icon: 'icon-navigation',
     children: [
       {
-        id: 'userList',
+        id: 'withdrawal',
         title: 'Withdrawal',
         type: 'item',
         classes: 'nav-item',
@@ -95,7 +121,7 @@ export const NavigationUserItems: NavigationItem[] = [
         breadcrumbs: false
       },
       {
-        id: 'userList',
+        id: 'withdrawal_history',
         title: 'Withdrawal History',
         type: 'item',
         classes: 'nav-item',
@@ -103,6 +129,32 @@ export const NavigationUserItems: NavigationItem[] = [
         icon: 'history',
         breadcrumbs: false
       }
+    ]
+  },
+  {
+    id: 'deposit_wallet',
+    title: 'Deposit wallet',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'add_fund',
+        title: 'Add Fund',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/fund',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'add_fund_history',
+        title: 'Add Fund History',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/fund-history',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
     ]
   },
   // {

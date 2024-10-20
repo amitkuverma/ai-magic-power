@@ -44,24 +44,33 @@ export const NavigationItems: NavigationItem[] = [
     children: [
       {
         id: 'userList',
-        title: 'Users',
+        title: 'All Users',
         type: 'item',
         classes: 'nav-item',
         url: '/users',
         icon: 'user',
         breadcrumbs: false
+      },
+      {
+        id: 'change_password',
+        title: 'Change Password',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/change-password',
+        icon: 'password',
+        breadcrumbs: false
       }
     ]
   },
   {
-    id: 'transaction',
-    title: 'KYC Upload',
+    id: 'bep',
+    title: 'BEP20',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'manageAccount',
-        title: 'Manage Account',
+        id: 'mybep',
+        title: 'My BEP20',
         type: 'item',
         classes: 'nav-item',
         url: '/manage-account',
@@ -69,14 +78,66 @@ export const NavigationItems: NavigationItem[] = [
         breadcrumbs: false
       },
       {
-        id: 'withdrawal',
-        title: 'Withdrawal Requests',
+        id: 'bepList',
+        title: 'Users BEP20',
         type: 'item',
         classes: 'nav-item',
-        url: '/withdrawal-requests',
+        url: '/uses-bep',
         icon: 'wallet',
         breadcrumbs: false
       }
+    ]
+  },
+  {
+    id: 'withdrawal',
+    title: 'Withdrawal',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'withdrawal',
+        title: 'Withdrawals',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/withdrawals',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'withdrawal-history',
+        title: 'Withdrawal History',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/withdrawal-history',
+        icon: 'wallet',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
+    id: 'deposit_wallet',
+    title: 'Deposit wallet',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'add_funds',
+        title: 'Add Funds',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/funds',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'add_funds_history',
+        title: 'Add Funds History',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/fund-history',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
     ]
   },
   // {

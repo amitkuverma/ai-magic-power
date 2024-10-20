@@ -7,7 +7,7 @@
     </div>
   
     <!-- Search Input -->
-    <input type="text" class="form-control mb-3" placeholder="Search by name or email" [(ngModel)]="searchQuery" (input)="filterUsers()">
+    <!-- <input type="text" class="form-control mb-3" placeholder="Search by name or email" [(ngModel)]="searchQuery" (input)="filterUsers()"> -->
   
     <!-- Loading Spinner -->
     <div *ngIf="loading" class="text-center">
@@ -23,23 +23,22 @@
           <tr>
             <th>USER ID</th>
             <th>NAME</th>
-            <th>EMAIL</th>
-            <th>PHONE</th>
-            <th>Reffer Code</th>
+            <th>TYPE</th>
+            <th>WITHDRAWAL AMOUNT</th>
             <th>STATUS</th>
-            <th>ACTIONS</th>
+            <th>RECEIPT</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-            <td>AI-100{{ user.userId }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.mobile }}</td>
-            <td>{{ user.referralCode }}</td>
-            <td>{{ user.status }}</td>
+          <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+            <td>AI-100{{ payment?.userId }}</td>
+            <td class="text-capitalize">{{ payment?.userName }}</td>
+            <td class="text-capitalize">{{ payment?.paymentType }}</td>
+            <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
+            <td class="text-capitalize">{{ payment?.status }}</td>
             <td>
-              <button class="btn btn-primary" (click)="viewUserDetails(user)">View Details</button>
+                <a *ngIf="payment?.receipt" [href]="payment?.receipt" target="_blank" class="view_rec">{{"View Receipt"}}</a>
+                <span *ngIf="!payment?.receipt">NA</span>
             </td>
           </tr>
         </tbody>
@@ -50,7 +49,7 @@
     </div>
   
     <!-- User Details Modal -->
-    <div *ngIf="selectedUser" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+    <!-- <div *ngIf="selectedUser" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -58,17 +57,14 @@
             <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
           </div>
           <div class="modal-body">
-            <p><strong>Name:</strong> {{ selectedUser.name }}</p>
-            <p><strong>Email:</strong> {{ selectedUser.email }}</p>
-            <p><strong>Phone:</strong> {{ selectedUser.mobile }}</p>
-            <p><strong>Reffer Code:</strong> {{ selectedUser.referralCode }}</p>
-            <p><strong>Status:</strong> {{ selectedUser.status }}</p>
+            <p><strong>Name:</strong> {{ selectedUser.userName }}</p>
+            <p><strong>BEP20:</strong> {{ selectedUser.accountNumber }}</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   

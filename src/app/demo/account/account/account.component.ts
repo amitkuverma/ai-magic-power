@@ -25,7 +25,7 @@ export class AccountComponent {
     private fb: FormBuilder,
     private accountService: AccountDetailsService,
     private cookies: CookieService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const decodedToken = this.cookies.decodeToken();
@@ -34,12 +34,12 @@ export class AccountComponent {
 
     // Initialize form controls with better validators
     this.accountForm = this.fb.group({
-      bankName: ['', Validators.required],
-      branchName: ['', Validators.required],
-      accountHolderName: ['', Validators.required],
+      bankName: [''],
+      branchName: [''],
+      accountHolderName: [''],
       accountNumber: ['', Validators.required],
-      ifscCode: ['', Validators.required], // Adjust as per IFSC format Validators.pattern('^[A-Z]{4}0[A-Z0-9]{6}$')]
-      accountType: ['', Validators.required],
+      ifscCode: [''], // Adjust as per IFSC format Validators.pattern('^[A-Z]{4}0[A-Z0-9]{6}$')]
+      accountType: [''],
     });
 
     // Load account details (from API)
@@ -68,6 +68,11 @@ export class AccountComponent {
 
     this.isLoading = true;
     const accountData = this.accountForm.value;
+    accountData.bankName = '';
+    accountData.branchName = '';
+    accountData.accountHolderName = '';
+    accountData.ifscCode = '';
+    accountData.accountType = '';
 
     if (this.isEditing && this.accountDetails) {
       // Update account

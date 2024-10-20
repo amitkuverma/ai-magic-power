@@ -1,0 +1,80 @@
+<div class="container card">
+    <h5 class="my-3">Add Funds</h5>
+  
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+  
+    <!-- Add Fund Button -->
+    <div>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userDetailsModal">
+        Add Fund
+      </button>
+    </div>
+  
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  
+    <!-- User Table -->
+    <div *ngIf="!loading" class="card mt-3">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>USER ID</th>
+            <th>NAME</th>
+            <th>TYPE</th>
+            <th>FUND AMOUNT</th>
+            <th>STATUS</th>
+            <th>RECEIPT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+            <td>AI-100{{ payment?.userId }}</td>
+            <td class="text-capitalize">{{ payment?.userName }}</td>
+            <td class="text-capitalize">{{ payment?.paymentType }}</td>
+            <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
+            <td class="text-capitalize">{{ payment?.status }}</td>
+            <td>
+              <a *ngIf="payment?.receipt" [href]="payment?.receipt" target="_blank" class="view_rec">View Receipt</a>
+              <span *ngIf="!payment?.receipt">NA</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <!-- Pagination Controls -->
+      <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
+    </div>
+  
+    <!-- User Details Modal -->
+    <div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Upload payment receipt details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="card">
+              <div class="card-body">
+                <div>
+                  <input type="file" class="form-control-file mb-2" (change)="onFileSelected($event)" />
+                  <button class="btn btn-primary" (click)="upload()" [disabled]="!selectedImage">Upload Profile</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="updateStatus('fund')">Add Fund</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

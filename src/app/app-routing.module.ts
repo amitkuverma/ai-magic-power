@@ -46,7 +46,7 @@ const routes: Routes = [
       {
         path: 'friends/:userId',  // Define a route with a parameter
         loadComponent: () => import('./demo/users/user-tree/user-tree.component').then((c) => c.UserTreeComponent)
-      },      
+      },
       {
         path: 'user-profile/:userId',
         loadComponent: () => import('./demo/users/user-profile/user-profile.component').then((c) => c.UserProfileComponent)
@@ -60,16 +60,36 @@ const routes: Routes = [
         loadComponent: () => import('./demo/account/account/account.component').then((c) => c.AccountComponent)
       },
       {
-        path: 'withdrawal-requests',
-        loadComponent: () => import('./demo/account/withdraw-request/withdraw-request.component').then((c) => c.WithdrawRequestComponent)
+        path: 'bep',
+        loadComponent: () => import('./demo/account/account/account.component').then((c) => c.AccountComponent)
+      },
+      {
+        path: 'uses-bep',
+        loadComponent: () => import('./demo/account/bep20-list/bep20-list.component').then((c) => c.Bep20ListComponent)
+      },
+      {
+        path: 'withdrawals',
+        loadComponent: () => import('./demo/withdraw/withdraws/withdraws.component').then((c) => c.WithdrawRequestComponent)
       },
       {
         path: 'withdrawal',
-        loadComponent: () => import('./demo/account/withdraw/withdraw.component').then((c) => c.WithdrawComponent)
+        loadComponent: () => import('./demo/withdraw/withdraw/withdraw.component').then((c) => c.WithdrawComponent)
       },
       {
         path: 'withdrawal-history',
-        loadComponent: () => import('./demo/account/withdraw-history/withdraw-history.component').then((c) => c.WithdrawHistoryComponent)
+        loadComponent: () => import('./demo/withdraw/withdraw-history/withdraw-history.component').then((c) => c.WithdrawHistoryComponent)
+      },
+      {
+        path: 'fund',
+        loadComponent: () => import('./demo/fund/add-fund/add-fund.component').then((c) => c.AddFundComponent)
+      },
+      {
+        path: 'funds',
+        loadComponent: () => import('./demo/fund/add-funds/add-funds.component').then((c) => c.AddFundsComponent)
+      },
+      {
+        path: 'fund-history',
+        loadComponent: () => import('./demo/fund/add-fund-history/add-fund-history.component').then((c) => c.AddFundHistoryComponent)
       },
       {
         path: 'payment-status/:userId',
@@ -102,7 +122,8 @@ const routes: Routes = [
         loadComponent: () => import('./demo/authentication/register/register.component')
       }
     ]
-  }
+  },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

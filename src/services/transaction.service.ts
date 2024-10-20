@@ -30,8 +30,8 @@ export class TransactionService {
         return this.http.get(`${environment.API_URL}/transaction/${userId}`);
     }
     
-    updateTransaction(body:any, userId:any): Observable<any> {                
-        return this.http.put(`${environment.API_URL}/transaction/${userId}`, body);
+    updateTransaction(body:any, id:any): Observable<any> {                
+        return this.http.put(`${environment.API_URL}/transaction/${id}`, body);
     }
 
     uploadTransactionReceipt(transId: any, receiptData: FormData): Observable<any> {        
