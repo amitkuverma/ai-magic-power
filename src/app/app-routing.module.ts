@@ -28,16 +28,20 @@ const routes: Routes = [
     component: AdminComponent,
     children: [
       {
-        path: 'dashboard/default',
-        loadComponent: () => import('./demo/default/dashboard/dashboard.component').then((c) => c.DefaultComponent)
-      },
-      {
         path: 'dashboard',
         loadComponent: () => import('./demo/user/user-dashboard/user-dashboard.component').then((c) => c.UserDashboardComponent)
       },
       {
         path: 'users',
         loadComponent: () => import('./demo/users/user-table/user-table.component').then((c) => c.UserTableComponent)
+      },
+      {
+        path: 'my-profile',
+        loadComponent: () => import('./demo/profile/profile/profile.component').then((c) => c.ProfileComponent)
+      },
+      {
+        path: 'change-password',
+        loadComponent: () => import('./demo/profile/change-password/change-password.component').then((c) => c.ChangePasswordComponent)
       },
       {
         path: 'friends/:userId',  // Define a route with a parameter
@@ -58,6 +62,14 @@ const routes: Routes = [
       {
         path: 'withdrawal-requests',
         loadComponent: () => import('./demo/account/withdraw-request/withdraw-request.component').then((c) => c.WithdrawRequestComponent)
+      },
+      {
+        path: 'withdrawal',
+        loadComponent: () => import('./demo/account/withdraw/withdraw.component').then((c) => c.WithdrawComponent)
+      },
+      {
+        path: 'withdrawal-history',
+        loadComponent: () => import('./demo/account/withdraw-history/withdraw-history.component').then((c) => c.WithdrawHistoryComponent)
       },
       {
         path: 'payment-status/:userId',

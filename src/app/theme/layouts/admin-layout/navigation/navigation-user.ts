@@ -36,36 +36,71 @@ export const NavigationUserItems: NavigationItem[] = [
       }
     ]
   },
-  // {
-  //   id: 'users',
-  //   title: 'Users',
-  //   type: 'group',
-  //   icon: 'icon-navigation',
-  //   children: [
-  //     {
-  //       id: 'users',
-  //       title: 'Users',
-  //       type: 'item',
-  //       classes: 'nav-item',
-  //       url: '/users',
-  //       icon: 'user',
-  //       breadcrumbs: false
-  //     }
-  //   ]
-  // },
   {
-    id: 'transaction',
-    title: 'Transactions',
+    id: 'profile',
+    title: 'Profile',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'profile',
+        title: 'My Profile',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/my-profile',
+        icon: 'user',
+        breadcrumbs: false
+      },
+      {
+        id: 'change_password',
+        title: 'Change Password',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/change-password',
+        icon: 'password',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
+    id: 'kyc',
+    title: 'KYC Upload',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'account',
+        title: 'Bank Details',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/manage-account',
+        icon: 'bank',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
+    id: 'withdrawal',
+    title: 'Withdrawal',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
         id: 'userList',
-        title: 'Withdrawal Requests',
+        title: 'Withdrawal',
         type: 'item',
         classes: 'nav-item',
         url: '/withdrawal',
         icon: 'wallet',
+        breadcrumbs: false
+      },
+      {
+        id: 'userList',
+        title: 'Withdrawal History',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/withdrawal-history',
+        icon: 'history',
         breadcrumbs: false
       }
     ]

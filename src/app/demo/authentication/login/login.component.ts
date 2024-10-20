@@ -64,8 +64,8 @@ export default class LoginComponent {
         this.successMessage = 'Login successful!';
         console.log('Login successful:', response);
         setTimeout(() => {
-          this.router.navigate(['/dashboard/default']); // Navigate after success
-        }, 2000);
+          this.router.navigate(['/dashboard']); // Navigate after success
+        }, 0);
       },
       (error) => {
         this.loading = false; // Stop loading
