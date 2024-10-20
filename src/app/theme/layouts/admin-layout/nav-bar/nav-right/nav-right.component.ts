@@ -1,6 +1,6 @@
 // angular import
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
@@ -28,7 +28,6 @@ import {
   ArrowRightOutline,
   GithubOutline
 } from '@ant-design/icons-angular/icons';
-import { UsersService } from 'src/services/users.service';
 import { CookieService } from 'src/services/cookie.service';
 
 @Component({
@@ -44,7 +43,7 @@ export class NavRightComponent {
   windowWidth: number;
   screenFull: boolean = true;
 
-  constructor(private iconService: IconService, public cookies: CookieService) {
+  constructor(private iconService: IconService, public cookies: CookieService, public router: Router) {
     this.windowWidth = window.innerWidth;
     this.iconService.addIcon(
       ...[
@@ -110,4 +109,9 @@ export class NavRightComponent {
       title: 'History'
     }
   ];
+
+  logout(){
+    this.cookies.deleteCookie('token');
+    this.router.navigate(['/home']);
+  }
 }

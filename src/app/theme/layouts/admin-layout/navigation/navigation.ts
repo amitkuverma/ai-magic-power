@@ -30,7 +30,7 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Default',
         type: 'item',
         classes: 'nav-item',
-        url: '/dashboard/default',
+        url: '/dashboard',
         icon: 'dashboard',
         breadcrumbs: false
       }
@@ -55,7 +55,7 @@ export const NavigationItems: NavigationItem[] = [
   },
   {
     id: 'transaction',
-    title: 'Transactions',
+    title: 'KYC Upload',
     type: 'group',
     icon: 'icon-navigation',
     children: [
