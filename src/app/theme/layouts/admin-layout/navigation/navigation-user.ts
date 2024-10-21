@@ -57,50 +57,75 @@ export const NavigationUserItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/change-password',
-        icon: 'password',
+        icon: 'ant-design',
         breadcrumbs: false
       }
     ]
   },
   {
-    id: 'kyc',
-    title: 'KYC Upload',
+    id: 'pdf',
+    title: 'PDF',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'account',
-        title: 'BEP20',
+        id: 'pdf_plan',
+        title: 'Plan PDF',
         type: 'item',
         classes: 'nav-item',
-        url: '/manage-account',
-        icon: 'bank',
+        icon: 'ant-design',        
+        url: '/plan-pdf',
         breadcrumbs: false
       }
     ]
   },
   {
-    id: 'income',
-    title: 'Income',
+    id: 'crypto',
+    title: 'Crypto',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'userList',
-        title: 'Super Rewards',
+        id: 'crypto_address',
+        title: 'Manage Crypto',
         type: 'item',
         classes: 'nav-item',
-        url: '/withdrawal',
-        icon: 'wallet',
+        url: '/my-crypto',
+        icon: 'ant-design',
         breadcrumbs: false
-      },
+      }
+    ]
+  },
+  {
+    id: 'ai_stake',
+    title: 'AI Stake',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
       {
-        id: 'userList',
-        title: 'Royalty Report',
+        id: 'ai_plan',
+        title: 'AI Plan',
         type: 'item',
         classes: 'nav-item',
-        url: '/withdrawal-history',
-        icon: 'history',
+        url: '/plan',
+        icon: 'ant-design',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
+    id: 'team',
+    title: 'Team',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'my_team',
+        title: 'My Team',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/team',
+        icon: 'ant-design',
         breadcrumbs: false
       }
     ]
@@ -126,7 +151,33 @@ export const NavigationUserItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/withdrawal-history',
-        icon: 'history',
+        icon: 'ant-design',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
+    id: 'income',
+    title: 'Income',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'super_rewards',
+        title: 'Super Rewards',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/super-rewards',
+        icon: 'wallet',
+        breadcrumbs: false
+      },
+      {
+        id: 'royalty_report',
+        title: 'Royalty Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/royalty-report',
+        icon: 'ant-design',
         breadcrumbs: false
       }
     ]
@@ -155,6 +206,23 @@ export const NavigationUserItems: NavigationItem[] = [
         icon: 'ant-design',
         breadcrumbs: false
       },
+    ]
+  },
+  {
+    id: 'p2p',
+    title: 'P2P',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'p2p_transfer',
+        title: 'P2P Transfer',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/transfer',
+        icon: 'ant-design',
+        breadcrumbs: false
+      }
     ]
   },
   // {

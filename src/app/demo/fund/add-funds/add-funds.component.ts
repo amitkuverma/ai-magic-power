@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { environment } from 'src/environments/environment';
 import { CookieService } from 'src/services/cookie.service';
+import { PaymentService } from 'src/services/payment.service';
 import { TransactionService } from 'src/services/transaction.service';
 
 @Component({
@@ -22,14 +24,34 @@ export class AddFundsComponent {
   itemsPerPage: number = 10;
   totalItems: number = 0;
   successMessage: string = '';
+  envImg: any;
+  loginUserPaymetDetails: any;
+  selectedImage: File;
+  imagePreviewUrl: string | ArrayBuffer;
 
-  constructor(private transactionService: TransactionService, private cookies: CookieService) { }
-
-  ngOnInit(): void {
-    this.fetchUsers();
+  constructor(private transactionService: TransactionService, private cookies: CookieService, private paymentService: PaymentService) {
+    this.envImg = environment.IMAGE_URL
   }
 
-  fetchUsers(): void {
+  ngOnInit(): void {
+    this.fetchTransactions();
+    this.fetchPaymentDetails();
+  }
+
+  fetchPaymentDetails() {
+    this.paymentService.getAllReferUser().subscribe(
+      res => {
+        console.log(this.cookies.decodeToken().userId)
+        this.loginUserPaymetDetails = res.filter(item => item.userId === this.cookies.decodeToken().userId);
+        console.log(this.loginUserPaymetDetails)
+      },
+      error => {
+
+      }
+    )
+  }
+
+  fetchTransactions(): void {
     this.loading = true;
     this.transactionService.getAllTransaction().subscribe((data: any) => {
       if (this.cookies.isAdmin()) {
@@ -67,14 +89,41 @@ export class AddFundsComponent {
     this.selectedUser = null;
   }
 
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      this.selectedImage = target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result;
+      };
+      reader.readAsDataURL(this.selectedImage);
+    }
+  }
+
   updateStatus(status: any) {
     this.selectedUser.status = status;
     this.transactionService.updateTransaction(this.selectedUser, this.selectedUser.transId).subscribe(
-      (res)=>{
-        this.successMessage = 'Status update successfully!';
-        this.fetchUsers();
+      (res) => {
+        if (status === 'rejected') {
+          this.loginUserPaymetDetails.totalAmount += this.selectedUser.transactionAmount;
+          this.paymentService.updateUserStatus(this.loginUserPaymetDetails, this.loginUserPaymetDetails.payId).subscribe(
+            res => {
+              this.successMessage = 'Fund added successfully!';
+              this.fetchTransactions();
+
+            },
+            error => {
+              this.successMessage = 'Unable to add fund!';
+              this.fetchTransactions();
+
+            }
+          )
+        }
+        this.successMessage = 'Fund rejected successfully!';
+
       },
-      (error:any)=>{
+      (error: any) => {
         this.successMessage = 'Unable to update status';
       }
     )

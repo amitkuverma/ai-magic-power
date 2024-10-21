@@ -56,15 +56,11 @@ const routes: Routes = [
         loadComponent: () => import('./demo/users/view-profile/view-profile.component').then((c) => c.ViewProfileComponent)
       },
       {
-        path: 'manage-account',
+        path: 'my-crypto',
         loadComponent: () => import('./demo/account/account/account.component').then((c) => c.AccountComponent)
       },
       {
-        path: 'bep',
-        loadComponent: () => import('./demo/account/account/account.component').then((c) => c.AccountComponent)
-      },
-      {
-        path: 'uses-bep',
+        path: 'uses-crypto',
         loadComponent: () => import('./demo/account/bep20-list/bep20-list.component').then((c) => c.Bep20ListComponent)
       },
       {
@@ -78,6 +74,14 @@ const routes: Routes = [
       {
         path: 'withdrawal-history',
         loadComponent: () => import('./demo/withdraw/withdraw-history/withdraw-history.component').then((c) => c.WithdrawHistoryComponent)
+      },
+      {
+        path: 'transfer',
+        loadComponent: () => import('./demo/p2p-transfer/p2p-transfer.component').then((c) => c.P2pTransferComponent)
+      },
+      {
+        path: 'ai-package',
+        loadComponent: () => import('./demo/fund/package-list/ai-package-list.component').then((c) => c.AiPackageListComponent)
       },
       {
         path: 'fund',

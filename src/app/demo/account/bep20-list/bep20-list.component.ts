@@ -36,7 +36,7 @@ export class Bep20ListComponent {
       this.filteredTrans = data;
       this.totalItems = data.length;
       this.loading = false;
-      this.successMessage = 'Users BEP20 data loaded successfully!';
+      this.successMessage = 'Users crypto data loaded successfully!';
       setTimeout(() => (this.successMessage = ''), 3000); // Clear success message after 3 seconds
     });
   }

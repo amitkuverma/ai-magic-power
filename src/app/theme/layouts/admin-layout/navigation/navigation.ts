@@ -63,26 +63,26 @@ export const NavigationItems: NavigationItem[] = [
     ]
   },
   {
-    id: 'bep',
-    title: 'BEP20',
+    id: 'crypto',
+    title: 'Crypto',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'mybep',
-        title: 'My BEP20',
+        id: 'crypto_address',
+        title: 'Manage Crypto',
         type: 'item',
         classes: 'nav-item',
-        url: '/manage-account',
+        url: '/my-crypto',
         icon: 'ant-design',
         breadcrumbs: false
-      },
+      },      
       {
-        id: 'bepList',
-        title: 'Users BEP20',
+        id: 'cryptoList',
+        title: 'Users Crypto',
         type: 'item',
         classes: 'nav-item',
-        url: '/uses-bep',
+        url: '/uses-crypto',
         icon: 'wallet',
         breadcrumbs: false
       }
@@ -120,6 +120,15 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     icon: 'icon-navigation',
     children: [
+      {
+        id: 'ai_package',
+        title: 'AI Package',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/ai-package',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
       {
         id: 'add_funds',
         title: 'Add Funds',
