@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { environment } from 'src/environments/environment';
 import { CookieService } from 'src/services/cookie.service';
@@ -10,7 +11,7 @@ import { UploadService } from 'src/services/uploadfile.service';
 @Component({
   selector: 'app-ai-package-list',
   standalone: true,
-  imports: [CommonModule, NgxPaginationModule],
+  imports: [CommonModule, NgxPaginationModule, FormsModule],
   templateUrl: './ai-package-list.component.html',
   styleUrl: './ai-package-list.component.scss'
 })
@@ -22,6 +23,7 @@ export class AiPackageListComponent {
   filteredTrans: any[] = [];
   searchQuery: string = '';
   selectedUser: any = null;
+  addedAmount: any = null;
   loading: boolean = false;
   page: number = 1;
   itemsPerPage: number = 10;
@@ -105,11 +107,23 @@ export class AiPackageListComponent {
   }
 
   updateStatus(status: any) {
+    
+    const currentDate = Date.now();
+
+    // Calculate 1000 days in milliseconds (1000 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
+    const daysToAdd = this.selectedUser.plan === ''? 1000 * 24 * 60 * 60 * 1000 : 750 * 24 * 60 * 60 * 1000;
+
+    // Create a new date by adding 1000 days
+    const newDate = new Date(currentDate + daysToAdd);
+
+    this.selectedUser.planStartDate = currentDate;
+    this.selectedUser.planEndDate = newDate;
     this.selectedUser.status = status;
-    this.transactionService.updateTransaction(this.selectedUser, this.selectedUser.transId).subscribe(
+
+    this.paymentService.updateUserStatus(this.selectedUser, this.selectedUser.transId).subscribe(
       (res) => {
-        if (status === 'rejected') {
-          this.loginUserPaymetDetails.totalAmount += this.selectedUser.transactionAmount;
+        if (status === 'active') {
+          this.loginUserPaymetDetails.totalAmount += this.addedAmount;
           this.paymentService.updateUserStatus(this.loginUserPaymetDetails, this.loginUserPaymetDetails.payId).subscribe(
             res => {
               this.successMessage = 'Fund added successfully!';

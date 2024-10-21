@@ -23,8 +23,9 @@
         <tr>
           <th>USER ID</th>
           <th>NAME</th>
-          <th>TYPE</th>
-          <th>FUND AMOUNT</th>
+          <th>PLAN</th>
+          <th>COMMISSION</th>
+          <th>ADD AMOUNT</th>
           <th>STATUS</th>
           <th>RECEIPT</th>
           <th>ACTION</th>
@@ -36,8 +37,7 @@
           <td class="text-capitalize">{{ payment?.userName }}</td>
           <td class="text-capitalize">{{ payment?.plan }}</td>
           <td class="text-capitalize">{{ payment?.commission }}</td>
-          <td class="text-capitalize">{{ payment?.planStartDate }}</td>
-          <td class="text-capitalize">{{ payment?.planEndDate }}</td>
+          <td class="text-capitalize"><input type="number" [(ngModel)]="addedAmount"  /></td>
           <td class="text-capitalize">{{ payment?.status }}</td>
           <td>
             <a *ngIf="payment?.filepath" [href]="envImg + payment?.filepath" target="_blank" class="view_rec">View Receipt</a>
@@ -72,8 +72,8 @@
           <p><strong>Status:</strong> {{ selectedUser.status }}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" (click)="updateStatus('approved')">Approved</button>
-          <button type="button" class="btn btn-secondary" (click)="updateStatus('rejected')">Rejected</button>
+          <button type="button" class="btn btn-secondary" (click)="updateStatus('cancel')">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="updateStatus('active')">Active</button>
         </div>
       </div>
     </div>
