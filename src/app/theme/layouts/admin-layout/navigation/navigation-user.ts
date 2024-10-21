@@ -188,6 +188,16 @@ export const NavigationUserItems: NavigationItem[] = [
     type: 'group',
     icon: 'icon-navigation',
     children: [
+      
+      {
+        id: 'ai_package',
+        title: 'AI Packages',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/ai-packages',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
       {
         id: 'add_fund',
         title: 'Add Fund',

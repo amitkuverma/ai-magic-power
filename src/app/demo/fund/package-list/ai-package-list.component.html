@@ -37,7 +37,6 @@
           <td class="text-capitalize">{{ payment?.userName }}</td>
           <td class="text-capitalize">{{ payment?.plan }}</td>
           <td class="text-capitalize">{{ payment?.commission }}</td>
-          <td class="text-capitalize"><input type="number" [(ngModel)]="addedAmount"  /></td>
           <td class="text-capitalize">{{ payment?.status }}</td>
           <td>
             <a *ngIf="payment?.filepath" [href]="envImg + payment?.filepath" target="_blank" class="view_rec">View Receipt</a>
@@ -66,9 +65,7 @@
           <p><strong>Name:</strong> {{ selectedUser.userName }}</p>
           <p><strong>Type:</strong> {{ selectedUser.paymentType }}</p>
           <p><strong>Selected Package:</strong> {{ selectedUser.plan }}</p>
-          <p><strong>Commission:</strong> {{ selectedUser.plan }}</p>
-          <p><strong>Plan Start Date:</strong> {{ selectedUser.planStartDate }}</p>
-          <p><strong>Plan End Date:</strong> {{ selectedUser.planEndDate }}</p>
+          <p><strong>Commission:</strong> {{ selectedUser.commission }}</p>
           <p><strong>Status:</strong> {{ selectedUser.status }}</p>
         </div>
         <div class="modal-footer">
