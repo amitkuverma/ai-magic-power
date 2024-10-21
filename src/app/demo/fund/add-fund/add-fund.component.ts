@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { environment } from 'src/environments/environment';
 import { CookieService } from 'src/services/cookie.service';
 import { TransactionService } from 'src/services/transaction.service';
 import { UploadService } from 'src/services/uploadfile.service';
@@ -11,7 +12,7 @@ import { UploadService } from 'src/services/uploadfile.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule, NgxPaginationModule],
   templateUrl: './add-fund.component.html',
-  styleUrl: './add-fund.component.scss'
+  styleUrls: ['./add-fund.component.scss']  // Fixed typo here
 })
 export class AddFundComponent {
   editProfileForm!: FormGroup;
@@ -28,46 +29,41 @@ export class AddFundComponent {
   searchQuery: string = '';
   selectedUser: any = null;
   transDetails: any;
-  userInfo: any; 
-  fundInfo: any; 
-
+  selectedUserInTransaction: any;
+  fundInfo: any;
+  fundAmount: number;
+  envImg:any;
+  @ViewChild('userDetailsModal') userDetailsModal!: ElementRef;
 
 
   constructor(private uploadService: UploadService, private fb: FormBuilder,
     private cookiesService: CookieService, private transactionService: TransactionService) {
+      this.envImg = environment.IMAGE_URL
   }
   ngOnInit(): void {
-    this.fetchUsers();
+    this.fetchTransaction();
     this.getSelectedUser();
   }
 
-  getSelectedUser(){
+  getSelectedUser() {
     this.transactionService.getUserTransactions(this.cookiesService.decodeToken().userId).subscribe(
-      (res)=>{
-        this.userInfo = res;
+      (res) => {
+        this.selectedUserInTransaction = res;
       },
-      (error:any)=>{
-
+      (error: any) => {
+        console.log(error);
       }
     )
   }
 
-  fetchUsers(): void {
+  fetchTransaction(): void {
     this.loading = true;
     this.transactionService.getAllTransaction().subscribe((data: any) => {
-      if (this.cookiesService.isAdmin()) {
-        this.transDetails = data;
-        const adminHistory = data.filter(item => item.paymentType === 'fund' && item.status === 'pending')
-        this.transInfo = adminHistory;
-        this.filteredTrans = adminHistory;
-        this.totalItems = adminHistory.length;
 
-      } else {
-        const userHistory = data.filter(item => item.userId === this.cookiesService.decodeToken().userId && item.paymentType === 'fund' && item.status === 'pending');
-        this.transInfo = userHistory
-        this.filteredTrans = userHistory;
-        this.totalItems = userHistory.length;
-      }
+      const userHistory = data.filter(item => item.userId === this.cookiesService.decodeToken().userId && item.paymentType === 'fund' && item.status === 'pending');
+      this.transInfo = userHistory
+      this.filteredTrans = userHistory;
+      this.totalItems = userHistory.length;
       this.loading = false;
       this.successMessage = 'Fund history data loaded successfully!';
       setTimeout(() => (this.successMessage = ''), 3000); // Clear success message after 3 seconds
@@ -83,21 +79,27 @@ export class AddFundComponent {
     this.totalItems = this.filteredTrans.length;
   }
 
-  viewUserDetails(): void {
+  async createUserDetails(): Promise<any> {
+    this.loading = true;
     const data = {
       paymentType: 'fund',
-      transactionAmount: 0
+      transactionAmount: this.fundAmount
     };
-    this.transactionService.createTransaction(data).subscribe(
-      (res)=>{
-        this.fundInfo = res;
-      },
-      (error)=>{
-        console.log(error)
-      }
-    )
-    this.selectedUser = this.transDetails.filter(item => item.userId === this.selectedUser.userId);
+
+    return this.transactionService.createTransaction(data).toPromise()
+      .then(res => {
+        if (res) {
+          this.selectedUser = res;
+          return res;
+        }
+      })
+      .catch(error => {
+        this.loading = false;
+        console.log(error);
+        return null;
+      });
   }
+
 
   closeModal(): void {
     this.selectedUser = null;
@@ -112,38 +114,45 @@ export class AddFundComponent {
         this.imagePreviewUrl = reader.result;
       };
       reader.readAsDataURL(this.selectedImage);
-
-      // Update form control for image
-      this.editProfileForm.patchValue({ image: this.selectedImage });
-      this.editProfileForm.get('image')?.updateValueAndValidity();
     }
   }
 
   // Handle the upload action
-  upload(): void {
-    if (this.selectedImage) {
-      this.uploadService.uploadFile(this.selectedImage, this.cookiesService.decodeToken().userId, 'transaction')
+  async upload(): Promise<void> {
+    const userData = await this.createUserDetails();
+    console.log(userData);
+
+    if (this.selectedImage && userData) {
+      this.uploadService.uploadFile(this.selectedImage, userData.transId, 'transaction')
         .subscribe(
           response => {
-            console.log('File uploaded successfully', response);
+            this.successMessage = 'File uploaded successfully';
             this.isImageUploaded = true; // Mark image as uploaded
+            this.loading = false;
+            this.closeModal();
           },
           error => {
+            this.successMessage = 'Error uploading file';
             console.error('Error uploading file', error);
+            this.loading = false;
           }
         );
+    } else {
+      this.successMessage = 'Error uploading file: No selected image or transaction data.';
+      this.loading = false;
     }
   }
 
+
+
   updateStatus(status: any) {
-    this.selectedUser.
     this.selectedUser.status = status;
     this.transactionService.updateTransaction(this.selectedUser, this.selectedUser.transId).subscribe(
-      (res)=>{
+      (res) => {
         this.successMessage = 'Status update successfully!';
-        this.fetchUsers();
+        this.fetchTransaction();
       },
-      (error:any)=>{
+      (error: any) => {
         this.successMessage = 'Unable to update status';
       }
     )

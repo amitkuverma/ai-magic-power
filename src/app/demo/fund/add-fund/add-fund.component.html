@@ -7,7 +7,7 @@
     </div>
   
     <!-- Add Fund Button -->
-    <div>
+    <div class="d-flex justify-content-end">
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userDetailsModal">
         Add Fund
       </button>
@@ -41,8 +41,8 @@
             <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
             <td class="text-capitalize">{{ payment?.status }}</td>
             <td>
-              <a *ngIf="payment?.receipt" [href]="payment?.receipt" target="_blank" class="view_rec">View Receipt</a>
-              <span *ngIf="!payment?.receipt">NA</span>
+              <a *ngIf="payment?.filepath" [href]="envImg + payment?.filepath" target="_blank" class="view_rec">View Receipt</a>
+              <span *ngIf="!payment?.filepath">NA</span>
             </td>
           </tr>
         </tbody>
@@ -61,17 +61,22 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <div class="card">
-              <div class="card-body">
-                <div>
-                  <input type="file" class="form-control-file mb-2" (change)="onFileSelected($event)" />
-                  <button class="btn btn-primary" (click)="upload()" [disabled]="!selectedImage">Upload Profile</button>
-                </div>
+            <div>
+              <div class="form-group mb-3">
+                <label class="form-label" for="transactionAmount">Fund Amount</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="transactionAmount"
+                  [(ngModel)]="fundAmount"
+                  placeholder="Fund Amount"
+                />
               </div>
             </div>
+              <input type="file" class="form-control-file mb-2" (change)="onFileSelected($event)" />
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="updateStatus('fund')">Add Fund</button>
+          <div class="modal-footer">            
+            <button class="btn btn-primary" (click)="upload()" data-bs-dismiss="modal" [disabled]="!selectedImage">Upload Profile</button>
           </div>
         </div>
       </div>
