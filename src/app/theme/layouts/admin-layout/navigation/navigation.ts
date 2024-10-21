@@ -125,7 +125,16 @@ export const NavigationItems: NavigationItem[] = [
         title: 'AI Package',
         type: 'item',
         classes: 'nav-item',
-        url: '/ai-package',
+        url: '/ai-packages-list',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'ai_package',
+        title: 'AI Packages',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/ai-packages',
         icon: 'ant-design',
         breadcrumbs: false
       },

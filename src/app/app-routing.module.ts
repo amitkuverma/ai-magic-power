@@ -80,8 +80,12 @@ const routes: Routes = [
         loadComponent: () => import('./demo/p2p-transfer/p2p-transfer.component').then((c) => c.P2pTransferComponent)
       },
       {
-        path: 'ai-package',
+        path: 'ai-packages-list',
         loadComponent: () => import('./demo/fund/package-list/ai-package-list.component').then((c) => c.AiPackageListComponent)
+      },
+      {
+        path: 'ai-packages',
+        loadComponent: () => import('./demo/fund/ai-packages/ai-packages.component').then((c) => c.AiPackagesComponent)
       },
       {
         path: 'fund',

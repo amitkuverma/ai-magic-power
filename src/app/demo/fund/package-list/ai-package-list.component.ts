@@ -1,13 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { environment } from 'src/environments/environment';
 import { CookieService } from 'src/services/cookie.service';
 import { PaymentService } from 'src/services/payment.service';
+import { TransactionService } from 'src/services/transaction.service';
 import { UploadService } from 'src/services/uploadfile.service';
 
 @Component({
   selector: 'app-ai-package-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgxPaginationModule],
   templateUrl: './ai-package-list.component.html',
   styleUrl: './ai-package-list.component.scss'
 })
@@ -15,90 +18,117 @@ import { UploadService } from 'src/services/uploadfile.service';
 
 
 export class AiPackageListComponent {
-  packages: any[] = [
-    {
-      id: 1,
-      name: 'OPAL AI',
-      stake: '12$ - 999$',
-      commission: '0.3%',
-      days: 1000
-    },
-    {
-      id: 2,
-      name: 'JASPER AI',
-      stake: '1000$ - 9999$+',
-      commission: '0.4%',
-      days: 750
-    }
-  ];
+  transInfo: any[] = [];
+  filteredTrans: any[] = [];
+  searchQuery: string = '';
+  selectedUser: any = null;
+  loading: boolean = false;
+  page: number = 1;
+  itemsPerPage: number = 10;
+  totalItems: number = 0;
+  successMessage: string = '';
+  envImg: any;
+  loginUserPaymetDetails: any;
+  selectedImage: File;
+  imagePreviewUrl: string | ArrayBuffer;
 
-  selectedPackage: any | null = null;
-  successMessage: string;
-  selectedImage: any;
-  isImageUploaded: boolean;
-
-  constructor(private paymentService:PaymentService, private cookies:CookieService, private uploadService:UploadService) { }
-
-  ngOnInit(): void {}
-
-  // Handle package selection
-  selectPackage(pack: any): void {
-    this.selectedPackage = pack;
-    console.log('Selected Package:', pack);
-    // You can add further logic here, like navigating or submitting
+  constructor(private transactionService: TransactionService, private cookies: CookieService, private paymentService: PaymentService) {
+    this.envImg = environment.IMAGE_URL
   }
 
-  upload(): void {
-    const body ={
-      userId: this.cookies.decodeToken().userId,
-      userName: this.cookies.decodeToken().userName,
-      plan: this.selectedPackage.name,
-      commission: this.selectedPackage.commission,
-      planStartDate: Date.now,
-      planEndDate: Date.now
+  ngOnInit(): void {
+    this.fetchTransactions();
+    this.fetchPaymentDetails();
+  }
+
+  fetchPaymentDetails() {
+    this.paymentService.getAllReferUser().subscribe(
+      res => {
+        console.log(this.cookies.decodeToken().userId)
+        this.loginUserPaymetDetails = res.filter(item => item.userId === this.cookies.decodeToken().userId);
+        console.log(this.loginUserPaymetDetails)
+      },
+      error => {
+
+      }
+    )
+  }
+
+  fetchTransactions(): void {
+    this.loading = true;
+    this.paymentService.getAllReferUser().subscribe((data: any) => {
+      if (this.cookies.isAdmin()) {
+        const adminHistory = data.filter(item => item.status === 'new')
+        this.transInfo = adminHistory;
+        this.filteredTrans = adminHistory;
+        this.totalItems = adminHistory.length;
+
+      } else {
+        const userHistory = data.filter(item => item.userId === this.cookies.decodeToken().userId && item.paymentType === 'fund' && item.status === 'pending');
+        this.transInfo = userHistory
+        this.filteredTrans = userHistory;
+        this.totalItems = userHistory.length;
+      }
+      this.loading = false;
+      this.successMessage = 'Fund history data loaded successfully!';
+      setTimeout(() => (this.successMessage = ''), 3000); // Clear success message after 3 seconds
+    });
+  }
+
+  filterUsers() {
+    this.filteredTrans = this.transInfo.filter(
+      (user) =>
+        user.userId.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        user.userName.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+    this.totalItems = this.filteredTrans.length;
+  }
+
+  viewUserDetails(user: any): void {
+    this.selectedUser = user;
+  }
+
+  closeModal(): void {
+    this.selectedUser = null;
+  }
+
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      this.selectedImage = target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreviewUrl = reader.result;
+      };
+      reader.readAsDataURL(this.selectedImage);
     }
-    this.paymentService.createPayment(body).subscribe(
-      res =>{
-        if (this.selectedImage && res) {
-          this.uploadService.uploadFile(this.selectedImage, res.payId, 'payment')
-            .subscribe(
-              response => {
-                this.successMessage = 'File uploaded successfully';
-                this.isImageUploaded = true; // Mark image as uploaded
-              },
-              error => {
-                this.successMessage = 'Error uploading file';
-                console.error('Error uploading file', error);
-              }
-            );
-        } else {
-          this.successMessage = 'Error uploading file: No selected image or transaction data.';
+  }
+
+  updateStatus(status: any) {
+    this.selectedUser.status = status;
+    this.transactionService.updateTransaction(this.selectedUser, this.selectedUser.transId).subscribe(
+      (res) => {
+        if (status === 'rejected') {
+          this.loginUserPaymetDetails.totalAmount += this.selectedUser.transactionAmount;
+          this.paymentService.updateUserStatus(this.loginUserPaymetDetails, this.loginUserPaymetDetails.payId).subscribe(
+            res => {
+              this.successMessage = 'Fund added successfully!';
+              this.fetchTransactions();
+
+            },
+            error => {
+              this.successMessage = 'Unable to add fund!';
+              this.fetchTransactions();
+
+            }
+          )
         }
+        this.successMessage = 'Fund rejected successfully!';
 
       },
-      error =>{
-
+      (error: any) => {
+        this.successMessage = 'Unable to update status';
       }
-    );
-  }
-  // Submit selected package
-  submitPackage(): void {
-    if (this.selectedPackage) {
-      const body = {
-        userId: this.cookies.decodeToken().userId,
-        userName: this.cookies.decodeToken().userName,
-
-      }
-      this.paymentService.createPayment(body).subscribe(
-        res => {
-
-        },
-        error =>{
-
-        }
-      )
-      console.log('Submitting Package:', this.selectedPackage);
-      // Add API call or logic here to handle the submission of the package
-    }
+    )
   }
 }

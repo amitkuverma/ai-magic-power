@@ -1,43 +1,79 @@
-<div class="container mt-4">
-  <h2 class="text-center">AI Packages</h2>
-  <p class="text-center">Please select your package to activate your account.</p>
+<div class="container card">
+  <h5 class="my-3">Add Funds</h5>
 
-  <div class="row mt-4">
-    <div *ngFor="let pack of packages; let i = index" class="col-12 col-md-6 mb-4">
-      <div class="card">
-        <div class="card-body text-center">
-          <h5 class="card-title">{{ pack.name }}</h5>
-          <hr />
-          <p class="card-text">AI Stake: {{ pack.stake }}</p>
-          <hr />
-          <p class="card-text">Commission: {{ pack.commission }}</p>
-          <hr />
-          <p class="card-text">Days: {{ pack.days }}</p>
-          <hr />
-          <button class="btn btn-primary" (click)="selectPackage(pack)" data-bs-toggle="modal"
-            data-bs-target="#packageModal">Select Package</button>
-        </div>
-      </div>
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <!-- Search Input -->
+  <!-- <input type="text" class="form-control mb-3" placeholder="Search by name or email" [(ngModel)]="searchQuery" (input)="filterUsers()"> -->
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
+  <!-- User Table -->
+  <div *ngIf="!loading" class="card">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>USER ID</th>
+          <th>NAME</th>
+          <th>TYPE</th>
+          <th>FUND AMOUNT</th>
+          <th>STATUS</th>
+          <th>RECEIPT</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+          <td>AI-100{{ payment?.userId }}</td>
+          <td class="text-capitalize">{{ payment?.userName }}</td>
+          <td class="text-capitalize">{{ payment?.plan }}</td>
+          <td class="text-capitalize">{{ payment?.commission }}</td>
+          <td class="text-capitalize">{{ payment?.planStartDate }}</td>
+          <td class="text-capitalize">{{ payment?.planEndDate }}</td>
+          <td class="text-capitalize">{{ payment?.status }}</td>
+          <td>
+            <a *ngIf="payment?.filepath" [href]="envImg + payment?.filepath" target="_blank" class="view_rec">View Receipt</a>
+            <span *ngIf="!payment?.filepath">NA</span>
+          </td>
+          <td>
+            <button class="btn btn-primary" (click)="viewUserDetails(payment)">View Details</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
+  </div>
+
+  <!-- User Details Modal -->
+  <div *ngIf="selectedUser" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="packageModalLabel">Selected Package: {{ selectedPackage?.name }}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h5 class="modal-title">User Details</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
         </div>
         <div class="modal-body">
-          <p><strong>AI Stake:</strong> {{ selectedPackage?.stake }}</p>
-          <p><strong>Commission:</strong> {{ selectedPackage?.commission }}</p>
-          <p><strong>Days:</strong> {{ selectedPackage?.days }}</p>
-          <p><strong>Days:</strong> {{ selectedPackage?.days }}</p>
+          <p><strong>Name:</strong> {{ selectedUser.userName }}</p>
+          <p><strong>Type:</strong> {{ selectedUser.paymentType }}</p>
+          <p><strong>Selected Package:</strong> {{ selectedUser.plan }}</p>
+          <p><strong>Commission:</strong> {{ selectedUser.plan }}</p>
+          <p><strong>Plan Start Date:</strong> {{ selectedUser.planStartDate }}</p>
+          <p><strong>Plan End Date:</strong> {{ selectedUser.planEndDate }}</p>
+          <p><strong>Status:</strong> {{ selectedUser.status }}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-success" (click)="submitPackage()">Submit Package</button>
+          <button type="button" class="btn btn-primary" (click)="updateStatus('approved')">Approved</button>
+          <button type="button" class="btn btn-secondary" (click)="updateStatus('rejected')">Rejected</button>
         </div>
       </div>
     </div>
