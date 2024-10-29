@@ -5,6 +5,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from 'src/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { PaymentService } from 'src/services/payment.service';
+import { CookieService } from 'src/services/cookie.service';
 
 @Component({
   selector: 'app-register',
@@ -38,7 +40,9 @@ export default class RegisterComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private paymentService: PaymentService,
+    private cookiesSerrvice: CookieService
   ) {
     this.signupForm = this.fb.group({
       name: ['', Validators.required],
@@ -60,11 +64,31 @@ export default class RegisterComponent {
 
     this.authService.register(this.signupForm.value).subscribe(
       (response) => {
-        this.loading = false; // Stop loading
-        this.toastr.success('Account created successfully!','Success');
-        setTimeout(() => {
-          this.router.navigate(['/login']); // Navigate after success
-        }, 2000);
+        const login = {
+          email: this.signupForm.get('email').value,
+          password: this.signupForm.get('password').value
+        }
+        this.authService.login(login).subscribe(
+          res=>{
+            this.cookiesSerrvice.setCookie('token', res.token, 1);
+            const body = {
+              userId: response.userId,
+              userName: response.name,
+              status: 'create'
+            }
+            this.paymentService.createPayment(body).subscribe(
+              res=>{
+                this.loading = false; // Stop loading
+                this.toastr.success('Account created successfully!','Success');
+                this.cookiesSerrvice.deleteCookie('token');
+                this.router.navigate(['/login']);                  
+              }
+            )
+          }
+        )
+
+      
+       
       },
       (error) => {
         this.loading = false; // Stop loading
