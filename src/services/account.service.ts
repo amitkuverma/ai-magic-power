@@ -26,8 +26,8 @@ export class AccountDetailsService {
   //   return this.http.get<any[]>(`${environment.API_URL}/account/1`);
   // }
 
-  getAccountById(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.API_URL}/account/${this.cookiesService.decodeToken().userId}`);
+  getAccountById(userId:any): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.API_URL}/account/${userId}`);
   }
 
   saveAccount(account: any): Observable<any> {

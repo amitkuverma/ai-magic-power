@@ -62,9 +62,10 @@
         </div>
         <div class="modal-body">
           <p><strong>Name:</strong> {{ selectedUser.userName }}</p>
-          <p><strong>BEP20:</strong> {{ selectedUser.paymentType }}</p>
-          <p><strong>BEP20:</strong> {{ selectedUser.transactionAmount }}</p>
-          <p><strong>BEP20:</strong> {{ selectedUser.status }}</p>
+          <p><strong>Type:</strong> {{ selectedUser.paymentType }}</p>
+          <p><strong>Ammount:</strong> {{ selectedUser.transactionAmount }}</p>
+          <p><strong>Crypto Address:</strong> {{ accountDetails?.accountNumber || 'NA' }}</p>
+          <p><strong>Status:</strong> {{ selectedUser.status }}</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" (click)="updateStatus('approved')">Approved</button>

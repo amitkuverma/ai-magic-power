@@ -29,7 +29,7 @@ export class WithdrawComponent {
     private cookiesService: CookieService, private paymentService: PaymentService) {
     this.bankTransferForm = this.fb.group({
       transactionAmount: ['', [Validators.required, Validators.min(5)]],
-    }, { validators: this.validateTransactionAmount });
+    });
     this.getUserPayment();
     this.fetchTransaction();
   }
@@ -49,15 +49,10 @@ export class WithdrawComponent {
   }
 
   validateTransactionAmount(control: AbstractControl) {
-    const totalAmount = this.userPaymentDetails?.totalAmount;
+    const earnAmount = this.userPaymentDetails?.earnWallet;
     const transactionAmount = control.get('transactionAmount')?.value;
 
-    return transactionAmount <= totalAmount ? null : { amountExceeds: true };
-  }
-
-  netAmmount() {
-    const transactionAmount = this.bankTransferForm.get('transactionAmount')?.value;
-    const x = (transactionAmount * 5) / 100
+    return transactionAmount <= earnAmount ? null : { amountExceeds: true };
   }
 
   fetchTransaction(): void {
@@ -79,16 +74,18 @@ export class WithdrawComponent {
     const totalAmount = this.userPaymentDetails?.totalAmount;
     const transactionAmount = this.bankTransferForm.get('transactionAmount')?.value;
 
-    if (transactionAmount > totalAmount) {
-      // this.toastr.error('Transaction amount must not exceed total amount.', 'Error');
-      return;
-    }
+    // if (transactionAmount > totalAmount) {
+    //   // this.toastr.error('Transaction amount must not exceed total amount.', 'Error');
+    //   return;
+    // }
 
     const data = {
       paymentType: 'withdraw',
       transactionAmount: transactionAmount
     };
 
+    console.log(data);
+    
     this.trancService.createTransaction(data).subscribe(
       (res: any) => {
         this.bankTransferForm.get('transactionAmount')?.setValue('');
@@ -99,8 +96,5 @@ export class WithdrawComponent {
         // console.error('Error sending withdrawal request:', error);
       }
     );
-  }
-  fetchwalletaddress() {
-
   }
 }

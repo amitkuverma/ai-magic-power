@@ -5,6 +5,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { CookieService } from 'src/services/cookie.service';
 import { TransactionService } from 'src/services/transaction.service';
 import { ToastrService } from 'ngx-toastr';
+import { PaymentService } from 'src/services/payment.service';
+import { AccountDetailsService } from 'src/services/account.service';
 
 @Component({
   selector: 'app-withdraws',
@@ -23,11 +25,26 @@ export class WithdrawRequestComponent {
   itemsPerPage: number = 10;
   totalItems: number = 0;
   successMessage: string = '';
+  accountDetails: any;
 
-  constructor(private transService: TransactionService, private cookies: CookieService, private toastr:ToastrService) { }
+  constructor(private transService: TransactionService, private cookies: CookieService, private toastr:ToastrService,
+    private paymentService: PaymentService, private accountService: AccountDetailsService) { }
 
   ngOnInit(): void {
     this.fetchUsers();
+  }
+
+  fetchAccount(userId:any){
+    this.accountService.getAccountById(userId).subscribe(
+      res=>{
+        console.log(res);
+        
+        this.accountDetails = res;
+      },
+      error=>{
+
+      }
+    )
   }
 
   fetchUsers(): void {
@@ -63,6 +80,7 @@ export class WithdrawRequestComponent {
 
   viewUserDetails(user: any): void {
     this.selectedUser = user;
+    this.fetchAccount(user.userId);
   }
 
   closeModal(): void {
@@ -73,11 +91,38 @@ export class WithdrawRequestComponent {
   updateStatus(status: any) {
     this.selectedUser.status = status;
     this.transService.updateTransaction(this.selectedUser, this.selectedUser.transId).subscribe(
-      (res)=>{
-        this.successMessage = 'Status update successfully!';
-        this.fetchUsers();
+      (res) => {
+        if (status === 'approved') {
+          this.paymentService.getUserReferrals(this.selectedUser.userId).subscribe(
+            res => {
+              console.log(this.selectedUser.transactionAmount);
+              
+              res.earnWallet = (parseFloat(res.earnWallet) - parseFloat(this.selectedUser.transactionAmount)).toFixed(2);
+              res.totalWithdraw = (parseFloat(res.totalWithdraw) + parseFloat(this.selectedUser.transactionAmount)).toFixed(2);
+              console.log(res)
+              this.paymentService.updateUserStatus(res, res.payId).subscribe(
+                res => {
+                  this.successMessage = 'Fund added successfully!';
+                  // this.fetchTransactions();
+                },
+                error => {
+                  this.successMessage = 'Unable to add fund!';
+                  // this.fetchTransactions();
+
+                }
+              )
+            },
+            error => {
+              this.successMessage = 'Fund rejected successfully!';
+            }
+          )
+
+        } else {
+          this.successMessage = 'Fund rejected successfully!';
+        }
+
       },
-      (error:any)=>{
+      (error: any) => {
         this.successMessage = 'Unable to update status';
       }
     )
