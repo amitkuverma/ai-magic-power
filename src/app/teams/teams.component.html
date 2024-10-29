@@ -1,0 +1,51 @@
+<div class="container card pb-3">
+    <h5 class="my-3">User Info</h5>
+  
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+  
+    <!-- Search Input -->
+    <input type="text" class="form-control mb-3" placeholder="Search by name or email" [(ngModel)]="searchQuery"
+      (input)="filterUsers()">
+  
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  
+    <!-- User Table -->
+    <div *ngIf="!loading" class="card">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>USER ID</th>
+            <th>NAME</th>
+            <th>EMAIL</th>
+            <th>PHONE</th>
+            <th>Reffer Code</th>
+            <th>STATUS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+            <td>AI-100{{ user.userId }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.mobile }}</td>
+            <td>{{ user.referralCode }}</td>
+            <td class="text-capitalize"><span class="d-block">
+                <i class="badge-circle {{ user.status }} f-10 m-r-5"></i>
+                {{ user.status }}
+              </span></td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <!-- Pagination Controls -->
+      <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
+    </div>
+  </div>

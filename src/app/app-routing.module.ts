@@ -22,6 +22,10 @@ const routes: Routes = [
         loadComponent: () => import('./users/user-table/user-table.component').then((c) => c.UserTableComponent)
       },
       {
+        path: 'teams',
+        loadComponent: () => import('./teams/teams.component').then((c) => c.TeamsComponent)
+      },
+      {
         path: 'my-profile',
         loadComponent: () => import('./profile/profile/profile.component').then((c) => c.ProfileComponent)
       },

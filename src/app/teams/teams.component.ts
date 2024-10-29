@@ -1,44 +1,21 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgxPaginationModule } from 'ngx-pagination';
 import { Router, RouterModule } from '@angular/router';
-import {
-  BellOutline,
-  SettingOutline,
-  GiftOutline,
-  MessageOutline,
-  PhoneOutline,
-  CheckCircleOutline,
-  LogoutOutline,
-  EditOutline,
-  UserOutline,
-  ProfileOutline,
-  WalletOutline,
-  QuestionCircleOutline,
-  LockOutline,
-  CommentOutline,
-  UnorderedListOutline,
-  ArrowRightOutline,
-  GithubOutline,
-  HolderOutline,
-  MoreOutline,
-  DeleteOutline,
-  UserDeleteOutline
-} from '@ant-design/icons-angular/icons';
-import { IconService } from '@ant-design/icons-angular';
-import { UsersService } from 'src/services/users.service';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
-import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { UsersService } from 'src/services/users.service';
+import { SharedModule } from '../theme/shared/shared.module';
+import { CookieService } from 'src/services/cookie.service';
 
 @Component({
-  selector: 'app-user-table',
+  selector: 'app-teams',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule, SharedModule, RouterModule], // Import necessary modules directly
-  templateUrl: './user-table.component.html',
-  styleUrls: ['./user-table.component.scss']
+  imports: [CommonModule, FormsModule, NgxPaginationModule, SharedModule, RouterModule],
+  templateUrl: './teams.component.html',
+  styleUrl: './teams.component.scss'
 })
-export class UserTableComponent implements OnInit {
+export class TeamsComponent {
   users: any[] = [];
   filteredUsers: any[] = [];
   searchQuery: string = '';
@@ -50,33 +27,20 @@ export class UserTableComponent implements OnInit {
   successMessage: string = '';
   isMenuOpen: { [key: number]: boolean } = {};
 
-  constructor(private usersService: UsersService, private iconService: IconService, private router: Router
-    , private toastr: ToastrService
+  constructor(private usersService: UsersService, private router: Router,
+    private toastr: ToastrService, private cookies: CookieService
   ) {
-    this.iconService.addIcon(
-      ...[
-        CheckCircleOutline,
-        UserOutline,
-        SettingOutline,
-        GiftOutline,
-        MoreOutline,
-        MessageOutline,
-        DeleteOutline,
-        UserDeleteOutline,
-      ]
-    );
   }
-
   ngOnInit(): void {
     this.fetchUsers();
   }
 
   fetchUsers(): void {
     this.loading = true;
-    this.usersService.getUsers().subscribe((data: any) => {
-      this.users = data;
-      this.filteredUsers = data;
-      this.totalItems = data.length;
+    this.usersService.getUserReferrals(this.cookies.decodeToken().userId).subscribe((data: any) => {
+      this.users = data.referrals;
+      this.filteredUsers = data.referrals;
+      this.totalItems = data.referrals.length;
       this.loading = false;
       this.toastr.success('Users loaded successfully!', 'Success');
     });

@@ -62,8 +62,4 @@ export class AddFundHistoryComponent {
   viewUserDetails(user: any): void {
     this.selectedUser = user;
   }
-
-  closeModal(): void {
-    this.selectedUser = null;
-  }
 }

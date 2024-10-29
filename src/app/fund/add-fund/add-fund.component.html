@@ -1,85 +1,88 @@
 <div class="container card">
+  <div class="d-flex justify-content-between align-items-center">
     <h5 class="my-3">Add Funds</h5>
-  
-    <!-- Success Message -->
-    <div *ngIf="successMessage" class="alert alert-success">
-      {{ successMessage }}
-    </div>
-  
-    <!-- Add Fund Button -->
-    <div class="d-flex justify-content-end">
+    <div>
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userDetailsModal">
-        Add Fund
+        Request Fund
       </button>
     </div>
-  
-    <!-- Loading Spinner -->
-    <div *ngIf="loading" class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
     </div>
-  
-    <!-- User Table -->
-    <div *ngIf="!loading" class="card mt-3">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>USER ID</th>
-            <th>NAME</th>
-            <th>TYPE</th>
-            <th>FUND AMOUNT</th>
-            <th>STATUS</th>
-            <th>RECEIPT</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-            <td>AI-100{{ payment?.userId }}</td>
-            <td class="text-capitalize">{{ payment?.userName }}</td>
-            <td class="text-capitalize">{{ payment?.paymentType }}</td>
-            <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
-            <td class="text-capitalize">{{ payment?.status }}</td>
-            <td>
-              <a *ngIf="payment?.filepath" [href]="envImg + payment?.filepath" target="_blank" class="view_rec">View Receipt</a>
-              <span *ngIf="!payment?.filepath">NA</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-  
-      <!-- Pagination Controls -->
-      <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
-    </div>
-  
-    <!-- User Details Modal -->
-    <div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Upload payment receipt details</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div>
-              <div class="form-group mb-3">
-                <label class="form-label" for="transactionAmount">Fund Amount</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="transactionAmount"
-                  [(ngModel)]="fundAmount"
-                  placeholder="Fund Amount"
-                />
-              </div>
+  </div>
+
+  <!-- User Table -->
+  <div *ngIf="!loading" class="card mt-3">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>USER ID</th>
+          <th>NAME</th>
+          <th>TYPE</th>
+          <th>FUND AMOUNT</th>
+          <th>STATUS</th>
+          <th>RECEIPT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+          <td>AI-100{{ payment?.userId }}</td>
+          <td class="text-capitalize">{{ payment?.userName }}</td>
+          <td class="text-capitalize">{{ payment?.paymentType }}</td>
+          <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
+          <td class="text-capitalize">{{ payment?.status }}</td>
+          <td>
+            <a *ngIf="payment?.filepath" [href]="envImg + payment?.filepath" target="_blank" class="view_rec">View
+              Receipt</a>
+            <span *ngIf="!payment?.filepath">NA</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
+  </div>
+
+  <!-- User Details Modal -->
+  <div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Upload payment receipt details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <div class="card p-3">
+              <b>Admin Crypto address:</b> <span class="text-primary">{{accountDetails?.accountNumber || 'NA'}}</span>
+              <button class="btn btn-primary"
+                (click)="copyToClipboard(accountDetails?.accountNumber)">Copy</button>
             </div>
-              <input type="file" class="form-control-file mb-2" (change)="onFileSelected($event)" />
+            <div class="form-group mb-3">
+              <label class="form-label" for="transactionAmount">Fund Amount</label>
+              <input type="number" class="form-control" id="transactionAmount" [(ngModel)]="fundAmount"
+                placeholder="Fund Amount" />
+            </div>
           </div>
-          <div class="modal-footer">            
-            <button class="btn btn-primary" (click)="upload()" data-bs-dismiss="modal" [disabled]="!selectedImage">Upload Profile</button>
-          </div>
+          <input type="file" class="form-control-file mb-2" (change)="onFileSelected($event)" />
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="upload()" data-bs-dismiss="modal" [disabled]="!selectedImage">Upload
+            Profile</button>
         </div>
       </div>
     </div>
   </div>
-  
+</div>

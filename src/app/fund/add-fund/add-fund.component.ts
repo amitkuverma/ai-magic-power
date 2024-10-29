@@ -6,6 +6,9 @@ import { CookieService } from 'src/services/cookie.service';
 import { TransactionService } from 'src/services/transaction.service';
 import { UploadService } from 'src/services/uploadfile.service';
 import { environment } from 'src/environments/environment';
+import { AccountDetailsService } from 'src/services/account.service';
+import { Clipboard } from '@angular/cdk/clipboard';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-fund',
@@ -29,20 +32,24 @@ export class AddFundComponent {
   searchQuery: string = '';
   selectedUser: any = null;
   transDetails: any;
+  accountDetails: any;
   selectedUserInTransaction: any;
   fundInfo: any;
   fundAmount!: number;
-  envImg:any;
+  envImg: any;
   @ViewChild('userDetailsModal') userDetailsModal!: ElementRef;
 
 
-  constructor(private uploadService: UploadService, private fb: FormBuilder,
-    private cookiesService: CookieService, private transactionService: TransactionService) {
-      this.envImg = environment.IMAGE_URL
+  constructor(private uploadService: UploadService, private fb: FormBuilder, private accountService: AccountDetailsService,
+    private cookiesService: CookieService, private transactionService: TransactionService, private clipboard: Clipboard,
+    private toster: ToastrService
+  ) {
+    this.envImg = environment.IMAGE_URL
   }
   ngOnInit(): void {
     this.fetchTransaction();
     this.getSelectedUser();
+    this.fetchAdminAccount();
   }
 
   getSelectedUser() {
@@ -56,17 +63,27 @@ export class AddFundComponent {
     )
   }
 
+  fetchAdminAccount() {
+    this.accountService.getAccountById(1).subscribe(
+      (res) => {
+        this.accountDetails = res;
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    )
+  }
+
   fetchTransaction(): void {
     this.loading = true;
     this.transactionService.getAllTransaction().subscribe((data: any) => {
 
-      const userHistory = data.filter((item:any) => item.userId === this.cookiesService.decodeToken().userId && item.paymentType === 'fund' && item.status === 'pending');
+      const userHistory = data.filter((item: any) => item.userId === this.cookiesService.decodeToken().userId && item.paymentType === 'fund' && item.status === 'pending');
       this.transInfo = userHistory
       this.filteredTrans = userHistory;
       this.totalItems = userHistory.length;
       this.loading = false;
-      this.successMessage = 'Fund history data loaded successfully!';
-      setTimeout(() => (this.successMessage = ''), 3000); // Clear success message after 3 seconds
+      this.toster.success('Fund data loaded successfully!');
     });
   }
 
@@ -77,6 +94,11 @@ export class AddFundComponent {
         user.userName.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
     this.totalItems = this.filteredTrans.length;
+  }
+
+  copyToClipboard(text: any) {
+    this.clipboard.copy(text);
+    this.toster.success(text + " coppied successfully!")
   }
 
   async createUserDetails(): Promise<any> {
@@ -101,8 +123,26 @@ export class AddFundComponent {
   }
 
 
-  closeModal(): void {
-    this.selectedUser = null;
+  
+  closeModal() {
+    const modalElement = document.getElementById('packageModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement); // Get the modal instance
+      if (modal) {
+        modal.hide(); // Hide the modal using Bootstrap's method
+      } else {
+        // If the modal is not instantiated, hide it manually
+        modalElement.classList.remove('show');
+        modalElement.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+
+        // Remove the backdrop if it exists
+        const modalBackdrop = document.querySelector('.modal-backdrop');
+        if (modalBackdrop) {
+          modalBackdrop.remove();
+        }
+      }
+    }
   }
 
   onFileSelected(event: Event): void {
@@ -120,13 +160,13 @@ export class AddFundComponent {
   // Handle the upload action
   async upload(): Promise<void> {
     const userData = await this.createUserDetails();
-    console.log(userData);
 
     if (this.selectedImage && userData) {
       this.uploadService.uploadFile(this.selectedImage, userData.transId, 'transaction')
         .subscribe(
           response => {
-            this.successMessage = 'File uploaded successfully';
+            this.fetchTransaction();
+            this.toster.success('File uploaded successfully!');
             this.isImageUploaded = true; // Mark image as uploaded
             this.loading = false;
             this.closeModal();
@@ -138,7 +178,7 @@ export class AddFundComponent {
           }
         );
     } else {
-      this.successMessage = 'Error uploading file: No selected image or transaction data.';
+      this.toster.error('Error uploading file: No selected image or transaction data.');
       this.loading = false;
     }
   }
@@ -149,11 +189,11 @@ export class AddFundComponent {
     this.selectedUser.status = status;
     this.transactionService.updateTransaction(this.selectedUser, this.selectedUser.transId).subscribe(
       (res) => {
-        this.successMessage = 'Status update successfully!';
+        this.toster.success('Status update successfully!');
         this.fetchTransaction();
       },
       (error: any) => {
-        this.successMessage = 'Unable to update status';
+        this.toster.error('Unable to update status');
       }
     )
   }
