@@ -44,7 +44,7 @@ export class NavRightComponent {
   windowWidth: number;
   screenFull: boolean = true;
 
-  constructor(private iconService: IconService, private cookies: CookieService, private router: Router, private themeService: ThemeService) {
+  constructor(private iconService: IconService, public cookies: CookieService, private router: Router, private themeService: ThemeService) {
     this.windowWidth = window.innerWidth;
     this.iconService.addIcon(
       ...[
@@ -113,7 +113,7 @@ export class NavRightComponent {
 
   logout() {
     this.cookies.deleteCookie('token');
-    this.router.navigate(['/home']);
+    this.router.navigate(['/']);
   }
 
   toggleTheme() {

@@ -44,7 +44,7 @@ export class NavContentComponent implements OnInit {
   title = 'Demo application for version numbering';
   currentApplicationVersion = environment.appVersion;
 
-  navigation = this.cookies.isAdmin()? NavigationItems: NavigationUserItems;
+  navigation:any;
   windowWidth = window.innerWidth;
 
   // Constructor
@@ -67,7 +67,7 @@ export class NavContentComponent implements OnInit {
         QuestionOutline
       ]
     );
-    this.navigations = NavigationItems;
+    this.navigations =  this.cookies.isAdmin()? NavigationItems: NavigationUserItems;;
   }
 
   // Life cycle events
