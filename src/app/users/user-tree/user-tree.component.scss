@@ -1,0 +1,43 @@
+.loader {
+    font-size: 24px;
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .user-tree {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .user-node {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+  }
+  
+  .user-pic {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
+  
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-name {
+    font-weight: bold;
+  }
+  
+  .user-details-panel {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 15px;
+  }
+  
+  .user-network-container {
+    margin-top: 20px;
+  }
+  

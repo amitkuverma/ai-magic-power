@@ -1,0 +1,70 @@
+<div class="container card">
+    <h5 class="my-3">Withdraw Request</h5>
+  
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+  
+    <!-- Search Input -->
+    <!-- <input type="text" class="form-control mb-3" placeholder="Search by name or email" [(ngModel)]="searchQuery" (input)="filterUsers()"> -->
+  
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  
+    <!-- User Table -->
+    <div *ngIf="!loading" class="card">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>USER ID</th>
+            <th>NAME</th>
+            <th>TYPE</th>
+            <th>WITHDRAWAL AMOUNT</th>
+            <th>STATUS</th>
+            <th>RECEIPT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+            <td>AI-100{{ payment?.userId }}</td>
+            <td class="text-capitalize">{{ payment?.userName }}</td>
+            <td class="text-capitalize">{{ payment?.paymentType }}</td>
+            <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
+            <td class="text-capitalize">{{ payment?.status }}</td>
+            <td>
+                <a *ngIf="payment?.receipt" [href]="payment?.receipt" target="_blank" class="view_rec">{{"View Receipt"}}</a>
+                <span *ngIf="!payment?.receipt">NA</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <!-- Pagination Controls -->
+      <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
+    </div>
+  
+    <!-- User Details Modal -->
+    <!-- <div *ngIf="selectedUser" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">User Details</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Name:</strong> {{ selectedUser.userName }}</p>
+            <p><strong>BEP20:</strong> {{ selectedUser.accountNumber }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+  

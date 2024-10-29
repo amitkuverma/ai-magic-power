@@ -1,0 +1,143 @@
+<div class="d-flex" style="height: 100vh;">
+  <!-- Main Content Area -->
+  <div class="flex-fill">
+    <!-- Top Header -->
+    <nav class="navbar_nev navbar-expand-lg px-4 py-25">
+      <img height="40" src="assets/images/logo.png" alt="logo" />
+
+      <ul class="list-unstyled pc-header">
+        <ng-container *ngIf="isSidebarVisible; else openIcon">
+          <li class="pc-h-item" (click)="toggleSidebar()">
+            <a class="pc-head-link me-0 bg-gray-200">
+              <i antIcon type="menu-fold" theme="outline"></i>
+            </a>
+          </li>
+        </ng-container>
+        <ng-template #openIcon>
+          <li class="pc-h-item" (click)="toggleSidebar()">
+            <a class="pc-head-link me-0 bg-gray-200">
+              <i antIcon type="menu-unfold" theme="outline"></i>
+            </a>
+          </li>
+        </ng-template>
+      </ul>
+      <div class="navbar-collapse" id="navbarNav">
+        <ul class="list-unstyled pc-header justify-content-end w-100">
+          <li class="pc-h-item" (click)="toggleTheme()">
+            <a class="pc-head-link me-0 bg-gray-200">
+              <i antIcon type="moon" theme="outline"></i>
+            </a>
+          </li>
+          <li class="dropdown pc-h-item header-user-profile" ngbDropdown>
+            <a class="pc-head-link dropdown-toggle arrow-none me-0" ngbDropdownToggle>
+              <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avatar me-2" />
+              <span class="f-w-600">{{cookies.decodeToken()?.userName}}</span>
+            </a>
+            <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
+              <div class="dropdown-header">
+                <div class="d-flex mb-1">
+                  <div class="flex-shrink-0">
+                    <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avatar wid-35" />
+                  </div>
+                  <div class="flex-grow-1 ms-3 text-start">
+                    <h6 class="mb-0">{{cookies.decodeToken()?.userName}}</h6>
+                    <span>Gold</span>
+                  </div>
+                  <a (click)="logout()" class="bg-transparent"><i class="d-flex f-20" antIcon theme="outline"
+                      type="logout"></i></a>
+                </div>
+              </div>
+              <ul ngbNav #nav="ngbNav" class="nav drp-tabs nav-fill nav-tabs">
+                <li ngbNavItem="1">
+                  <a ngbNavLink>
+                    <i antIcon theme="outline" type="user" class="me-2"></i>
+                    Profile
+                  </a>
+                  <ng-template ngbNavContent>
+                    @for (task of profile; track task) {
+                    <div>
+                      <a class="dropdown-item">
+                        <i class="text-muted" antIcon theme="outline" type="{{ task.icon }}"></i>
+                        <span>{{ task.title }}</span>
+                      </a>
+                    </div>
+                    }
+                    <div>
+                      <a class="dropdown-item" (click)="logout()">
+                        <i class="text-muted" antIcon theme="outline" type="logout"></i>
+                        <span>Logout</span>
+                      </a>
+                    </div>
+                  </ng-template>
+                </li>
+                <li ngbNavItem="2">
+                  <a ngbNavLink>
+                    <i class="me-2" antIcon theme="outline" type="setting"></i>
+                    Setting
+                  </a>
+                  <ng-template ngbNavContent>
+                    @for (task of setting; track task) {
+                    <div>
+                      <a class="dropdown-item">
+                        <i class="text-muted" antIcon theme="outline" type="{{ task.icon }}"></i>
+                        <span>{{ task.title }}</span>
+                      </a>
+                    </div>
+                    }
+                  </ng-template>
+                </li>
+              </ul>
+              <div [ngbNavOutlet]="nav"></div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- </div> -->
+    </nav>
+
+    <!-- Sidebar -->
+    <!-- Sidebar -->
+    <div id="sidebar" *ngIf="isSidebarVisible" class="sidebar">
+      <ul class="nav flex-column">
+        <li class="nav-item" *ngFor="let item of menuItems">
+          <a class="nav-link d-flex justify-content-between align-items-center" [routerLink]="item.url"
+            *ngIf="!item.children" routerLinkActive="active" (click)="closeDropdownOnSelect()">
+            {{ item.title }}
+          </a>
+
+          <!-- Dropdown menu items -->
+          <a class="nav-link menu d-flex justify-content-between align-items-center"
+            (click)="toggleDropdown(item.title)" *ngIf="item.children"
+            [ngClass]="{ active: activeDropdown === item.title }">
+            {{ item.title }}
+            <span
+              [ngClass]="{ 'icon-open': activeDropdown === item.title, 'icon-close': activeDropdown !== item.title }">
+              <span *ngIf="activeDropdown === item.title">&#9660;</span>
+              <span *ngIf="activeDropdown !== item.title">&#9654;</span>
+            </span>
+          </a>
+
+          <!-- Dropdown items -->
+          <ul *ngIf="activeDropdown === item.title && item.children" class="nav flex-column ms-3">
+            <li *ngFor="let child of item.children">
+              <a class="nav-link" [routerLink]="child.url" routerLinkActive="active"
+                (click)="closeDropdownOnSelect()">
+                {{ child.title }}
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col px-4 mt-4">
+          <router-outlet></router-outlet> <!-- Placeholder for routed components -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

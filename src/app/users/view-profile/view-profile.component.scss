@@ -1,0 +1,254 @@
+.professional-profile-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border-bottom: 1px solid #e6e6e6;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+  
+      .profile-image-wrapper {
+        flex-shrink: 0;
+        margin-bottom: 15px;
+  
+        .profile-image {
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 3px solid #007bff;
+        }
+  
+        input[type="file"] {
+          display: block;
+          padding: 5px;
+          font-size: 0.9em;
+        }
+      }
+  
+      .profile-info {
+        h1, h2 {
+          font-size: 2em;
+          color: #333;
+        }
+  
+        input[type="text"] {
+          font-size: 1.5em;
+          padding: 5px;
+          margin-bottom: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+  
+        .btn-edit {
+          padding: 10px 20px;
+          background-color: #007bff;
+          color: #fff;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          margin-top: 15px;
+  
+          &:hover {
+            background-color: #0056b3;
+          }
+        }
+      }
+    }
+  
+    .profile-bio {
+      margin-bottom: 20px;
+  
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+  
+      p {
+        color: #666;
+        line-height: 1.6;
+      }
+    }
+  
+    .profile-stats {
+      display: flex;
+      justify-content: space-around;
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+  
+      .stat-item {
+        text-align: center;
+  
+        h4 {
+          font-size: 1.8em;
+          color: #007bff;
+          margin-bottom: 5px;
+        }
+  
+        p {
+          font-size: 1em;
+          color: #777;
+        }
+      }
+    }
+  
+    .profile-social-links {
+      text-align: center;
+  
+      .social-icon {
+        margin: 0 10px;
+        font-size: 1.8em;
+        color: #666;
+        transition: color 0.3s;
+  
+        &:hover {
+          color: #007bff;
+        }
+  
+        &.linkedin {
+          color: #0077b5;
+        }
+  
+        &.github {
+          color: #333;
+        }
+  
+        &.twitter {
+          color: #1da1f2;
+        }
+      }
+    }
+  
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      max-width: 100%;
+      padding: 15px;
+  
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+  
+        .profile-image-wrapper {
+          margin-right: 0;
+          margin-bottom: 15px;
+  
+          .profile-image {
+            width: 120px;
+            height: 120px;
+          }
+        }
+  
+        .profile-info {
+          h1 {
+            font-size: 1.8em;
+          }
+  
+          h2 {
+            font-size: 1.1em;
+          }
+  
+          input[type="text"] {
+            font-size: 1.3em;
+          }
+  
+          .btn-edit {
+            padding: 8px 15px;
+            font-size: 0.9em;
+          }
+        }
+      }
+  
+      .profile-bio {
+        h3 {
+          font-size: 1.3em;
+        }
+  
+        p {
+          font-size: 0.9em;
+        }
+      }
+  
+      .profile-stats {
+        flex-direction: column;
+  
+        .stat-item {
+          margin-bottom: 15px;
+          
+          h4 {
+            font-size: 1.6em;
+          }
+  
+          p {
+            font-size: 0.9em;
+          }
+        }
+      }
+    }
+  
+    @media (max-width: 480px) {
+      .profile-header {
+        .profile-image-wrapper {
+          .profile-image {
+            width: 100px;
+            height: 100px;
+          }
+        }
+  
+        .profile-info {
+          h1 {
+            font-size: 1.5em;
+          }
+  
+          h2 {
+            font-size: 1em;
+          }
+  
+          input[type="text"] {
+            font-size: 1.2em;
+          }
+  
+          .btn-edit {
+            padding: 7px 12px;
+            font-size: 0.8em;
+          }
+        }
+      }
+  
+      .profile-bio {
+        h3 {
+          font-size: 1.2em;
+        }
+  
+        p {
+          font-size: 0.8em;
+        }
+      }
+  
+      .profile-stats {
+        padding: 15px;
+        
+        .stat-item {
+          h4 {
+            font-size: 1.4em;
+          }
+  
+          p {
+            font-size: 0.8em;
+          }
+        }
+      }
+    }
+  }
+  

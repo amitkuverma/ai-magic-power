@@ -1,0 +1,46 @@
+<div class="d-flex">
+  <button (click)="location.back()" class="mb-2"><span>&larr;</span> Back</button>
+</div>
+<div class="bg-primary text-white p-3">
+  <span>Friends Tree</span>
+</div>
+
+<!-- Loader when data is being fetched -->
+<div *ngIf="loading" class="loader">Loading...</div>
+
+<!-- Display the user tree -->
+<div class="user-network-container" *ngIf="!loading">
+  <ul class="user-tree">
+    <li *ngFor="let node of dataSource">
+      <div class="user-node" (click)="selectNode(node)">
+        <img [src]="node.profilePic" alt="{{ node.name }}" class="user-pic">
+        <div class="user-info">
+          <span class="user-name">{{ node.name }}</span>
+          <span class="user-email">{{ node.email }}</span>
+        </div>
+        <span *ngIf="node.referrals?.length" (click)="toggleNode(node)">
+          <strong>{{ node.expanded ? '-' : '+' }}</strong>
+        </span>
+      </div>
+      <ul *ngIf="node.expanded">
+        <li *ngFor="let referral of node.referrals">
+          <div class="user-node" (click)="selectNode(referral)">
+            <img [src]="referral.profilePic" alt="{{ referral.name }}" class="user-pic">
+            <div class="user-info">
+              <span class="user-name">{{ referral.name }}</span>
+              <span class="user-email">{{ referral.email }}</span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <!-- Sidebar/Details Panel for Selected Node -->
+  <div class="user-details-panel" *ngIf="selectedNode">
+    <h3>User Details</h3>
+    <p><strong>Name:</strong> {{ selectedNode.name }}</p>
+    <p><strong>Email:</strong> {{ selectedNode.email }}</p>
+    <p><strong>Mobile:</strong> {{ selectedNode.mobile }}</p>
+  </div>
+</div>

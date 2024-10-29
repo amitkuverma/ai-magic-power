@@ -1,0 +1,47 @@
+<div class="professional-profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-image-wrapper">
+        <img *ngIf="!editMode" src="{{ user.image }}" alt="Profile Picture" class="profile-image" />
+        <input *ngIf="editMode" type="file" (change)="onFileSelected($event)" />
+      </div>
+      <div class="profile-info">
+        <h1 *ngIf="!editMode">{{ user.name }}</h1>
+        <input *ngIf="editMode" type="text" [(ngModel)]="user.name" placeholder="Name" />
+        
+        <h2 *ngIf="!editMode">{{ user.profession }}</h2>
+        <input *ngIf="editMode" type="text" [(ngModel)]="user.profession" placeholder="Profession" />
+        
+        <p *ngIf="!editMode" class="location">{{ user.location }}</p>
+        <input *ngIf="editMode" type="text" [(ngModel)]="user.location" placeholder="Location" />
+  
+        <button class="btn-edit" (click)="toggleEditMode()">
+          {{ editMode ? 'Save Changes' : 'Edit Profile' }}
+        </button>
+      </div>
+    </div>
+  
+    <!-- Profile Bio -->
+    <div class="profile-bio">
+      <h3>About Me</h3>
+      <p *ngIf="!editMode">{{ user.bio }}</p>
+      <textarea *ngIf="editMode" [(ngModel)]="user.bio" placeholder="About Me"></textarea>
+    </div>
+  
+    <!-- Profile Statistics -->
+    <div class="profile-stats" *ngIf="!editMode">
+      <div class="stat-item">
+        <h4>{{ user.projects }}</h4>
+        <p>Projects</p>
+      </div>
+      <div class="stat-item">
+        <h4>{{ user.followers }}</h4>
+        <p>Followers</p>
+      </div>
+      <div class="stat-item">
+        <h4>{{ user.following }}</h4>
+        <p>Following</p>
+      </div>
+    </div>
+  </div>
+  

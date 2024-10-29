@@ -1,0 +1,36 @@
+.card {
+  background-color: var(--theme-color-dark) !important;
+  h5, h3, span {
+    color: var(--text-color) !important;
+  }
+}
+
+
+.bg-label-success {
+    background-color: #21965333!important;
+    color: #219653!important
+}
+
+.bg-label-danger {
+    background-color: #ffd2d2!important;
+    color: red!important
+}
+
+.bg-label-warning {
+    background-color: #ff9c0733!important;
+    color: #ffb849!important
+}
+
+.bg-label-primary {
+    background-color: #2f80ed33!important;
+    color: #0060ff!important
+}
+
+.bg-label-violate {
+    background-color: #4d21ff33!important;
+    color: #9181db!important
+}
+.card{
+    height: 100%;
+    box-shadow: 0 4px 8px var(--box-shadow-color) !important;
+}

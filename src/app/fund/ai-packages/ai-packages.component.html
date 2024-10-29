@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="card px-4 py-3 w-100">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h2>AI Packages</h2>
+        <p>Please select your package to activate your account.</p>
+      </div>
+      <h3><b>Deposit Wallet: </b><span class="text-primary">{{loginUserPayDetails?.depositWallet}}</span></h3>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div *ngFor="let pack of packages; let i = index" class="col-12 col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title">{{ pack.name }}</h5>
+          <hr />
+          <p class="card-text">AI Stake: {{ pack.stake }}</p>
+          <hr />
+          <p class="card-text">Commission: {{ pack.commission }}</p>
+          <hr />
+          <p class="card-text">Days: {{ pack.days }}</p>
+          <hr />
+          <button class="btn btn-primary" (click)="selectPackage(pack)" data-bs-toggle="modal"
+            data-bs-target="#packageModal">Select {{ pack.name }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="packageModalLabel">Selected Package: <span class="text-primary">{{
+              selectedPackage?.name }}</span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>AI Stake:</strong> {{ selectedPackage?.stake }}</p>
+          <p><strong>Commission:</strong> {{ selectedPackage?.commission }}</p>
+          <p><strong>Days:</strong> {{ selectedPackage?.days }}</p>
+          <div class="d-flex mb-3">
+            <label for="aiStake"><strong>Enter AI Stake</strong></label>
+            <input id="aiStake" [(ngModel)]="walletAmount" type="number" placeholder="Enter amount">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-secondary" (click)="closeModal()">Close</button>
+            <button type="submit" class="btn btn-success" (click)="submitPackage()">Start Trading</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

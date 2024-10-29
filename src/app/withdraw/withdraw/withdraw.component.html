@@ -1,0 +1,140 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="form-header text-uppercase">
+                        <!-- <i class="fa fa-address-book-o"></i> -->
+                        Withdrawal Request
+                    </h4>
+                    <form [formGroup]="bankTransferForm">
+
+                        <div class="alert alert-dismissible alert-icon-info" role="alert">
+                            <div class="alert-icon icon-part-info">
+                                <i class="icon-info"></i>
+                            </div>
+                            <div class="alert-message alert alert-info">
+                                <span><strong>Wallet Balance : </strong>{{userPaymentDetails?.totalAmount || 0}}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="transactionAmount" class="col-sm-2 col-form-label">Amount</label>
+                            <div class="input-group col-sm-10">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="" aria-hidden="true">$</i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" id="transactionAmount"
+                                    formControlName="transactionAmount" required="required">
+
+                            </div>
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-8">
+                                <div *ngIf="bankTransferForm.get('transactionAmount')?.invalid && bankTransferForm.get('transactionAmount')?.touched"
+                                    class="error-message text-danger">
+                                    Withdrawal amount is required and must be $5.
+                                </div>
+                                <div *ngIf="bankTransferForm.hasError('amountExceeds') && bankTransferForm.get('transactionAmount')?.touched"
+                                    class="error-message text-danger">
+                                    Withdrawal amount must not exceed total amount.
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="input-10" class="col-sm-2 col-form-label"></label>
+                            <div class="col-sm-10">
+
+                                <div class="alert alert-success alert-dismissible" role="alert">
+                                    <div class="alert-message">
+                                        <!-- <span><strong>TDS : </strong> 0% <span id="tdsAmount"></span></span> -->
+                                        <span><strong>Admin Charge : </strong> 5% <span id="acAmount"></span></span>
+                                        <span><strong>Net Amount : </strong> <span id="netAmount">$
+                                                {{userPaymentDetails?.totalAmount -
+                                                ((bankTransferForm.get('transactionAmount')?.value*5)/100) || 0}}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group row">
+                            <label for="input-10" class="col-sm-2 col-form-label">Transaction Password</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="transactionPassword"
+                                    name="transactionPassword" required="required">
+                            </div>
+                        </div> -->
+
+                        <div class="form-group row">
+                            <label for="basic-input" class="col-sm-2 col-form-label">Receive Wallet</label>
+                            <div class="col-sm-10">
+                                <div class="input-group mb-3 packageerror">
+                                    <select name="wallettype" id="wallettype" required="required" disabled
+                                        class="form-control valid" onchange="fetchwalletaddress();"
+                                        aria-invalid="false">
+                                        <option selected="selected" value="" disabled="disabled">Select Receive Wallet
+                                        </option>
+                                        <option selected="" value="1"
+                                            wallet="0xa151077453dbDc584c788766a205cea923836F30">USDT - BEP20</option>
+                                        <option value="2" wallet="">BEP20</option>
+                                        <option value="3" wallet="1">INR</option>
+                                    </select>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="packagemrp">
+                                            &nbsp;0xa151077453dbDc584c788766a205cea923836F30</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success" (click)="onSubmitWithdrawal()"
+                                [disabled]="bankTransferForm.invalid">
+                                Request</button>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div><!--End Row-->
+
+    <div *ngIf="!loading" class="card">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>USER ID</th>
+              <th>NAME</th>
+              <th>TYPE</th>
+              <th>WITHDRAWAL AMOUNT</th>
+              <th>STATUS</th>
+              <th>RECEIPT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+              <td>AI-100{{ payment?.userId }}</td>
+              <td class="text-capitalize">{{ payment?.userName }}</td>
+              <td class="text-capitalize">{{ payment?.paymentType }}</td>
+              <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
+              <td class="text-capitalize">{{ payment?.status }}</td>
+              <td>
+                  <a *ngIf="payment?.receipt" [href]="payment?.receipt" target="_blank" class="view_rec">{{"View Receipt"}}</a>
+                  <span *ngIf="!payment?.receipt">NA</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    
+        <!-- Pagination Controls -->
+        <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
+      </div>
+    
+
+</div>

@@ -1,0 +1,90 @@
+.manage-account-container {
+  margin: 0 auto;
+}
+
+.no-account-card {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.account-details {
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  table {
+    width: 100%;
+    tr {
+      border-top: 1px solid #f2f2f2;
+      th,
+      td {
+        width: 48%;
+        padding: 10px 0px;
+      }
+    }
+  }
+}
+
+.account-actions {
+  margin-top: 15px;
+  text-align: end;
+}
+
+.form-field {
+  margin-bottom: 15px;
+}
+
+.form-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: end;
+}
+
+.add-account-container {
+  text-align: end;
+  margin-top: 20px;
+}
+
+// button {
+//   padding: 10px 15px;
+//   border: none;
+//   background-color: #007bff;
+//   color: white;
+//   cursor: pointer;
+//   margin-right: 10px;
+// }
+
+// button:hover {
+//   background-color: #0056b3;
+// }
+
+// button[type='button'] {
+//   background-color: #dc3545;
+// }
+
+// button[type='button']:hover {
+//   background-color: #c82333;
+// }
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 123, 255, 0.2);
+  border-top-color: #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
