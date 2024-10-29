@@ -30,99 +30,123 @@ export const NavigationItems: NavigationItem[] = [
         title: 'Default',
         type: 'item',
         classes: 'nav-item',
-        url: '/dashboard/default',
+        url: '/dashboard',
         icon: 'dashboard',
         breadcrumbs: false
       }
     ]
   },
   {
-    id: 'authentication',
-    title: 'Authentication',
+    id: 'users',
+    title: 'Users',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'login',
-        title: 'Login',
+        id: 'userList',
+        title: 'All Users',
         type: 'item',
         classes: 'nav-item',
-        url: '/login',
-        icon: 'login',
-        target: true,
+        url: '/users',
+        icon: 'user',
         breadcrumbs: false
       },
       {
-        id: 'register',
-        title: 'Register',
+        id: 'change_password',
+        title: 'Change Password',
         type: 'item',
         classes: 'nav-item',
-        url: '/register',
-        icon: 'profile',
-        target: true,
+        url: '/change-password',
+        icon: 'password',
         breadcrumbs: false
       }
     ]
   },
   {
-    id: 'utilities',
-    title: 'UI Components',
+    id: 'crypto',
+    title: 'Crypto',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'typography',
-        title: 'Typography',
+        id: 'crypto_address',
+        title: 'Manage Crypto',
         type: 'item',
         classes: 'nav-item',
-        url: '/typography',
-        icon: 'font-size'
-      },
-      {
-        id: 'color',
-        title: 'Colors',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/color',
-        icon: 'bg-colors'
-      },
-      {
-        id: 'tabler',
-        title: 'Tabler',
-        type: 'item',
-        classes: 'nav-item',
-        url: 'https://ant.design/components/icon',
+        url: '/my-crypto',
         icon: 'ant-design',
-        target: true,
-        external: true
+        breadcrumbs: false
+      },      
+      {
+        id: 'cryptoList',
+        title: 'Users Crypto',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/uses-crypto',
+        icon: 'wallet',
+        breadcrumbs: false
       }
     ]
   },
-
   {
-    id: 'other',
-    title: 'Other',
+    id: 'withdrawal',
+    title: 'Withdrawal',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
-        id: 'sample-page',
-        title: 'Sample Page',
+        id: 'withdrawal',
+        title: 'Withdrawals',
         type: 'item',
-        url: '/sample-page',
         classes: 'nav-item',
-        icon: 'chrome'
+        url: '/withdrawals',
+        icon: 'ant-design',
+        breadcrumbs: false
       },
       {
-        id: 'document',
-        title: 'Document',
+        id: 'withdrawal-history',
+        title: 'Withdrawal History',
         type: 'item',
         classes: 'nav-item',
-        url: 'https://codedthemes.gitbook.io/mantis-angular/',
-        icon: 'question',
-        target: true,
-        external: true
+        url: '/withdrawal-history',
+        icon: 'wallet',
+        breadcrumbs: false
       }
     ]
-  }
+  },
+  {
+    id: 'deposit_wallet',
+    title: 'Deposit wallet',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'ai_package',
+        title: 'AI Package',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/ai-plans',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'add_funds',
+        title: 'Add Funds',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/funds',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'add_funds_history',
+        title: 'Add Funds History',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/fund-history',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+    ]
+  },
 ];

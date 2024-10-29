@@ -1,6 +1,6 @@
 <ul class="list-unstyled">
   <li class="pc-h-item">
-    <a class="pc-head-link me-0 bg-gray-200">
+    <a class="pc-head-link me-0 bg-gray-200" (click)="toggleTheme()">
       <i antIcon type="github" theme="outline"></i>
     </a>
   </li>
@@ -104,7 +104,7 @@
             <h6 class="mb-0">JWT User</h6>
             <span>UI/UX Designer</span>
           </div>
-          <a href="javascript:" class="bg-transparent"><i class="d-flex f-20" antIcon theme="outline" type="logout"></i></a>
+          <a href="javascript:" class="bg-transparent" (click)="logout()"><i class="d-flex f-20" antIcon theme="outline" type="logout"></i></a>
         </div>
       </div>
       <ul ngbNav #nav="ngbNav" class="nav drp-tabs nav-fill nav-tabs">
@@ -123,7 +123,7 @@
               </div>
             }
             <div>
-              <a class="dropdown-item">
+              <a class="dropdown-item" (click)="logout()">
                 <i class="text-muted" antIcon theme="outline" type="logout"></i>
                 <span>Logout</span>
               </a>

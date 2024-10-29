@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { CookieService } from 'src/serviceskie.service';
-import { PaymentService } from 'src/servicesment.service';
-import { TransactionService } from 'src/servicesnsaction.service';
 import { environment } from 'src/environments/environment';
+import { CookieService } from 'src/services/cookie.service';
+import { PaymentService } from 'src/services/payment.service';
+import { TransactionService } from 'src/services/transaction.service';
 
 @Component({
   selector: 'app-add-funds',

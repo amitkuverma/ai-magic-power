@@ -24,6 +24,8 @@ import {
   AntDesignOutline
 } from '@ant-design/icons-angular/icons';
 import { environment } from 'src/environments/environment.prod';
+import { CookieService } from 'src/services/cookie.service';
+import { NavigationUserItems } from '../navigation-user';
 
 @Component({
   selector: 'app-nav-content',
@@ -42,14 +44,15 @@ export class NavContentComponent implements OnInit {
   title = 'Demo application for version numbering';
   currentApplicationVersion = environment.appVersion;
 
-  navigation = NavigationItems;
+  navigation = this.cookies.isAdmin()? NavigationItems: NavigationUserItems;
   windowWidth = window.innerWidth;
 
   // Constructor
   constructor(
     private location: Location,
     private locationStrategy: LocationStrategy,
-    private iconService: IconService
+    private iconService: IconService,
+    private cookies: CookieService
   ) {
     this.iconService.addIcon(
       ...[
@@ -69,9 +72,9 @@ export class NavContentComponent implements OnInit {
 
   // Life cycle events
   ngOnInit() {
-    if (this.windowWidth < 1025) {
-      (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
-    }
+    // if (this.windowWidth < 1025) {
+    //   (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
+    // }
   }
 
   fireOutClick() {
@@ -99,9 +102,10 @@ export class NavContentComponent implements OnInit {
     }
   }
 
-  navMob() {
-    if (this.windowWidth < 1025 && document.querySelector('app-navigation.coded-navbar').classList.contains('mob-open')) {
-      this.NavCollapsedMob.emit();
-    }
-  }
+  // navMob() {
+  //   const navbar = document.querySelector('app-navigation.coded-navbar');
+  //   if (this.windowWidth < 1025 && navbar && navbar.classList.contains('mob-open')) {
+  //     this.NavCollapsedMob.emit();
+  //   }
+  // }
 }

@@ -2,7 +2,7 @@
   <div class="auth-wrapper v3">
     <div class="auth-form">
       <div class="auth-header">
-        <a href="javascript:"><img src="assets/images/logo-dark.svg" alt="logo img" /></a>
+        AI-Magic Power
       </div>
       <div class="card my-5">
         <div class="card-body">
@@ -10,74 +10,87 @@
             <h3 class="mb-0"><b>Sign up</b></h3>
             <a [routerLink]="['/login']" class="link-primary">Already have an account?</a>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group mb-3">
-                <label class="form-label" for="firstName">First Name*</label>
-                <input type="text" class="form-control" id="firstName" placeholder="First Name" />
+          <form [formGroup]="signupForm" (ngSubmit)="register()">
+            <div class="form-group mb-3">
+              <label class="form-label" for="name">User Name*</label>
+              <input type="text" class="form-control" formControlName="name" placeholder="User Name" />
+              <div *ngIf="signupForm.get('name')?.touched && signupForm.get('name')?.invalid" class="text-danger">
+                User name is required
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-group mb-3">
-                <label class="form-label" for="lastName">Last Name*</label>
-                <input type="text" class="form-control" id="lastName" placeholder="Last Name" />
+            <div class="form-group mb-3">
+              <label class="form-label" for="emailAddress">Email Address*</label>
+              <input type="email" class="form-control" formControlName="email" placeholder="Email Address" />
+              <div *ngIf="signupForm.get('email')?.touched && signupForm.get('email')?.invalid" class="text-danger">
+                Valid email is required
               </div>
             </div>
+            <div class="form-group mb-3">
+              <label class="form-label" for="password">Password*</label>
+              <input type="password" class="form-control" formControlName="password" placeholder="Password" />
+              <div *ngIf="signupForm.get('password')?.touched && signupForm.get('password')?.invalid" class="text-danger">
+                Password is required
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label class="form-label" for="mobile">Mobile Number*</label>
+              <input type="text" class="form-control" formControlName="mobile" placeholder="Mobile Number" />
+              <div *ngIf="signupForm.get('mobile')?.touched && signupForm.get('mobile')?.invalid" class="text-danger">
+                Valid mobile number is required
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label class="form-label" for="referralCode">Referral Code (Optional)</label>
+              <input type="text" class="form-control" formControlName="referralCode" placeholder="Referral Code" />
+            </div>
+
+            <p class="mt-4 text-sm text-muted">
+              By Signing up, you agree to our
+              <a href="javascript:" class="text-primary">Terms of Service</a>
+              and
+              <a href="javascript:" class="text-primary">Privacy Policy</a>
+            </p>
+
+            <div class="d-grid my-3">
+              <button type="submit" class="btn btn-primary" [disabled]="loading">Create Account</button>
+            </div>
+          </form>
+
+          <!-- Loader -->
+          <div *ngIf="loading" class="text-center mt-4">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </div>
-          <div class="form-group mb-3">
-            <label class="form-label" for="company">Company</label>
-            <input type="text" class="form-control" id="company" placeholder="Company" />
+
+          <!-- Error Message -->
+          <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+            {{ errorMessage }}
           </div>
-          <div class="form-group mb-3">
-            <label class="form-label" for="emailAddress">Email Address*</label>
-            <input type="email" class="form-control" id="emailAddress" placeholder="Email Address" />
+
+          <!-- Success Message -->
+          <div *ngIf="successMessage" class="alert alert-success mt-3">
+            {{ successMessage }}
           </div>
-          <div class="form-group mb-3">
-            <label class="form-label" for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Password" />
-          </div>
-          <p class="mt-4 text-sm text-muted">
-            By Signing up, you agree to our
-            <a href="javascript:" class="text-primary">Terms of Service</a>
-            and
-            <a href="javascript:" class="text-primary">Privacy Policy</a>
-          </p>
-          <div class="d-grid mt-3">
-            <button type="button" class="btn btn-primary">Create Account</button>
-          </div>
-          <div class="saprator mt-3">
+
+          <!-- <div class="saprator mt-3">
             <span>Sign up with</span>
-          </div>
-          <div class="row">
+          </div> -->
+
+          <!-- <div class="row">
+
             @for (item of SignUpOptions; track item) {
-              <div class="col-4">
-                <div class="d-grid">
-                  <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                    <img src="{{ item.image }}" alt="google img" />
-                    <span class="d-none d-sm-inline-block">{{ item.name }}</span>
-                  </button>
-                </div>
+            <div class="col-4">
+              <div class="d-grid">
+                <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
+                  <img src="{{ item.image }}" alt="Sign-up option img" />
+                  <span class="d-none d-sm-inline-block">{{ item.name }}</span>
+                </button>
               </div>
+            </div>
             }
-          </div>
+          </div> -->
         </div>
-      </div>
-      <div class="auth-footer row">
-        <!-- <div class=""> -->
-        <div class="col my-1">
-          <p class="m-0">
-            Copyright ©
-            <a href="https://codedthemes.com/" target="_blank">CodedThemes</a>
-          </p>
-        </div>
-        <div class="col-auto my-1">
-          <ul class="list-inline footer-link mb-0">
-            <li class="list-inline-item"><a href="https://codedthemes.com/" target="_blank">Home</a></li>
-            <li class="list-inline-item"><a href="https://codedthemes.com/privacy-policy/" target="_blank">Privacy Policy</a></li>
-            <li class="list-inline-item"><a href="https://codedthemes.support-hub.io/" target="_blank">Contact us</a></li>
-          </ul>
-        </div>
-        <!-- </div> -->
       </div>
     </div>
   </div>

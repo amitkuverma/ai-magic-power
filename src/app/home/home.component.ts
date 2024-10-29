@@ -9,5 +9,13 @@ import { RouterModule } from '@angular/router';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+  isNavOpen = false;
 
+  toggleNav() {
+    this.isNavOpen = !this.isNavOpen;
+  }
+
+  login() {
+    // Navigate to login or open login modal
+  }
 }

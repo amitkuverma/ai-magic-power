@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { Router, RouterModule } from '@angular/router';
 import {
@@ -28,14 +27,14 @@ import {
   UserDeleteOutline
 } from '@ant-design/icons-angular/icons';
 import { IconService } from '@ant-design/icons-angular';
-import { SharedModule } from '../../../shared/shared.module';
 import { UsersService } from 'src/services/users.service';
 import { ToastrService } from 'ngx-toastr';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 @Component({
   selector: 'app-user-table',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, NgxPaginationModule, SharedModule, RouterModule], // Import necessary modules directly
+  imports: [CommonModule, FormsModule, NgxPaginationModule, SharedModule, RouterModule], // Import necessary modules directly
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.scss']
 })
@@ -51,7 +50,9 @@ export class UserTableComponent implements OnInit {
   successMessage: string = '';
   isMenuOpen: { [key: number]: boolean } = {};
 
-  constructor(private usersService: UsersService, private iconService: IconService, private router: Router, private toastr: ToastrService) {
+  constructor(private usersService: UsersService, private iconService: IconService, private router: Router
+    // , private toastr: ToastrService
+  ) {
     this.iconService.addIcon(
       ...[
         CheckCircleOutline,
@@ -77,7 +78,7 @@ export class UserTableComponent implements OnInit {
       this.filteredUsers = data;
       this.totalItems = data.length;
       this.loading = false;
-      this.toastr.success('Users loaded successfully!', 'Success');
+      // this.toastr.success('Users loaded successfully!', 'Success');
     });
   }
 

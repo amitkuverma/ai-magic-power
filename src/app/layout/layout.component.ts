@@ -2,7 +2,6 @@ import { Component, EventEmitter, Inject, Input, Output, PLATFORM_ID } from '@an
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ThemeService } from 'src/services/theme.service';
-import { SharedModule } from '../../shared/shared.module';
 import { CookieService } from 'src/services/cookie.service';
 import { IconService } from '@ant-design/icons-angular';
 import {
@@ -27,6 +26,7 @@ import {
   MenuFoldOutline,
   MenuUnfoldOutline,
 } from '@ant-design/icons-angular/icons';
+import { SharedModule } from '../theme/shared/shared.module';
 
 @Component({
   selector: 'app-layout',
