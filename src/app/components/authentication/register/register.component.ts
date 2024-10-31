@@ -1,12 +1,13 @@
 // angular import
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from 'src/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { PaymentService } from 'src/services/payment.service';
 import { CookieService } from 'src/services/cookie.service';
+import * as bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-register',
@@ -35,11 +36,14 @@ export default class RegisterComponent {
   loading = false;
   errorMessage = '';
   successMessage = '';
+  userInfo: any;
+  @ViewChild('packageModal') packageModal!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private toastr: ToastrService,
     private paymentService: PaymentService,
     private cookiesSerrvice: CookieService
@@ -51,6 +55,13 @@ export default class RegisterComponent {
       password: ['', Validators.required],
       referralCode: [''] // Optional
     });
+    this.route.queryParamMap.subscribe((params) => {
+      const referralCode = params.get('referralCode');
+      if (referralCode) {
+        this.signupForm.get('referralCode')?.setValue(referralCode);
+        this.signupForm.get('referralCode')?.disable();
+      }
+    });
   }
 
   register() {
@@ -61,15 +72,16 @@ export default class RegisterComponent {
     this.loading = true; // Start loading
     this.errorMessage = '';
     this.successMessage = '';
-
+    this.signupForm.get('referralCode')?.enable();
     this.authService.register(this.signupForm.value).subscribe(
       (response) => {
+        this.userInfo = response;
         const login = {
-          email: this.signupForm.get('email').value,
+          userId: response.userId,
           password: this.signupForm.get('password').value
         }
         this.authService.login(login).subscribe(
-          res=>{
+          res => {
             this.cookiesSerrvice.setCookie('token', res.token, 1);
             const body = {
               userId: response.userId,
@@ -77,23 +89,43 @@ export default class RegisterComponent {
               status: 'create'
             }
             this.paymentService.createPayment(body).subscribe(
-              res=>{
+              res => {
                 this.loading = false; // Stop loading
-                this.toastr.success('Account created successfully!','Success');
+                const modal = new bootstrap.Modal(this.packageModal.nativeElement);
+                modal.show();
+                this.toastr.success('Account created successfully!', 'Success');
                 this.cookiesSerrvice.deleteCookie('token');
-                this.router.navigate(['/login']);                  
+                this.router.navigate(['/login']);
               }
             )
           }
         )
-
-      
-       
       },
       (error) => {
         this.loading = false; // Stop loading
         this.toastr.error('Registration failed. Please try again.', 'Error');
       }
     );
+  }
+
+  closeModal() {
+    const modalElement = document.getElementById('packageModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement); // Get the modal instance
+      if (modal) {
+        modal.hide(); // Hide the modal using Bootstrap's method
+      } else {
+        // If the modal is not instantiated, hide it manually
+        modalElement.classList.remove('show');
+        modalElement.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+
+        // Remove the backdrop if it exists
+        const modalBackdrop = document.querySelector('.modal-backdrop');
+        if (modalBackdrop) {
+          modalBackdrop.remove();
+        }
+      }
+    }
   }
 }

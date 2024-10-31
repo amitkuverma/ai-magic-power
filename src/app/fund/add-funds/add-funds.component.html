@@ -32,7 +32,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-            <td>AI-100{{ payment?.userId }}</td>
+            <td>{{ payment?.userId }}</td>
             <td class="text-capitalize">{{ payment?.userName }}</td>
             <td class="text-capitalize">{{ payment?.paymentType }}</td>
             <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
@@ -42,7 +42,8 @@
               <span *ngIf="!payment?.filepath">NA</span>
             </td>
             <td>
-              <button class="btn btn-primary" (click)="viewUserDetails(payment)">View Details</button>
+              <button class="btn btn-primary" data-bs-toggle="modal"
+              data-bs-target="#packageModal" (click)="viewUserDetails(payment)">View Details</button>
             </td>
           </tr>
         </tbody>
@@ -53,7 +54,7 @@
     </div>
   
     <!-- User Details Modal -->
-    <div *ngIf="selectedUser" class="modal fade show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+    <div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -61,10 +62,10 @@
             <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
           </div>
           <div class="modal-body">
-            <p><strong>Name:</strong> {{ selectedUser.userName }}</p>
-            <p><strong>Type:</strong> {{ selectedUser.paymentType }}</p>
-            <p><strong>Fund Ammount:</strong> {{ selectedUser.transactionAmount }}</p>
-            <p><strong>Status:</strong> {{ selectedUser.status }}</p>
+            <p><strong>Name:</strong> {{ selectedUser?.userName }}</p>
+            <p><strong>Type:</strong> {{ selectedUser?.paymentType }}</p>
+            <p><strong>Fund Ammount:</strong> {{ selectedUser?.transactionAmount }}</p>
+            <p><strong>Status:</strong> {{ selectedUser?.status }}</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" (click)="updateStatus('approved')">Approved</button>

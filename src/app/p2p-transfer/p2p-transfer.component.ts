@@ -23,8 +23,7 @@ export class P2pTransferComponent {
   transResult: any;
   userPaymentInfo: any;
   loginUser:any;
-
-  @ViewChild('shareDialog') shareDialog!: TemplateRef<any>;
+  InvaliedUser:string;
 
   constructor(
     private fb: FormBuilder,
@@ -35,12 +34,35 @@ export class P2pTransferComponent {
   ) {
     this.getAllUserPaymentDetails();
     this.internalTransferForm = this.fb.group({
-      receiverName: ['', Validators.required],
-      transactionAmount: ['', [Validators.required, Validators.min(1)]],
+      memberId: ['', Validators.required],
+      transactionAmount: ['', [Validators.required, Validators.min(5)]],
     });
 
     this.loadUsers();
     this.getUserPayment();
+    // this.internalTransferForm.get('memberId')?.valueChanges.subscribe(value => {
+    //   this.getUserData(value);
+    // });
+  }
+
+  onMemberIdBlur(): void {
+    const formattedId = this.internalTransferForm.get('memberId')?.value;
+    if (formattedId) {
+      this.getUserData(formattedId);
+    }
+  }
+
+  getUserData(formattedId: string): void {
+    console.log(this.userDetails);
+    
+    this.selectedUser = this.userDetails.find((user: any) => user.userId === formattedId);
+    if(this.selectedUser){
+      this.InvaliedUser = this.selectedUser.name
+    }else{
+      this.InvaliedUser = "Mamber Id not found."
+    }
+    console.log(this.selectedUser);
+    
   }
 
   loadUsers() {
@@ -86,22 +108,46 @@ export class P2pTransferComponent {
 
 
   validateTransactionAmount(control: AbstractControl) {
-    const totalAmount = control.get('totalAmount')?.value;
+    const earnWallet = this.userPaymentDetails?.earnWallet || 0;
     const transactionAmount = control.get('transactionAmount')?.value;
 
-    return transactionAmount <= totalAmount ? null : { amountExceeds: true };
+    return transactionAmount <= earnWallet ? null : { amountExceeds: true };
   }
 
   transactionAmountExceeds(): boolean {
-    const totalAmount = this.userPaymentDetails?.totalAmount || 0;
+    const earnWallet = this.userPaymentDetails?.earnWallet || 0;
     const transactionAmount = this.internalTransferForm.get('transactionAmount')?.value || 0;
-    return transactionAmount > totalAmount;
+    return transactionAmount > earnWallet;
   }
 
   openShareDialog() {
-    const selectedUserId = this.internalTransferForm.get('receiverName')?.value;
+    const selectedUserId = this.internalTransferForm.get('memberId')?.value;
     this.selectedUser = this.userDetails.find((user: any) => user.userId === selectedUserId);
-    // this.dialog.open(this.shareDialog);
+  }
+
+  closeModal() {
+    const modalElement = document.getElementById('packageModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement); // Get the modal instance
+      if (modal) {
+        modal.hide(); // Hide the modal using Bootstrap's method
+      } else {
+        // If the modal is not instantiated, hide it manually
+        modalElement.classList.remove('show');
+        modalElement.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+
+        // Remove the backdrop if it exists
+        const modalBackdrop = document.querySelector('.modal-backdrop');
+        if (modalBackdrop) {
+          modalBackdrop.remove();
+        }
+      }
+    }
+  }
+
+  formatId(id: number): string {
+    return 'AI' + id.toString().padStart(4, '0');
   }
 
   getAllUserPaymentDetails() {
@@ -118,10 +164,10 @@ export class P2pTransferComponent {
   }
 
   onInternalSubmit() {
-    const totalAmount = this.userPaymentDetails?.totalAmount || 0;
+    const earnWallet = this.userPaymentDetails?.earnWallet || 0;
     const transactionAmount = this.internalTransferForm.get('transactionAmount')?.value;
 
-    if (transactionAmount > totalAmount) {
+    if (transactionAmount > earnWallet) {
       // this.toastr.error('Transaction amount must not exceed total amount.', 'Error');
       return;
     }
@@ -129,26 +175,38 @@ export class P2pTransferComponent {
     const body = {
       userId: this.cookiesService.decodeToken().userId,
       userName: this.cookiesService.decodeToken().userName,
-      receiverName: this.internalTransferForm.get('receiverName')?.value,
+      receiverName: this.internalTransferForm.get('memberId')?.value,
       paymentType: 'internal',
       transactionAmount: transactionAmount
     };
 
-    const selectedUserId = this.internalTransferForm.get('receiverName')?.value;
+    const selectedUserId = this.internalTransferForm.get('memberId')?.value;
     const senderUser = this.userPaymentInfo.find((user: any) => user.userId === this.cookiesService.decodeToken().userId);
     const receiverUser = this.userPaymentInfo.find((user: any) => user.userId === selectedUserId);
-
-    body.receiverName = receiverUser.userName;
+    
     this.trancService.createTransaction(body).subscribe(
       (transUpdate) => {
-        senderUser.totalAmount -= transactionAmount;
-        receiverUser.totalAmount += transactionAmount;
+        senderUser.earnWallet -= transactionAmount;
+        receiverUser.earnWallet += transactionAmount;
         
         this.updateUserStatus(senderUser, receiverUser);
         const userInfo = this.userDetails.find((item: any) => item.userId === receiverUser.userId);
         
-        if (userInfo.status !== 'active' && receiverUser.totalAmount >= 300) {
+        if (userInfo.status !== 'active' && receiverUser.earnWallet >= 5) {
           this.activateUserIfTransferExceeds300(receiverUser);
+          this.userService.getUserById(this.selectedUser.userId).subscribe(
+            (resUser: any) => {
+              if (resUser.status === 'pending') {
+                this.userService.updateUserStatus(this.selectedUser.userId, "active").subscribe(
+                  resCre=>{
+                      console.log(resCre);
+                      
+                  }
+                )
+              }
+            }
+          )
+          this.closeModal();
         }
       },
       (error) => {

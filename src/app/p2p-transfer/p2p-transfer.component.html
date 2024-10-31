@@ -1,84 +1,65 @@
 <div class="transfer-card card">
-    <div class="card-body">
-      <form [formGroup]="internalTransferForm">
-        <div class="form-grid">
-          <!-- Total Amount Display -->
-          <div class="form-group">
-            <label for="totalAmount">Total Available Coin</label>
-            <input type="text" class="form-control" id="totalAmount" [value]="userPaymentDetails?.totalAmount" readonly>
-          </div>
-  
-          <!-- Receiver User (Dropdown) -->
-          <div class="form-group">
-            <label for="receiverName">Receiver Name</label>
-            <select formControlName="receiverName" id="receiverName" class="form-control">
-              <option *ngFor="let user of userDetails" [value]="user.userId">
-                {{ user.name }}
-              </option>
-            </select>
-            <div *ngIf="internalTransferForm.get('receiverName')?.invalid && internalTransferForm.get('receiverName')?.touched" class="text-danger">
-              Receiver User is required.
-            </div>
-          </div>
-  
-          <!-- Coin (Amount) -->
-          <div class="form-group">
-            <label for="transactionAmount">Enter Coin</label>
-            <input type="number" class="form-control" id="transactionAmount" formControlName="transactionAmount" placeholder="Enter transfer amount">
-            <div *ngIf="internalTransferForm.get('transactionAmount')?.invalid && internalTransferForm.get('transactionAmount')?.touched" class="text-danger">
-              Coin amount is required and must be greater than 0.
-            </div>
-            <div *ngIf="transactionAmountExceeds()" class="text-danger">
-              Transaction amount must not exceed total amount available.
-            </div>
+  <div class="card-body">
+    <form [formGroup]="internalTransferForm">
+      <div class="form-grid">
+        <!-- Total Amount Display -->
+        <div class="form-group">
+          <span for="totalAmount">Wallet Balance: </span>
+          {{userPaymentDetails?.earnWallet}}
+        </div>
+
+        <div class="form-group">
+          <label for="memberId">Member Id</label>
+          <input class="form-control" id="memberId" type="text" formControlName="memberId" placeholder="Enter Member Id"
+            (blur)="onMemberIdBlur()" />
+          <div *ngIf="InvaliedUser" [ngClass]="InvaliedUser =='Mamber Id not found.'?'text-danger':'text-primary'">
+            <strong>{{InvaliedUser}}</strong>
           </div>
         </div>
-  
-        <!-- Submit Button -->
-        <div class="d-flex justify-content-center">
-          <button type="button" class="btn btn-primary" (click)="openShareDialog()"
-            [disabled]="internalTransferForm.invalid || transactionAmountExceeds()">Confirm</button>
+
+        <!-- Coin (Amount) -->
+        <div class="form-group">
+          <label for="transactionAmount">Amount</label>
+          <input type="number" class="form-control" id="transactionAmount" formControlName="transactionAmount"
+            placeholder="Enter transfer amount">
+          <div
+            *ngIf="internalTransferForm.get('transactionAmount')?.invalid && internalTransferForm.get('transactionAmount')?.touched"
+            class="text-danger">
+            Amount is required.
+          </div>
+          <div *ngIf="transactionAmountExceeds()" class="text-danger">
+            Insufficient Balance.
+          </div>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#packageModal"
+          (click)="openShareDialog()"
+          [disabled]="internalTransferForm.invalid || transactionAmountExceeds()">Transfer</button>
+      </div>
+    </form>
   </div>
-  <ng-template #shareDialog>
-    <h2>Please verify the user details!</h2>
-    <div class="modal-body">
-      <div class="account-details-content">
-        <table class="table table-bordered account-details-table">
-          <tbody>
-            <tr>
-              <td>Name</td>
-              <td class="text-capitalize">{{ selectedUser.name }}</td>
-            </tr>
-            <tr>
-              <td>Email</td>
-              <td>{{ selectedUser.email }}</td>
-            </tr>
-            <tr>
-              <td>Mobile</td>
-              <td>{{ selectedUser.mobile }}</td>
-            </tr>
-            <tr>
-              <td>Verified</td>
-              <td>{{ selectedUser.emailVerified ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-              <td>Referral Code</td>
-              <td>{{ selectedUser.referralCode }}</td>
-            </tr>
-            <tr>
-              <td>Status</td>
-              <td class="text-capitalize">{{ selectedUser.status }}</td>
-            </tr>
-          </tbody>
-        </table>
+</div>
+<div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
+
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="packageModalLabel">P2P Wallet</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <p>Are you sure you want to transfer the amount?</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger w-48" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary w-48" (click)="onInternalSubmit()">Transfer</button>
       </div>
     </div>
-    <div class="modal-footer d-flex justify-content-between">
-      <button type="button" class="btn btn-danger w-48" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary w-48" (click)="onInternalSubmit()">Send</button>
-    </div>
-  </ng-template>
-  
+  </div>
+</div>

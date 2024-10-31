@@ -2,10 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 import { CookieService } from 'src/services/cookie.service';
 import { PaymentService } from 'src/services/payment.service';
 import { TransactionService } from 'src/services/transaction.service';
+import { UsersService } from 'src/services/users.service';
 
 @Component({
   selector: 'app-add-funds',
@@ -29,7 +31,9 @@ export class AddFundsComponent {
   selectedImage!: File;
   imagePreviewUrl!: any;
 
-  constructor(private transactionService: TransactionService, private cookies: CookieService, private paymentService: PaymentService) {
+  constructor(private transactionService: TransactionService, private cookies: CookieService, private paymentService: PaymentService,
+    private userService: UsersService, private toastr:ToastrService
+  ) {
     this.envImg = environment.IMAGE_URL
   }
 
@@ -54,8 +58,7 @@ export class AddFundsComponent {
         this.totalItems = userHistory.length;
       }
       this.loading = false;
-      this.successMessage = 'Fund history data loaded successfully!';
-      setTimeout(() => (this.successMessage = ''), 3000); // Clear success message after 3 seconds
+      this.toastr.success('Fund history data loaded successfully!');
     });
   }
 
@@ -70,10 +73,6 @@ export class AddFundsComponent {
 
   viewUserDetails(user: any): void {
     this.selectedUser = user;
-  }
-
-  closeModal(): void {
-    this.selectedUser = null;
   }
 
   onFileSelected(event: Event): void {
@@ -91,33 +90,43 @@ export class AddFundsComponent {
   updateStatus(status: any) {
     this.selectedUser.status = status;
     this.transactionService.updateTransaction(this.selectedUser, this.selectedUser.transId).subscribe(
-      (res) => {
+      (resTrans) => {
         if (status === 'approved') {
           this.paymentService.getUserReferrals(this.selectedUser.userId).subscribe(
-            res => {
-              console.log(this.selectedUser.transactionAmount);
-              
-              res.depositWallet = (parseFloat(res.depositWallet) + parseFloat(this.selectedUser.transactionAmount)).toFixed(2);
-              console.log(res)
-              this.paymentService.updateUserStatus(res, res.payId).subscribe(
+            resPay => {
+              resPay.depositWallet = (parseFloat(resPay.depositWallet) + parseFloat(this.selectedUser.transactionAmount)).toFixed(2);
+              this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
                 res => {
-                  this.successMessage = 'Fund added successfully!';
+                  this.userService.getUserById(this.selectedUser.userId).subscribe(
+                    (resUser: any) => {
+                      if (resUser.status === 'pending') {
+                        this.userService.updateUserStatus(this.selectedUser.userId, "active").subscribe(
+                          resCre=>{
+                              console.log(resCre);
+                              
+                          }
+                        )
+                      }
+                    }
+                  )
+                  this.closeModal();
+                  this.toastr.success('Fund added successfully!');
                   this.fetchTransactions();
                 },
                 error => {
-                  this.successMessage = 'Unable to add fund!';
+                  this.toastr.error('Unable to add fund!');
                   this.fetchTransactions();
 
                 }
               )
             },
             error => {
-              this.successMessage = 'Fund rejected successfully!';
+              this.toastr.error('Unable to add fund!');
             }
           )
 
         } else {
-          this.successMessage = 'Fund rejected successfully!';
+          this.toastr.error('Fund rejected successfully!');
         }
 
       },
@@ -125,5 +134,26 @@ export class AddFundsComponent {
         this.successMessage = 'Unable to update status';
       }
     )
+  }
+
+  closeModal() {
+    const modalElement = document.getElementById('packageModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap.Modal.getInstance(modalElement); // Get the modal instance
+      if (modal) {
+        modal.hide(); // Hide the modal using Bootstrap's method
+      } else {
+        // If the modal is not instantiated, hide it manually
+        modalElement.classList.remove('show');
+        modalElement.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+
+        // Remove the backdrop if it exists
+        const modalBackdrop = document.querySelector('.modal-backdrop');
+        if (modalBackdrop) {
+          modalBackdrop.remove();
+        }
+      }
+    }
   }
 }

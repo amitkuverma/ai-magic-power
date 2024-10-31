@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'src/services/cookie.service';
 import { TransactionService } from 'src/services/transaction.service';
 
@@ -23,7 +24,7 @@ export class AddFundHistoryComponent {
   totalItems: number = 0;
   successMessage: string = '';
 
-  constructor(private transactionService: TransactionService, private cookies: CookieService) { }
+  constructor(private transactionService: TransactionService, private cookies: CookieService, private toastr:ToastrService) { }
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -45,8 +46,7 @@ export class AddFundHistoryComponent {
         this.totalItems = userHistory.length;
       }
       this.loading = false;
-      this.successMessage = 'Fund data loaded successfully!';
-      setTimeout(() => (this.successMessage = ''), 3000); // Clear success message after 3 seconds
+      this.toastr.success('Fund data loaded successfully!');
     });
   }
 

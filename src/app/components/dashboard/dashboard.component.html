@@ -1597,62 +1597,90 @@
     </div>
 </div>
 
-<div class="row g-3 mb-3">
-    <div class="col-md-6 col-lg-4 col-xl-3">
+<div class="row g-3 mb-4">
+    <div class="col-12 col-md-6 col-lg-4">
         <div class="card radius-12">
-            <div class="card-body">
-                <div class="d-flex align-items-center gap-3">
-                    <h5 class="text-black mb-0 fs-16">Total Direct</h5>
-                </div>
-                <h3 class="text-black fw-semi-bold fs-30 my-3">{{totalDirect?.length || 0}}</h3>
-                <div class="pt-2">
-                    <div class="d-flex align-items-center gap-2 gap-xxl-3">
-                        <span class="fs-13 text-muted fw-medium">&nbsp;</span>
-                    </div>
+            <div class="card-body p-2">
+                <img class="profile-photo img-fluid"
+                    [src]="users?.filepath ? imageUrl + users?.filepath :'../../../assets/images/avtar.jpg'"
+                    alt="User Photo" />
+                <div class="id-info">
+                    <hr />
+                    <p class="mt-3 mb-0"><strong>User ID:</strong> {{ users?.userId }}</p>
+                    <hr />
+                    <p class="mt-2 mb-0 text-capitalize"><strong>Name:</strong> {{ users?.name }}</p>
+                    <hr />
+                    <p class="mt-2 mb-0"><strong>Sponsor:</strong> {{ users?.parentUserId || 'NA' }}</p>
+                    <hr />
+                    <p class="mt-2 mb-0"><strong>Mobile:</strong> {{ users?.mobile }}</p>
+                    <hr />
+                    <p class="mt-2 mb-0"><strong>Joining Date:</strong> {{ users?.createdAt | date:'short' }}</p>
+                    <hr />
+                    <p class="mt-2 mb-0"><strong>Active Date:</strong> {{ users?.updatedAt | date:'short' }}</p>
+                    <hr />
+                    <p class="mt-2 mb-0 text-capitalize"><strong>Status:</strong> {{ users?.status }}</p>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6 col-lg-4 col-xl-3">
-        <div class="card radius-12">
-            <div class="card-body">
-                <div class="d-flex align-items-center gap-3">
-                    <h5 class="text-black mb-0 fs-16">Active Direct</h5>
-                </div>
-                <h3 class="text-black fw-semi-bold fs-30 my-3">{{activeDirect?.length || 0}}</h3>
-                <div class="pt-2">
-                    <div class="d-flex align-items-center gap-2 gap-xxl-3">
-                        <span class="fs-13 text-muted fw-medium">&nbsp;</span>
+    <div class="col-12 col-md-6 col-lg-8">
+        <div class="row g-3 mb-3">
+            <div class="col-6">
+                <div class="card radius-12">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3">
+                            <h5 class="text-black mb-0 fs-16">Total Direct</h5>
+                        </div>
+                        <h3 class="text-black fw-semi-bold fs-30 my-3">{{totalDirect?.length || 0}}</h3>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-lg-4 col-xl-3">
-        <div class="card radius-12">
-            <div class="card-body">
-                <div class="d-flex align-items-center gap-3">
-                    <h5 class="text-black mb-0 fs-16">Total Team</h5>
-                </div>
-                <h3 class="text-black fw-semi-bold fs-30 my-3">{{totalTeam?.length || 0}}</h3>
-                <div class="pt-2">
-                    <div class="d-flex align-items-center gap-2 gap-xxl-3">
-                        <span class="fs-13 text-muted fw-medium">&nbsp;</span>
+            <div class="col-6">
+                <div class="card radius-12">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3">
+                            <h5 class="text-black mb-0 fs-16">Active Direct</h5>
+                        </div>
+                        <h3 class="text-black fw-semi-bold fs-30 my-3">{{activeDirect?.length || 0}}</h3>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-md-6 col-lg-4 col-xl-3">
-        <div class="card radius-12">
-            <div class="card-body">
-                <div class="d-flex align-items-center gap-3">
-                    <h5 class="text-black mb-0 fs-16">Active Team</h5>
+            <div class="col-6">
+                <div class="card radius-12">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3">
+                            <h5 class="text-black mb-0 fs-16">Total Team</h5>
+                        </div>
+                        <h3 class="text-black fw-semi-bold fs-30 my-3">{{totalTeam || 0}}</h3>
+                    </div>
                 </div>
-                <h3 class="text-black fw-semi-bold fs-30 my-3">{{activeTeam?.length || 0}}</h3>
-                <div class="pt-2">
-                    <div class="d-flex align-items-center gap-2 gap-xxl-3">
-                        <span class="fs-13 text-muted fw-medium">&nbsp;</span>
+            </div>
+            <div class="col-6">
+                <div class="card radius-12">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center gap-3">
+                            <h5 class="text-black mb-0 fs-16">Active Team</h5>
+                        </div>
+                        <h3 class="text-black fw-semi-bold fs-30 my-3">{{activeTeam?.length || 0}}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12" *ngIf="!cookies.isAdmin()">
+                <div class="card radius-12">
+                    <div class="card-body">
+                        Withdrawal Balance
+                        <p>${{paymentInfo?.earnWallet || 0}}</p>
+                        <hr />
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-danger" routerLink="/"><i antIcon type="Plus"
+                                    theme="outline"></i>Withdraw</button>
+                            <button class="btn btn-primary" routerLink="/"><i antIcon type="send"
+                                    theme="outline"></i>Send P2P</button>
+                            <button class="btn btn-success" routerLink="/"><i antIcon type="bank"
+                                    theme="outline"></i>Deposit</button>
+                            <button class="btn btn-warning" (click)="copyToClipboard(users.referralCode)"><i antIcon
+                                    type="share" theme="outline"></i>Share</button>
+                        </div>
                     </div>
                 </div>
             </div>

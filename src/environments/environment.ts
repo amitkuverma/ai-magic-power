@@ -7,6 +7,7 @@ import packageInfo from '../../package.json';
 export const environment = {
   API_URL:'http://localhost:8082/api',
   IMAGE_URL:'http://localhost:8082/',
+  UI_URL:'https://aimagicpower.com/',
   appVersion: packageInfo.version,
   production: false
 };

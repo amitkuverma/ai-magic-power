@@ -90,6 +90,30 @@ const routes: Routes = [
         loadComponent: () => import('./fund/add-fund-history/add-fund-history.component').then((c) => c.AddFundHistoryComponent)
       },
       {
+        path: 'ai-report',
+        loadComponent: () => import('./income/ai-income/ai-income.component').then((c) => c.AiIncomeComponent)
+      },
+      {
+        path: 'daily-report',
+        loadComponent: () => import('./income/daily-income/daily-income.component').then((c) => c.DailyIncomeComponent)
+      },
+      {
+        path: 'leadership-report',
+        loadComponent: () => import('./income/leadership-income/leadership-income.component').then((c) => c.LeadershipIncomeComponent)
+      },
+      {
+        path: 'royalty-report',
+        loadComponent: () => import('./income/royalty-report/royalty-report.component').then((c) => c.RoyaltyReportComponent)
+      },
+      {
+        path: 'super-rewards',
+        loadComponent: () => import('./income/super-rewards/super-rewards.component').then((c) => c.SuperRewardsComponent)
+      },
+      {
+        path: 'star-report',
+        loadComponent: () => import('./income/star-income/star-income.component').then((c) => c.StarIncomeComponent)
+      },
+      {
         path: 'payment-status/:userId',
         loadComponent: () => import('./account/payment-status/payment-status.component').then((c) => c.PaymentStatusComponent)
       },

@@ -163,11 +163,29 @@ export const NavigationUserItems: NavigationItem[] = [
     icon: 'icon-navigation',
     children: [
       {
-        id: 'super_rewards',
-        title: 'Super Rewards',
+        id: 'ai_report',
+        title: 'AI Report',
         type: 'item',
         classes: 'nav-item',
-        url: '/super-rewards',
+        url: '/ai-report',
+        icon: 'wallet',
+        breadcrumbs: false
+      },
+      {
+        id: 'daily_report',
+        title: 'Daily Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/daily-report',
+        icon: 'wallet',
+        breadcrumbs: false
+      },
+      {
+        id: 'leadership_report',
+        title: 'Leaership Income Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/leadership-report',
         icon: 'wallet',
         breadcrumbs: false
       },
@@ -177,6 +195,24 @@ export const NavigationUserItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/royalty-report',
+        icon: 'wallet',
+        breadcrumbs: false
+      },
+      {
+        id: 'super_report',
+        title: 'Super Rewaeds',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/super-rewards',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'star_report',
+        title: 'Star Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/star-report',
         icon: 'ant-design',
         breadcrumbs: false
       }

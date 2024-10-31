@@ -43,7 +43,7 @@ export default class LoginComponent {
     private cookieService: CookieService
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      userId: ['', [Validators.required]],
       password: ['', Validators.required]
     });
   }

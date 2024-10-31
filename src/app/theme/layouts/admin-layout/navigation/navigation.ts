@@ -121,15 +121,6 @@ export const NavigationItems: NavigationItem[] = [
     icon: 'icon-navigation',
     children: [
       {
-        id: 'ai_package',
-        title: 'AI Package',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/ai-plans',
-        icon: 'ant-design',
-        breadcrumbs: false
-      },
-      {
         id: 'add_funds',
         title: 'Add Funds',
         type: 'item',

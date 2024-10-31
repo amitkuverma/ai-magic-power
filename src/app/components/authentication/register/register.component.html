@@ -28,7 +28,8 @@
             <div class="form-group mb-3">
               <label class="form-label" for="password">Password*</label>
               <input type="password" class="form-control" formControlName="password" placeholder="Password" />
-              <div *ngIf="signupForm.get('password')?.touched && signupForm.get('password')?.invalid" class="text-danger">
+              <div *ngIf="signupForm.get('password')?.touched && signupForm.get('password')?.invalid"
+                class="text-danger">
                 Password is required
               </div>
             </div>
@@ -52,7 +53,8 @@
             </p>
 
             <div class="d-grid my-3">
-              <button type="submit" class="btn btn-primary" [disabled]="loading">Create Account</button>
+              <button type="submit" class="btn btn-primary" [disabled]="loading" data-bs-toggle="modal"
+                data-bs-target="#packageModal">Create Account</button>
             </div>
           </form>
 
@@ -72,25 +74,27 @@
           <div *ngIf="successMessage" class="alert alert-success mt-3">
             {{ successMessage }}
           </div>
-
-          <!-- <div class="saprator mt-3">
-            <span>Sign up with</span>
-          </div> -->
-
-          <!-- <div class="row">
-
-            @for (item of SignUpOptions; track item) {
-            <div class="col-4">
-              <div class="d-grid">
-                <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
-                  <img src="{{ item.image }}" alt="Sign-up option img" />
-                  <span class="d-none d-sm-inline-block">{{ item.name }}</span>
-                </button>
-              </div>
-            </div>
-            }
-          </div> -->
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="packageModalLabel">Welcome {{userInfo.name}} 😊</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <p class="modal-title" id="packageModalLabel">Thank you for selecting AI Magic Power Family !!!</p>
+          <p>Please rember you MenmerId {{userInfo.userId}}</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary w-48" routerLink="/login" (click)="closeModal()">Go to Login</button>
       </div>
     </div>
   </div>

@@ -34,3 +34,9 @@
     height: 100%;
     box-shadow: 0 4px 8px var(--box-shadow-color) !important;
 }
+p{
+    strong{
+        min-width: 100px;
+        display: inline-block;
+    }
+}
