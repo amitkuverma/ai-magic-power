@@ -38,6 +38,7 @@ export default class RegisterComponent {
   successMessage = '';
   userInfo: any;
   @ViewChild('packageModal') packageModal!: ElementRef;
+  private modalInstance: any;
 
   constructor(
     private fb: FormBuilder,
@@ -62,6 +63,34 @@ export default class RegisterComponent {
         this.signupForm.get('referralCode')?.disable();
       }
     });
+  }
+
+  ngAfterViewInit() {
+    this.initializeModal();
+  }
+
+  initializeModal() {
+    const modalElement = this.packageModal.nativeElement;
+    if (modalElement) {
+      this.modalInstance = new bootstrap.Modal(modalElement);
+    }
+  }
+
+  openModal() {
+    if (this.modalInstance) {
+      this.modalInstance.show();
+    } else {
+      console.error('Modal instance is not initialized.');
+    }
+  }
+
+  closeModal() {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+      this.router.navigate(['/login'])
+    } else {
+      console.error('Modal instance is not initialized.');
+    }
   }
 
   register() {
@@ -91,11 +120,9 @@ export default class RegisterComponent {
             this.paymentService.createPayment(body).subscribe(
               res => {
                 this.loading = false; // Stop loading
-                const modal = new bootstrap.Modal(this.packageModal.nativeElement);
-                modal.show();
+                this.openModal();
                 this.toastr.success('Account created successfully!', 'Success');
                 this.cookiesSerrvice.deleteCookie('token');
-                this.router.navigate(['/login']);
               }
             )
           }
@@ -106,26 +133,5 @@ export default class RegisterComponent {
         this.toastr.error('Registration failed. Please try again.', 'Error');
       }
     );
-  }
-
-  closeModal() {
-    const modalElement = document.getElementById('packageModal');
-    if (modalElement) {
-      const modal = (window as any).bootstrap.Modal.getInstance(modalElement); // Get the modal instance
-      if (modal) {
-        modal.hide(); // Hide the modal using Bootstrap's method
-      } else {
-        // If the modal is not instantiated, hide it manually
-        modalElement.classList.remove('show');
-        modalElement.setAttribute('aria-hidden', 'true');
-        document.body.classList.remove('modal-open');
-
-        // Remove the backdrop if it exists
-        const modalBackdrop = document.querySelector('.modal-backdrop');
-        if (modalBackdrop) {
-          modalBackdrop.remove();
-        }
-      }
-    }
   }
 }

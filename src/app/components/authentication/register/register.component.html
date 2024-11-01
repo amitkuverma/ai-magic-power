@@ -53,8 +53,7 @@
             </p>
 
             <div class="d-grid my-3">
-              <button type="submit" class="btn btn-primary" [disabled]="loading" data-bs-toggle="modal"
-                data-bs-target="#packageModal">Create Account</button>
+              <button type="submit" class="btn btn-primary" [disabled]="loading">Create Account</button>
             </div>
           </form>
 
@@ -80,21 +79,21 @@
   </div>
 </div>
 
-<div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
+<div class="modal fade" id="packageModal" #packageModal tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="packageModalLabel">Welcome {{userInfo.name}} 😊</h5>
+        <h5 class="modal-title" id="packageModalLabel">Welcome {{userInfo?.name}} 😊</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div>
           <p class="modal-title" id="packageModalLabel">Thank you for selecting AI Magic Power Family !!!</p>
-          <p>Please rember you MenmerId {{userInfo.userId}}</p>
+          <p>Please rember you MenmerId {{userInfo?.userId}}</p>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary w-48" routerLink="/login" (click)="closeModal()">Go to Login</button>
+        <button type="button" class="btn btn-primary w-48" (click)="closeModal()">Go to Login</button>
       </div>
     </div>
   </div>
