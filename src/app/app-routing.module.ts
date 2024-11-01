@@ -114,6 +114,10 @@ const routes: Routes = [
         loadComponent: () => import('./income/star-income/star-income.component').then((c) => c.StarIncomeComponent)
       },
       {
+        path: 'plan-pdf',
+        loadComponent: () => import('./pdf/pdf.component').then((c) => c.PdfComponent)
+      },
+      {
         path: 'payment-status/:userId',
         loadComponent: () => import('./account/payment-status/payment-status.component').then((c) => c.PaymentStatusComponent)
       },
@@ -132,7 +136,8 @@ const routes: Routes = [
         loadComponent: () => import('./components/authentication/register/register.component')
       }
     ]
-  }
+  },
+  { path:'**', redirectTo:'/'}
 ];
 
 @NgModule({
