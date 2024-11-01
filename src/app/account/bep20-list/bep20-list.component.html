@@ -29,7 +29,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let user of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-            <td>AI-100{{ user.userId }}</td>
+            <td>{{ user.userId }}</td>
             <td>{{ user.userName }}</td>
             <td>{{ user.accountNumber }}</td>
             <td>

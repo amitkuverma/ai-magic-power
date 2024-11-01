@@ -31,7 +31,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-            <td>AI-100{{ payment?.userId }}</td>
+            <td>{{ payment?.userId }}</td>
             <td class="text-capitalize">{{ payment?.userName }}</td>
             <td class="text-capitalize">{{ payment?.paymentType }}</td>
             <td class="text-capitalize">{{ payment?.transactionAmount }}</td>

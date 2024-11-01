@@ -8,12 +8,14 @@ import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import { PlusOutline, SendOutline, BankOutline, ShareAltOutline } from '@ant-design/icons-angular/icons';
 import { IconService } from '@ant-design/icons-angular';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { Router } from '@angular/router';
 
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SharedModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -29,7 +31,7 @@ export class DashboardComponent {
   imageUrl: any;
 
   constructor(private paymentService: PaymentService, public cookies: CookieService, private usersService: UsersService,
-    private clipboard: Clipboard, private toastr: ToastrService, private iconService: IconService
+    private clipboard: Clipboard, private toastr: ToastrService, private iconService: IconService, private router: Router
   ) {
     this.loadPayment();
     this.fetchUsers();
@@ -45,8 +47,6 @@ export class DashboardComponent {
     this.usersService.getUsers().subscribe(
       (res) => {
         this.userInfo = res.filter((item: any) => item.userId === this.cookies.decodeToken().userId);
-        this.totalDirect = res.filter((item: any) => item.status === 'direct');
-        this.activeDirect = res.filter((item: any) => item.status === 'active_direct');
       },
 
       (error: any) => {
@@ -67,17 +67,28 @@ export class DashboardComponent {
         }
       )
     }
-
   }
 
   fetchUsers(): void {
     this.usersService.getUserReferrals(this.cookies.decodeToken().userId).subscribe((data: any) => {
       this.users = data.user;
-      console.log(this.users)
+      console.log(this.users)      
+      this.totalDirect = data.referrals.filter((item: any) => item.parentUserId === this.users.userId);
+      this.activeDirect = data.referrals.filter((item: any) => item.status === 'active' && item.parentUserId === this.users.userId);
       this.filteredUsers = data.referrals;
       this.totalTeam = data.referrals.length;
       this.activeTeam = data.referrals.filter((item: any) => item.status === 'active');
     });
+  }
+
+  withdrawal(){
+    this.router.navigate(['/withdrawal']);
+  }
+  p2p(){
+    this.router.navigate(['/transfer']);
+  }
+  addFund(){
+    this.router.navigate(['/fund']);
   }
   copyToClipboard(text: any) {
     this.clipboard.copy(`${environment.UI_URL}register?referralCode=${text}`);

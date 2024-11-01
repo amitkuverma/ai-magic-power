@@ -1614,9 +1614,9 @@
                     <hr />
                     <p class="mt-2 mb-0"><strong>Mobile:</strong> {{ users?.mobile }}</p>
                     <hr />
-                    <p class="mt-2 mb-0"><strong>Joining Date:</strong> {{ users?.createdAt | date:'short' }}</p>
+                    <p class="mt-2 mb-0"><strong>Joining Date:</strong> {{ users?.joiningDate | date:'short' }}</p>
                     <hr />
-                    <p class="mt-2 mb-0"><strong>Active Date:</strong> {{ users?.updatedAt | date:'short' }}</p>
+                    <p class="mt-2 mb-0"><strong>Active Date:</strong> {{ users?.activeDate | date:'short' }}</p>
                     <hr />
                     <p class="mt-2 mb-0 text-capitalize"><strong>Status:</strong> {{ users?.status }}</p>
                 </div>
@@ -1668,18 +1668,23 @@
             <div class="col-12" *ngIf="!cookies.isAdmin()">
                 <div class="card radius-12">
                     <div class="card-body">
-                        Withdrawal Balance
-                        <p>${{paymentInfo?.earnWallet || 0}}</p>
+                        <b>Withdrawal Balance:</b> <strong class="text-primary"> ${{paymentInfo?.earnWallet || 0}}</strong>
                         <hr />
                         <div class="d-flex justify-content-between">
-                            <button class="btn btn-danger" routerLink="/"><i antIcon type="Plus"
-                                    theme="outline"></i>Withdraw</button>
-                            <button class="btn btn-primary" routerLink="/"><i antIcon type="send"
-                                    theme="outline"></i>Send P2P</button>
-                            <button class="btn btn-success" routerLink="/"><i antIcon type="bank"
-                                    theme="outline"></i>Deposit</button>
+                            <button class="btn btn-danger" (click)="withdrawal()">
+                                <i antIcon type="plus" theme="outline"></i>
+                                Withdraw
+                            </button>
+                            <button class="btn btn-primary" (click)="p2p()">
+                                <i antIcon type="send"  theme="outline"></i>
+                                    Send P2P
+                                </button>
+                            <button class="btn btn-success" (click)="addFund()">
+                                <i antIcon type="bank" theme="outline"></i>
+                                Deposit
+                            </button>
                             <button class="btn btn-warning" (click)="copyToClipboard(users.referralCode)"><i antIcon
-                                    type="share" theme="outline"></i>Share</button>
+                                    type="share-alt" theme="outline"></i>Share</button>
                         </div>
                     </div>
                 </div>

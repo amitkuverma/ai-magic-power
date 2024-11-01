@@ -100,6 +100,7 @@ export class AddFundsComponent {
                   this.userService.getUserById(this.selectedUser.userId).subscribe(
                     (resUser: any) => {
                       if (resUser.status === 'pending') {
+                        resUser.activeDate = new Date();
                         this.userService.updateUserStatus(this.selectedUser.userId, "active").subscribe(
                           resCre=>{
                             this.userService.getParentReferralChain(this.selectedUser.userId).subscribe(resRefParent => {
