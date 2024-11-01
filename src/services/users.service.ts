@@ -38,8 +38,8 @@ export class UsersService {
         return this.http.get(`${environment.API_URL}/referral-chain/${this.cookiesService.decodeToken().userId}`);
     }
 
-    getPagentReferralChain(): Observable<any> {
-        return this.http.get(`${environment.API_URL}/referral-parent/${this.cookiesService.decodeToken().userId}`);
+    getParentReferralChain(userId:any): Observable<any> {
+        return this.http.get(`${environment.API_URL}/referral-parent/${userId}`);
     }
     
     getChildrenReferralChain(): Observable<any> {

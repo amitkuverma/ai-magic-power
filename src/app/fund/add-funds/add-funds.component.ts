@@ -102,8 +102,33 @@ export class AddFundsComponent {
                       if (resUser.status === 'pending') {
                         this.userService.updateUserStatus(this.selectedUser.userId, "active").subscribe(
                           resCre=>{
-                              console.log(resCre);
-                              
+                            this.userService.getParentReferralChain(this.selectedUser.userId).subscribe(resRefParent => {
+                              switch (resRefParent.length) {
+                                case 1:
+                                  console.log("Case 1");
+                                  this.handleReferralPercentage(resRefParent, 5);
+                                  break;
+                                case 2:
+                                  console.log("Case 2");
+                                  this.handleReferralPercentage(resRefParent, 3);
+                                  break;
+                                case 3:
+                                  console.log("Case 3");
+                                  this.handleReferralPercentage(resRefParent, 2);
+                                  break;
+                                case 4:
+                                  console.log("Case 4");
+                                  this.handleReferralPercentage(resRefParent, 1);
+                                  break;
+                                case (resRefParent.length >= 5 && resRefParent.length <= 10):
+                                  console.log("Case 5-10");
+                                  this.handleReferralPercentage(resRefParent, 0.5);
+                                  break;
+                                default:
+                                  console.log("No match found");
+                                  break;
+                              }
+                            });                           
                           }
                         )
                       }
@@ -134,6 +159,28 @@ export class AddFundsComponent {
         this.successMessage = 'Unable to update status';
       }
     )
+  }
+
+  handleReferralPercentage(referrals: any[], percentage: number) {
+    referrals.forEach((referral, i) => {
+      this.paymentService.getUserReferrals(referral.userId).subscribe(resPay => {
+        const depositAmount = parseFloat(resPay.depositWallet) || 0;
+        const additionalAmount = (depositAmount * (percentage / 100)).toFixed(2);
+        resPay.depositWallet = (depositAmount + parseFloat(additionalAmount)).toFixed(2);
+        
+        console.log(`Updated deposit for referral ${i + 1}: ${resPay.depositWallet}`);
+        
+        // Now save the updated payment status
+        this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
+          response => {
+            console.log(`Payment status updated successfully for payId ${resPay.payId}`);
+          },
+          error => {
+            console.error(`Failed to update payment status for payId ${resPay.payId}:`, error);
+          }
+        );
+      });
+    });
   }
 
   closeModal() {
