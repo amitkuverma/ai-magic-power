@@ -3,18 +3,20 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
+import { AIEarningService } from 'src/services/ai-earning.service';
 import { CookieService } from 'src/services/cookie.service';
+import { PaymentService } from 'src/services/payment.service';
 import { TransactionService } from 'src/services/transaction.service';
+import { UsersService } from 'src/services/users.service';
 
 @Component({
-  selector: 'app-daily-income',
+  selector: 'app-earn-wallet-report',
   standalone: true,
-  imports:  [CommonModule, FormsModule, NgxPaginationModule],
-  templateUrl: './daily-income.component.html',
-  styleUrl: './daily-income.component.scss'
+  imports: [CommonModule, FormsModule, NgxPaginationModule],
+  templateUrl: './earn-wallet-report.component.html',
+  styleUrl: './earn-wallet-report.component.scss'
 })
-export class DailyIncomeComponent {
-
+export class EarnWalletReportComponent {
   transInfo: any[] = [];
   filteredTrans: any[] = [];
   searchQuery: string = '';
@@ -24,8 +26,9 @@ export class DailyIncomeComponent {
   itemsPerPage: number = 10;
   totalItems: number = 0;
   successMessage: string = '';
+  totalDepositWallet: string = '';
 
-  constructor(private transactionService: TransactionService, public cookies: CookieService, private toastr:ToastrService) { }
+  constructor(private paymentServices: PaymentService, public cookies: CookieService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -33,24 +36,29 @@ export class DailyIncomeComponent {
 
   fetchUsers(): void {
     this.loading = true;
-    this.transactionService.getAllTransaction().subscribe((data: any) => {
-      if (this.cookies.isAdmin()) {
-        const adminHistory = data.filter((item:any) => item.paymentType === 'daily' );
+    this.paymentServices.getAllReferUser().subscribe(
+      (data: any) => {
+        const adminHistory = data.filter(item=> item.status !== 'admin');
+  
+        // Calculate total depositWallet
+        const totalDepositWallet = adminHistory.reduce((total: number, item: any) => {
+          return total + parseFloat(item.earnWallet);
+        }, 0);
+  
         this.transInfo = adminHistory;
         this.filteredTrans = adminHistory;
         this.totalItems = adminHistory.length;
-
-      } else {
-        const userHistory = data.filter((item:any) => item.userId === this.cookies.decodeToken().userId && item.paymentType === 'daily' );
-        this.transInfo = userHistory
-        this.filteredTrans = userHistory;
-        this.totalItems = userHistory.length;
+        this.totalDepositWallet = totalDepositWallet; // Store the total for display
+        this.loading = false;
+        this.toastr.success('Earn wallet report loaded successfully!');
+      },
+      (error: any) => {
+        this.loading = false;
+        this.toastr.error(error.error.message);
       }
-      this.loading = false;
-      this.toastr.success('Fund data loaded successfully!');
-    });
+    );
   }
-
+  
   filterUsers() {
     this.filteredTrans = this.transInfo.filter(
       (user) =>

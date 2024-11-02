@@ -1,38 +1,32 @@
 <div class="container card">
-    <h5 class="my-3">Daily Income Report</h5>
-    <div *ngIf="loading" class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div>
-
-    <div *ngIf="!loading" class="card">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>USER ID</th>
-            <th>NAME</th>
-            <th>TYPE</th>
-            <th>AMOUNT</th>
-            <th>STATUS</th>
-            <th>RECEIPT</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-            <td>{{ payment?.userId }}</td>
-            <td class="text-capitalize">{{ payment?.userName }}</td>
-            <td class="text-capitalize">{{ payment?.paymentType }}</td>
-            <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
-            <td class="text-capitalize">{{ payment?.status }}</td>
-            <td>
-                <a *ngIf="payment?.receipt" [href]="payment?.receipt" target="_blank" class="view_rec">{{"View Receipt"}}</a>
-                <span *ngIf="!payment?.receipt">NA</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
+  <h5 class="my-3">Daily Income Report</h5>
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
     </div>
   </div>
-  
+
+  <div *ngIf="!loading" class="card">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>DATE</th>
+          <th>USER ID</th>
+          <th>NAME</th>
+          <th>AMOUNT</th>
+          <th>STATUS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+          <td>{{ payment?.createdAt | date: 'short' }}</td>
+          <td>{{ payment?.userId }}</td>
+          <td class="text-capitalize">{{ payment?.userName }}</td>
+          <td class="text-capitalize">{{ payment?.aiEarning }}</td>
+          <td class="text-capitalize">{{ payment?.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
+  </div>
+</div>

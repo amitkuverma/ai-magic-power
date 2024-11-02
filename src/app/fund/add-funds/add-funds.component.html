@@ -62,10 +62,13 @@
             <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
           </div>
           <div class="modal-body">
-            <p><strong>Name:</strong> {{ selectedUser?.userName }}</p>
-            <p><strong>Type:</strong> {{ selectedUser?.paymentType }}</p>
-            <p><strong>Fund Ammount:</strong> {{ selectedUser?.transactionAmount }}</p>
-            <p><strong>Status:</strong> {{ selectedUser?.status }}</p>
+            <p class="text-capitalize"><strong>Name:</strong> {{ selectedUser?.userName }}</p>
+            <hr />
+            <p class="text-capitalize"><strong>Type:</strong> {{ selectedUser?.paymentType }}</p>
+            <hr />
+            <p class="text-capitalize"><strong>Fund Ammount:</strong> {{ selectedUser?.transactionAmount }}</p>
+            <hr />
+            <p class="text-capitalize"><strong>Status:</strong> {{ selectedUser?.status }}</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" (click)="updateStatus('approved')">Approved</button>

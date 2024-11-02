@@ -83,7 +83,9 @@ export class AddFundComponent {
       this.filteredTrans = userHistory;
       this.totalItems = userHistory.length;
       this.loading = false;
-      this.toster.success('Fund data loaded successfully!');
+      if(!this.isImageUploaded){
+        this.toster.success('Fund data loaded successfully!');  
+      }
     });
   }
 
@@ -166,7 +168,7 @@ export class AddFundComponent {
         .subscribe(
           response => {
             this.fetchTransaction();
-            this.toster.success('File uploaded successfully!');
+            this.toster.success('Fund resquest send successfully!');
             this.isImageUploaded = true; // Mark image as uploaded
             this.loading = false;
             this.closeModal();

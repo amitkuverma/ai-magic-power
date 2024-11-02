@@ -4,17 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'src/services/cookie.service';
-import { TransactionService } from 'src/services/transaction.service';
+import { UsersService } from 'src/services/users.service';
 
 @Component({
-  selector: 'app-daily-income',
+  selector: 'app-today-joining',
   standalone: true,
-  imports:  [CommonModule, FormsModule, NgxPaginationModule],
-  templateUrl: './daily-income.component.html',
-  styleUrl: './daily-income.component.scss'
+  imports: [CommonModule, FormsModule, NgxPaginationModule],
+  templateUrl: './today-joining.component.html',
+  styleUrl: './today-joining.component.scss'
 })
-export class DailyIncomeComponent {
-
+export class TodayJoiningComponent {
   transInfo: any[] = [];
   filteredTrans: any[] = [];
   searchQuery: string = '';
@@ -25,7 +24,7 @@ export class DailyIncomeComponent {
   totalItems: number = 0;
   successMessage: string = '';
 
-  constructor(private transactionService: TransactionService, public cookies: CookieService, private toastr:ToastrService) { }
+  constructor(private userServices: UsersService, public cookies: CookieService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -33,22 +32,28 @@ export class DailyIncomeComponent {
 
   fetchUsers(): void {
     this.loading = true;
-    this.transactionService.getAllTransaction().subscribe((data: any) => {
-      if (this.cookies.isAdmin()) {
-        const adminHistory = data.filter((item:any) => item.paymentType === 'daily' );
+    this.userServices.getUsers().subscribe(
+      (data: any) => {
+        const today = new Date();
+        const adminHistory = data.filter((item: any) => {
+          const createdAtDate = new Date(item.createdAt);
+          return (
+            createdAtDate.getDate() === today.getDate() &&
+            createdAtDate.getMonth() === today.getMonth() &&
+            createdAtDate.getFullYear() === today.getFullYear()
+          );
+        });
         this.transInfo = adminHistory;
         this.filteredTrans = adminHistory;
         this.totalItems = adminHistory.length;
-
-      } else {
-        const userHistory = data.filter((item:any) => item.userId === this.cookies.decodeToken().userId && item.paymentType === 'daily' );
-        this.transInfo = userHistory
-        this.filteredTrans = userHistory;
-        this.totalItems = userHistory.length;
+        this.loading = false;
+        this.toastr.success('Today join users data loaded successfully!');
+      },
+      (error: any) => {
+        this.loading = false;
+        this.toastr.error(error.error.message);
       }
-      this.loading = false;
-      this.toastr.success('Fund data loaded successfully!');
-    });
+    );
   }
 
   filterUsers() {

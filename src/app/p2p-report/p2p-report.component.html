@@ -1,5 +1,5 @@
 <div class="container card">
-    <h5 class="my-3">{{this.cookies.isAdmin()?'Today AI Trade':'AI Income'}} Report</h5>
+    <h5 class="my-3">P2P Report</h5>
     <div *ngIf="loading" class="text-center">
       <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
@@ -13,7 +13,8 @@
             <th>DATE</th>
             <th>USER ID</th>
             <th>NAME</th>
-            <th>AMOUNT</th>
+            <th>RECEIVER NAME</th>
+            <th>TRANSFER AMOUNT</th>
             <th>STATUS</th>
           </tr>
         </thead>
@@ -22,7 +23,8 @@
             <td>{{ payment?.createdAt | date: 'short' }}</td>
             <td>{{ payment?.userId }}</td>
             <td class="text-capitalize">{{ payment?.userName }}</td>
-            <td class="text-capitalize">{{ payment?.aiEarning }}</td>
+            <td class="text-capitalize">{{ payment?.reciverName }}</td>
+            <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
             <td class="text-capitalize">{{ payment?.status }}</td>
           </tr>
         </tbody>

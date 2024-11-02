@@ -22,7 +22,11 @@ const routes: Routes = [
         loadComponent: () => import('./users/user-table/user-table.component').then((c) => c.UserTableComponent)
       },
       {
-        path: 'teams',
+        path: 'direct-team',
+        loadComponent: () => import('./teams/teams.component').then((c) => c.TeamsComponent)
+      },
+      {
+        path: 'leval-team',
         loadComponent: () => import('./teams/teams.component').then((c) => c.TeamsComponent)
       },
       {
@@ -90,7 +94,7 @@ const routes: Routes = [
         loadComponent: () => import('./fund/add-fund-history/add-fund-history.component').then((c) => c.AddFundHistoryComponent)
       },
       {
-        path: 'ai-report',
+        path: 'ai-trade',
         loadComponent: () => import('./income/ai-income/ai-income.component').then((c) => c.AiIncomeComponent)
       },
       {
@@ -116,6 +120,30 @@ const routes: Routes = [
       {
         path: 'plan-pdf',
         loadComponent: () => import('./pdf/pdf.component').then((c) => c.PdfComponent)
+      },
+      {
+        path: 'today-joining',
+        loadComponent: () => import('./today-joining/today-joining.component').then((c) => c.TodayJoiningComponent)
+      },
+      {
+        path: 'earn-wallet',
+        loadComponent: () => import('./earn-wallet-report/earn-wallet-report.component').then((c) => c.EarnWalletReportComponent)
+      },
+      {
+        path: 'deposit-wallet',
+        loadComponent: () => import('./deposit-wallet-report/deposit-wallet-report.component').then((c) => c.DepositWalletReportComponent)
+      },
+      {
+        path: 'total-turnover',
+        loadComponent: () => import('./total-turnover-report/total-turnover-report.component').then((c) => c.TotalTurnoverReportComponent)
+      },
+      {
+        path: 'p2p-report',
+        loadComponent: () => import('./p2p-report/p2p-report.component').then((c) => c.P2PReportComponent)
+      },
+      {
+        path: 'fund-deposit',
+        loadComponent: () => import('./fund-deposit-report/fund-deposit-report.component').then((c) => c.FundDepositReportComponent)
       },
       {
         path: 'payment-status/:userId',

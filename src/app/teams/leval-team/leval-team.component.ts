@@ -5,17 +5,17 @@ import { Router, RouterModule } from '@angular/router';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
 import { UsersService } from 'src/services/users.service';
-import { SharedModule } from '../theme/shared/shared.module';
 import { CookieService } from 'src/services/cookie.service';
+import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 @Component({
-  selector: 'app-teams',
+  selector: 'app-leval-team',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgxPaginationModule, SharedModule, RouterModule],
-  templateUrl: './teams.component.html',
-  styleUrl: './teams.component.scss'
+  imports:  [CommonModule, FormsModule, NgxPaginationModule, SharedModule, RouterModule],
+  templateUrl: './leval-team.component.html',
+  styleUrl: './leval-team.component.scss'
 })
-export class TeamsComponent {
+export class LevalTeamComponent {
   users: any[] = [];
   filteredUsers: any[] = [];
   searchQuery: string = '';
@@ -26,7 +26,6 @@ export class TeamsComponent {
   totalItems: number = 0;
   successMessage: string = '';
   isMenuOpen: { [key: number]: boolean } = {};
-  totalDirect:any;
 
   constructor(private usersService: UsersService, private router: Router,
     private toastr: ToastrService, private cookies: CookieService
@@ -40,14 +39,12 @@ export class TeamsComponent {
     this.loading = true;
     this.usersService.getUserReferrals(this.cookies.decodeToken().userId).subscribe((data: any) => {
       this.users = data.referrals;
-      this.totalDirect = data.referrals.filter((item: any) => item.parentUserId === data.user.userId);
-      this.filteredUsers = this.totalDirect;
-      this.totalItems = this.totalDirect;
+      this.filteredUsers = data.referrals;
+      this.totalItems = data.referrals.length;
       this.loading = false;
       this.toastr.success('Users loaded successfully!', 'Success');
     });
   }
-
 
   filterUsers() {
     this.filteredUsers = this.users.filter(

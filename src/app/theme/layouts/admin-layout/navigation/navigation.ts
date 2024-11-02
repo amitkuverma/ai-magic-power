@@ -44,7 +44,7 @@ export const NavigationItems: NavigationItem[] = [
     children: [
       {
         id: 'userList',
-        title: 'All Users',
+        title: 'All Users Details',
         type: 'item',
         classes: 'nav-item',
         url: '/users',
@@ -57,7 +57,70 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/change-password',
-        icon: 'password',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'today_joining',
+        title: 'Today Joining',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/today-joining',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'today_ai_trade',
+        title: 'Today AI Trade',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/ai-trade',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'fund_credit',
+        title: 'Fund Credit/Debit',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/fund-deposit',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'earn_wallet',
+        title: 'Earn Wallet Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/earn-wallet',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'deposit_wallet',
+        title: 'Deposit Wallet Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/deposit-wallet',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'turnover',
+        title: 'Total Turnover Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/total-turnover',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'p2p_report',
+        title: 'P2P Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/p2p-report',
+        icon: 'ant-design',
         breadcrumbs: false
       }
     ]
@@ -96,7 +159,7 @@ export const NavigationItems: NavigationItem[] = [
     children: [
       {
         id: 'withdrawal',
-        title: 'Withdrawals',
+        title: 'Withdrawal User Request',
         type: 'item',
         classes: 'nav-item',
         url: '/withdrawals',
@@ -105,7 +168,7 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'withdrawal-history',
-        title: 'Withdrawal History',
+        title: 'Withdrawal User Report',
         type: 'item',
         classes: 'nav-item',
         url: '/withdrawal-history',
