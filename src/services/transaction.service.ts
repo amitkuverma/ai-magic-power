@@ -22,6 +22,10 @@ export class TransactionService {
         
     }
 
+    createTransactionForOneTime(body: any): Observable<any> {
+        return this.http.post(`${environment.API_URL}/transaction`, body);        
+    }
+
     getAllTransaction(): Observable<any> {                
         return this.http.get(`${environment.API_URL}/transaction`);
     }
