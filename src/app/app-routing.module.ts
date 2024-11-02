@@ -146,6 +146,10 @@ const routes: Routes = [
         loadComponent: () => import('./fund-deposit-report/fund-deposit-report.component').then((c) => c.FundDepositReportComponent)
       },
       {
+        path: 'one-time-earning',
+        loadComponent: () => import('./one-time-earning/one-time-earning.component').then((c) => c.OneTimeEarningComponent)
+      },
+      {
         path: 'payment-status/:userId',
         loadComponent: () => import('./account/payment-status/payment-status.component').then((c) => c.PaymentStatusComponent)
       },

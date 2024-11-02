@@ -36,7 +36,7 @@ export class OneTimeEarningComponent {
 
   fetchUsers(): void {
     this.loading = true;
-    this.transactionServices.getUserTransactions(this.cookies.decodeToken().userId).subscribe(
+    this.transactionServices.geTransactionsByUserId(this.cookies.decodeToken().userId).subscribe(
       (data: any) => {
         const adminHistory = data.filter(item=>item.paymentType === 'oneTime');
   

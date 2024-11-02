@@ -53,7 +53,7 @@ export class AddFundComponent {
   }
 
   getSelectedUser() {
-    this.transactionService.getUserTransactions(this.cookiesService.decodeToken().userId).subscribe(
+    this.transactionService.geTransactionsByUserId(this.cookiesService.decodeToken().userId).subscribe(
       (res) => {
         this.selectedUserInTransaction = res;
       },

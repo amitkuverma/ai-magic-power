@@ -30,8 +30,12 @@ export class TransactionService {
         return this.http.get(`${environment.API_URL}/transaction`);
     }
 
-    getUserTransactions(userId:any): Observable<any> {                
-        return this.http.get(`${environment.API_URL}/transaction/${userId}`);
+    getTransactionsById(id:any): Observable<any> {                
+        return this.http.get(`${environment.API_URL}/transaction/${id}`);
+    }
+
+    geTransactionsByUserId(userId:any): Observable<any> {                
+        return this.http.get(`${environment.API_URL}/transaction/user/${userId}`);
     }
     
     updateTransaction(body:any, id:any): Observable<any> {                

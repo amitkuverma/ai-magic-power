@@ -196,7 +196,7 @@ export const NavigationUserItems: NavigationItem[] = [
         title: 'One Time Earning',
         type: 'item',
         classes: 'nav-item',
-        url: '/one-time',
+        url: '/one-time-earning',
         icon: 'wallet',
         breadcrumbs: false
       },
