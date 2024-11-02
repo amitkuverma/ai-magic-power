@@ -4,12 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'src/services/cookie.service';
+import { DailyEarningService } from 'src/services/daily-earning.service';
 import { TransactionService } from 'src/services/transaction.service';
 
 @Component({
   selector: 'app-daily-income',
   standalone: true,
-  imports:  [CommonModule, FormsModule, NgxPaginationModule],
+  imports: [CommonModule, FormsModule, NgxPaginationModule],
   templateUrl: './daily-income.component.html',
   styleUrl: './daily-income.component.scss'
 })
@@ -25,7 +26,7 @@ export class DailyIncomeComponent {
   totalItems: number = 0;
   successMessage: string = '';
 
-  constructor(private transactionService: TransactionService, public cookies: CookieService, private toastr:ToastrService) { }
+  constructor(private dailyEarningService: DailyEarningService, public cookies: CookieService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -33,22 +34,20 @@ export class DailyIncomeComponent {
 
   fetchUsers(): void {
     this.loading = true;
-    this.transactionService.getAllTransaction().subscribe((data: any) => {
-      if (this.cookies.isAdmin()) {
-        const adminHistory = data.filter((item:any) => item.paymentType === 'daily' );
+    this.dailyEarningService.getDailyEarningByUserId(this.cookies.decodeToken().userId).subscribe(
+      (data: any) => {
+        const adminHistory = data;
         this.transInfo = adminHistory;
         this.filteredTrans = adminHistory;
         this.totalItems = adminHistory.length;
-
-      } else {
-        const userHistory = data.filter((item:any) => item.userId === this.cookies.decodeToken().userId && item.paymentType === 'daily' );
-        this.transInfo = userHistory
-        this.filteredTrans = userHistory;
-        this.totalItems = userHistory.length;
+        this.loading = false;
+        this.toastr.success('Fund data loaded successfully!');
+      },
+      (error:any)=>{
+        this.loading = false;
+        this.toastr.error(error.error.message)
       }
-      this.loading = false;
-      this.toastr.success('Fund data loaded successfully!');
-    });
+    );
   }
 
   filterUsers() {
