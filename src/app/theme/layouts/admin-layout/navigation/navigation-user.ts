@@ -229,7 +229,7 @@ export const NavigationUserItems: NavigationItem[] = [
       },
       {
         id: 'super_report',
-        title: 'Rewaeds',
+        title: 'Rewards',
         type: 'item',
         classes: 'nav-item',
         url: '/super-rewards',
