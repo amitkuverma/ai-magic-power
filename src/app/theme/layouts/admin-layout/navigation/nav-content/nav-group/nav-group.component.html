@@ -1,10 +1,15 @@
 <li class="nav-item coded-menu-caption">
-  <label>{{ item.title }}</label>
+  <!-- Display the title and toggle icon for collapsible group items -->
+  <div (click)="toggleExpand()" class="group-title">
+    <span>{{ item.title }}</span>
+    <i [class.rotate]="isExpanded" class="dropdown-icon">&#x25BC;</i>
+  </div>
+
+  <!-- Render children items when expanded -->
+  <ul *ngIf="isExpanded && item.children" class="dropdown-content">
+    <ng-container *ngFor="let child of item.children">
+      <app-nav-item *ngIf="child.type === 'item'" [item]="child"></app-nav-item>
+      <app-nav-collapse *ngIf="child.type === 'collapse'" [item]="child"></app-nav-collapse>
+    </ng-container>
+  </ul>
 </li>
-@for (item of item.children; track item) {
-  @if (item.type === 'collapse') {
-    <app-nav-collapse [item]="item"></app-nav-collapse>
-  } @else if (item.type === 'item') {
-    <app-nav-item [item]="item"></app-nav-item>
-  }
-}

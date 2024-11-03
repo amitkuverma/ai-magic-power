@@ -40,3 +40,48 @@ p{
         display: inline-block;
     }
 }
+.profile-photo{
+    width: 150px;
+}
+
+/* referral-link.component.css */
+.referral-link-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  .referral-link-box {
+    display: flex;
+    align-items: center;
+  }
+  
+  .referral-input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .copy-button {
+    margin-left: 8px;
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .copy-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .copy-success-message {
+    margin-top: 8px;
+    color: green;
+    font-size: 0.9rem;
+  }
+  

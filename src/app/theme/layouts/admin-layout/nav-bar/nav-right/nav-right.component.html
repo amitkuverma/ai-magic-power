@@ -1,5 +1,5 @@
 <ul class="list-unstyled">
-  <li class="pc-h-item">
+  <!-- <li class="pc-h-item">
     <a class="pc-head-link me-0 bg-gray-200" (click)="toggleTheme()">
       <i antIcon type="github" theme="outline"></i>
     </a>
@@ -93,27 +93,35 @@
         <a class="link-primary">View all</a>
       </div>
     </div>
-  </li>
+  </li> -->
   <li class="dropdown pc-h-item header-user-profile" ngbDropdown>
     <a class="pc-head-link dropdown-toggle arrow-none me-0" ngbDropdownToggle>
-      <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avatar me-2" />
+      <img [src]="users?.filepath ? imageUrl + users?.filepath :'assets/images/user/avatar-2.jpg'" alt="user-image" class="user-avatar me-2" />
       <span class="f-w-600">{{ cookies.decodeToken()?.userName ? cookies.decodeToken().userName : 'John Doe'}}</span>
     </a>
     <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
       <div class="dropdown-header">
-        <div class="d-flex mb-1">
+        <div class="d-flex mb-1 align-items-center">
           <div class="flex-shrink-0">
-            <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avatar wid-35" />
+            <img [src]="users?.filepath ? imageUrl + users?.filepath :'assets/images/user/avatar-2.jpg'" alt="user-image" class="user-avatar wid-35" />
           </div>
           <div class="flex-grow-1 ms-3 text-start">
-            <h6 class="mb-0">{{ cookies.decodeToken()?.userName ? cookies.decodeToken().userName : 'John Doe'}}</h6>
-            <span>UI/UX Designer</span>
+            <h6 class="mb-0">{{ cookies.decodeToken()?.userId ? cookies.decodeToken().userId : 'AI0000'}}</h6>
+            <!-- <h6 class="mb-0">{{ cookies.decodeToken()?.userName ? cookies.decodeToken().userName : 'John Doe'}}</h6> -->
           </div>
           <a class="bg-transparent" (click)="logout()"><i class="d-flex f-20" antIcon theme="outline"
               type="logout"></i></a>
-        </div>
+        </div>        
+        <hr />        
+        <div><b class="text-black">Sponsor: </b>{{users?.parentUserId}}</div>
+        <hr />
+        <div><b class="text-black">Leadership: </b>{{users?.name}}</div>
+        <hr />
+        <div><b class="text-black">Joining Date: </b>{{users?.joiningDate | date: 'short'}}</div>
+        <hr />
+        <div class="text-capitalize"><b class="text-black">Status: </b>{{users?.status}}</div>
       </div>
-      <ul ngbNav #nav="ngbNav" class="nav drp-tabs nav-fill nav-tabs">
+      <!-- <ul ngbNav #nav="ngbNav" class="nav drp-tabs nav-fill nav-tabs">
         <li ngbNavItem="1">
           <a ngbNavLink>
             <i antIcon theme="outline" type="user" class="me-2"></i>
@@ -153,7 +161,7 @@
           </ng-template>
         </li>
       </ul>
-      <div [ngbNavOutlet]="nav"></div>
+      <div [ngbNavOutlet]="nav"></div> -->
     </div>
   </li>
 </ul>

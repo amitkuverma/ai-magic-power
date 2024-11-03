@@ -1,0 +1,20 @@
+.group-title {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .dropdown-icon {
+    transition: transform 0.3s ease;
+  }
+  
+  .dropdown-icon.rotate {
+    transform: rotate(180deg);
+  }
+  
+  .dropdown-content {
+    list-style: none;
+    display: block;
+  }
+  

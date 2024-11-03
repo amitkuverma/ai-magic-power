@@ -7,11 +7,12 @@ import { NavigationItem } from '../../navigation';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { NavCollapseComponent } from '../nav-collapse/nav-collapse.component';
 import { NavItemComponent } from '../nav-item/nav-item.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-nav-group',
   standalone: true,
-  imports: [CommonModule, SharedModule, NavCollapseComponent, NavItemComponent],
+  imports: [CommonModule, SharedModule, NavCollapseComponent, NavItemComponent, RouterModule],
   templateUrl: './nav-group.component.html',
   styleUrls: ['./nav-group.component.scss']
 })
@@ -20,6 +21,7 @@ export class NavGroupComponent implements OnInit {
 
   // All Version in Group Name
   @Input() item!: NavigationItem;
+  isExpanded = false;
 
   // Constructor
   constructor(private location: Location) {}
@@ -61,5 +63,9 @@ export class NavGroupComponent implements OnInit {
       }
       last_parent.classList.add('active');
     }
+  }
+
+  toggleExpand() {
+    this.isExpanded = !this.isExpanded;
   }
 }

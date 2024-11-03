@@ -30,6 +30,8 @@ import {
 } from '@ant-design/icons-angular/icons';
 import { CookieService } from 'src/services/cookie.service';
 import { ThemeService } from 'src/services/theme.service';
+import { UsersService } from 'src/services/users.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-nav-right',
@@ -43,8 +45,13 @@ export class NavRightComponent {
   @Output() Customize = new EventEmitter();
   windowWidth: number;
   screenFull: boolean = true;
-
-  constructor(private iconService: IconService, public cookies: CookieService, private router: Router, private themeService: ThemeService) {
+  users: any;
+  imageUrl: any;
+  constructor(private iconService: IconService, public cookies: CookieService, private router: Router, private themeService: ThemeService,
+    private usersService: UsersService
+  ) {
+    this.fetchUsers();
+    this.imageUrl = environment.IMAGE_URL
     this.windowWidth = window.innerWidth;
     this.iconService.addIcon(
       ...[
@@ -110,6 +117,12 @@ export class NavRightComponent {
       title: 'History'
     }
   ];
+
+  fetchUsers(): void {
+    this.usersService.getUserReferrals(this.cookies.decodeToken().userId).subscribe((data: any) => {
+      this.users = data.user;
+    });
+  }
 
   logout() {
     this.cookies.deleteCookie('token');

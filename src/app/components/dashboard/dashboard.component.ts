@@ -29,6 +29,8 @@ export class DashboardComponent {
   users: any;
   filteredUsers: any;
   imageUrl: any;
+  referralLink: string;// Your dynamic referral link
+  copySuccess: boolean = false;
 
   constructor(private paymentService: PaymentService, public cookies: CookieService, private usersService: UsersService,
     private clipboard: Clipboard, private toastr: ToastrService, private iconService: IconService, private router: Router
@@ -78,7 +80,26 @@ export class DashboardComponent {
       this.filteredUsers = data.referrals;
       this.totalTeam = data.referrals.length;
       this.activeTeam = data.referrals.filter((item: any) => item.status === 'active');
+      this.referralLink = `https://aimagicpower.com/register?referralCode=${this.users.referralCode}`; 
     });
+  }
+
+  copyReferralLink() {
+    // Create a temporary textarea element to copy text from
+    const tempTextarea = document.createElement('textarea');
+    tempTextarea.value = this.referralLink;
+    document.body.appendChild(tempTextarea);
+    tempTextarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempTextarea);
+
+    // Show success message
+    this.copySuccess = true;
+
+    // Hide success message after 2 seconds
+    setTimeout(() => {
+      this.copySuccess = false;
+    }, 2000);
   }
 
   withdrawal(){
