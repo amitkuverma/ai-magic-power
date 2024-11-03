@@ -57,3 +57,38 @@ File: style.css
 .sr-only{
     display: none;
 }
+
+/* Mobile styling */
+@media (max-width: 768px) {
+    /* Hide table headers */
+    .table-hover thead {
+      display: none;
+    }
+  
+    /* Each row as a card */
+    .table-hover tr {
+      display: block;
+      margin-bottom: 15px;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    /* Display cells in flex layout with labels */
+    .table-hover td {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      font-size: 0.9em;
+      text-align: left;
+      border: none;
+    }
+  
+    /* Add label for each cell */
+    .table-hover td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      color: #555;
+    }
+  }

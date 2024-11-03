@@ -1,13 +1,17 @@
 <div class="container card">
-    <h5 class="my-3">Total Turnover</h5>
-    <p>Total Turnover: <span class="text-primary">{{totalDepositWallet}}</span></p>
-    <div *ngIf="loading" class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-      </div>
-    </div>
+  <h5 class="my-3">Total Turnover</h5>
+  <p>Total Turnover: <span class="text-primary">{{ totalDepositWallet }}</span></p>
 
-    <div *ngIf="!loading" class="card">
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Table / Card View for Turnover Data -->
+  <div *ngIf="!loading" class="card">
+    <div class="d-none d-md-block"> <!-- Standard Table View for Desktop -->
       <table class="table table-hover">
         <thead>
           <tr>
@@ -28,7 +32,20 @@
           </tr>
         </tbody>
       </table>
-      <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
     </div>
+
+    <!-- Card View for Mobile -->
+    <div class="d-block d-md-none"> <!-- Visible on mobile only -->
+      <div *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }" class="mobile-card">
+        <p><strong>Date:</strong> {{ payment?.createdAt | date: 'short' }}</p>
+        <p><strong>User ID:</strong> {{ payment?.userId }}</p>
+        <p><strong>Name:</strong> {{ payment?.userName }}</p>
+        <p><strong>Fund:</strong> {{ payment?.transactionAmount }}</p>
+        <p><strong>Status:</strong> {{ payment?.status }}</p>
+      </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
   </div>
-  
+</div>

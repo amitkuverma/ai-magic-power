@@ -1,23 +1,26 @@
 <div class="row g-3 mb-3">
 
-    <!-- <div class="col-12">
+    <div class="col-12">
         <div class="card radius-12">
             <div class="card-body p-2 row align-items-center">
-                <div class="col-2">
-                <img class="profile-photo img-fluid"
-                    [src]="users?.filepath ? imageUrl + users?.filepath :'../../../assets/images/avtar.jpg'"
-                    alt="User Photo" />
+                <div class="col-md-4 col-lg-3 d-flex justify-content-center hr_line">
+                    <img class="profile-photo img-fluid"
+                        [src]="users?.filepath ? imageUrl + users?.filepath :'../../../assets/images/avtar.jpg'"
+                        alt="User Photo" />
                 </div>
-                <div class="id-info col">
-                    <p class="mb-0"><strong>User ID:</strong> {{ users?.userId }}</p>
-                    <p class="mt-2 mb-0"><strong>Sponsor:</strong> {{ users?.parentUserId || 'NA' }}</p>
-                    <p class="mt-2 mb-0 text-capitalize"><strong>Leadership:</strong> {{ users?.name }}</p>
-                    <p class="mt-2 mb-0"><strong>Joining Date:</strong> {{ users?.joiningDate | date:'short' }}</p>
-                    <p class="mt-2 mb-0 text-capitalize"><strong>Status:</strong> <span class="text-success">{{ users?.status }}</span></p>
+                <div class="id-info col-12 col-md-8 col-lg-9 ">
+                    <hr class="d-md-none" />
+                    <p class="mb-2"><strong>User ID:</strong> {{ users?.userId }}</p>
+                    <p class="mb-2"><strong>User Name:</strong> <b id="clr_07">{{ users?.name }}</b></p>
+                    <p class="mb-2"><strong>Sponsor:</strong> {{ users?.parentUserId || 'NA' }}</p>
+                    <p class="mb-2 text-capitalize"><strong>Leadership:</strong> {{ users?.name }}</p>
+                    <p class="mb-2"><strong>Joining Date:</strong> {{ users?.joiningDate | date:'short' }}</p>
+                    <p class="mb-2 text-capitalize"><strong>Status:</strong> <span class="text-success">{{
+                            users?.status }}</span></p>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <!-- referral-link.component.html -->
     <div>

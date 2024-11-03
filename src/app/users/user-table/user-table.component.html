@@ -26,30 +26,29 @@
           <th>NAME</th>
           <th>EMAIL</th>
           <th>PHONE</th>
-          <th>Reffer Code</th>
+          <th>Referral Code</th>
           <th>STATUS</th>
           <th>ACTIONS</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let user of filteredUsers | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-          <td>{{ user.userId }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.mobile }}</td>
-          <td>{{ user.referralCode }}</td>
-          <td class="text-capitalize"><span class="d-block">
+          <td data-label="USER ID">{{ user.userId }}</td>
+          <td data-label="NAME">{{ user.name }}</td>
+          <td data-label="EMAIL">{{ user.email }}</td>
+          <td data-label="PHONE">{{ user.mobile }}</td>
+          <td data-label="Referral Code">{{ user.referralCode }}</td>
+          <td data-label="STATUS" class="text-capitalize">
+            <span class="d-block">
               <i class="badge-circle {{ user.status }} f-10 m-r-5"></i>
               {{ user.status }}
-            </span></td>
-          <td class="dropdown pc-h-item header-user-profile" ngbDropdown>
+            </span>
+          </td>
+          <td data-label="ACTIONS" class="dropdown pc-h-item header-user-profile" ngbDropdown>
             <a class="pc-head-link dropdown-toggle arrow-none me-0 px-4" ngbDropdownToggle>
               <i class="text-muted" antIcon theme="outline" type="more"></i>
             </a>
-
-            <!-- Dropdown Menu -->
             <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
-              <!-- Profile options -->
               <div>
                 <a class="dropdown-item" (click)="viewUserDetails(user)">
                   <i class="text-muted" antIcon theme="outline" type="user"></i>
@@ -76,28 +75,5 @@
 
     <!-- Pagination Controls -->
     <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
-  </div>
-
-  <!-- User Details Modal -->
-  <div *ngIf="selectedUser" class="modal fade show" tabindex="-1"
-    style="display: block; background: rgba(0, 0, 0, 0.5);">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">User Details</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
-        </div>
-        <div class="modal-body user-details">
-          <p><b>Name:</b> {{ selectedUser.name }}</p>
-          <p><b>Email:</b> {{ selectedUser.email }}</p>
-          <p><b>Phone:</b> {{ selectedUser.mobile }}</p>
-          <p><b>Reffer Code:</b> {{ selectedUser.referralCode }}</p>
-          <p class="text-capitalize"><b>Status:</b> {{ selectedUser.status }}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
