@@ -8,9 +8,11 @@
   z-index: 1026;
   box-shadow: var(--pc-sidebar-shadow);
   display: block;
-  height: 100vh;
   color: var(--pc-sidebar-color);
   border-right: 1px solid rgb(240, 240, 240);
+  @media (min-width: 767px) {
+    height: 100vh;
+  }
 
   a {
     color: #262626;
