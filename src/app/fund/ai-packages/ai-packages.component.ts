@@ -4,6 +4,8 @@ import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModu
 import { CookieService } from 'src/services/cookie.service';
 import { PaymentService } from 'src/services/payment.service';
 import { ToastrService } from 'ngx-toastr';
+import { UsersService } from 'src/services/users.service';
+import { TransactionService } from 'src/services/transaction.service';
 
 @Component({
   selector: 'app-ai-packages',
@@ -15,8 +17,8 @@ import { ToastrService } from 'ngx-toastr';
 export class AiPackagesComponent {
   daysToAdd: any;
   packages: any[] = [
-    { id: 1, name: 'OPAL AI', stake: '12$ - 999$', commission: '0.3%', days: 1000 },
-    { id: 2, name: 'JASPER AI', stake: '1000$ - 9999$+', commission: '0.4%', days: 750 }
+    { id: 1, name: 'OPAL AI', stake: '12$ - 999$', commission: '0.3', days: 1000 },
+    { id: 2, name: 'JASPER AI', stake: '1000$ - 9999$+', commission: '0.4', days: 750 }
   ];
 
   selectedPackage: any;
@@ -27,19 +29,21 @@ export class AiPackagesComponent {
   oneTimeEarning!: any;
   loginUserPayDetails: any;
 
-  constructor(private paymentService: PaymentService, private cookies: CookieService, private fb: FormBuilder, private toastr: ToastrService) {
+  constructor(private paymentService: PaymentService, private cookies: CookieService, private fb: FormBuilder, private toastr: ToastrService,
+    private userService: UsersService, private transactionService: TransactionService
+  ) {
     this.aiStakeForm = this.fb.group({
       aiStake: ['', [Validators.required, this.aiStakeValidator]]
     });
     this.fatchTransDetails();
   }
 
-  fatchTransDetails(){
+  fatchTransDetails() {
     this.paymentService.getUserReferrals(this.cookies.decodeToken().userId).subscribe(
-      (res:any)=>{
+      (res: any) => {
         this.loginUserPayDetails = res;
       },
-      (error:any)=>{
+      (error: any) => {
 
       }
     )
@@ -119,23 +123,100 @@ export class AiPackagesComponent {
     }
     const futureDate = new Date(currentDate.getTime() + this.daysToAdd * 24 * 60 * 60 * 1000);
     this.loginUserPayDetails.plan = this.selectedPackage.name,
-    this.loginUserPayDetails.commission = this.selectedPackage.commission,
-    this.loginUserPayDetails.planStartDate = currentDate,
-    this.loginUserPayDetails.planEndDate = futureDate,
-    this.loginUserPayDetails.depositWallet = (parseFloat(this.loginUserPayDetails.depositWallet) - parseFloat(this.walletAmount)).toFixed(2);
+      this.loginUserPayDetails.commission = this.selectedPackage.commission,
+      this.loginUserPayDetails.planStartDate = currentDate,
+      this.loginUserPayDetails.planEndDate = futureDate,
+      this.loginUserPayDetails.depositWallet = (parseFloat(this.loginUserPayDetails.depositWallet) - parseFloat(this.walletAmount)).toFixed(2);
     this.loginUserPayDetails.selfInvestment = (parseFloat(this.loginUserPayDetails.selfInvestment) + parseFloat(this.walletAmount)).toFixed(2);
 
     this.paymentService.updateUserStatus(this.loginUserPayDetails, this.loginUserPayDetails.payId).subscribe(
       res => {
+        const body = {
+          paymentType: 'trade',
+          transactionAmount: this.walletAmount,
+          status: 'completed'
+        }
+        this.transactionService.createTransaction(body).subscribe(
+          (createTrade) => {
+            this.userService.getParentReferralChain(this.cookies.decodeToken().userId).subscribe(resRefParent => {
+              resRefParent = resRefParent.filter(item => item.userId !== this.cookies.decodeToken().userId);
+              this.handleReferralPercentage(resRefParent.reverse());
+            });
+          }
+        )
         this.toastr.success('Trading started successfully!', 'Success');
         this.closeModal(); // Close modal on success
         this.aiStakeForm.get('aiStake')?.reset(); // Reset the input
         this.aiStakeForm.get('aiStake')?.updateValueAndValidity(); // Update validation
       },
-      error => {
+      (error: any) => {
         this.toastr.error('Failed Trading.', 'Error');
       }
     );
   }
 
+  handleReferralPercentage(referrals: any[]) {
+    referrals.forEach((referral, i) => {
+      const level = i + 1;  // Determine the level (1-based index)
+      const percentage = this.getReferralPercentage(level);  // Get percentage based on level
+
+      console.log(referral);
+
+      this.paymentService.getUserReferrals(referral.userId).subscribe(resPay => {
+        const userFundRequestAmount = parseFloat(this.walletAmount) || 0;
+        const additionalAmount = (userFundRequestAmount * (percentage / 100)).toFixed(2);
+        resPay.earnWallet = (parseFloat(resPay.earnWallet) + parseFloat(additionalAmount)).toFixed(2);
+
+        console.log(`Updated earn for referral level ${level}: ${resPay.earnWallet}`);
+
+        // Save the updated payment status
+        this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
+          response => {
+            console.log(`Payment status updated successfully for payId ${resPay.payId}`);
+            const body = {
+              userId: referral.userId,
+              userName: referral.name,
+              paymentType: 'oneTime',
+              transactionAmount: additionalAmount,
+              status: 'paid'
+            };
+            this.transactionService.createTransactionForOneTime(body).subscribe(
+              transCreated => {
+                console.log("Transaction created:", transCreated);
+              },
+              transError => {
+                console.error("Failed to create transaction:", transError);
+              }
+            );
+          },
+          error => {
+            console.error(`Failed to update payment status for payId ${resPay.payId}:`, error);
+          }
+        );
+      });
+    });
+  }
+
+  // Function to determine percentage based on referral level
+  getReferralPercentage(level: number): number {
+    switch (level) {
+      case 1:
+        return 5;
+      case 2:
+        return 3;
+      case 3:
+        return 2;
+      case 4:
+        return 1;
+      case 5:
+      case 6:
+      case 7:
+      case 8:
+      case 9:
+      case 10:
+        return 0.5;
+      default:
+        return 0;
+    }
+  }
 }

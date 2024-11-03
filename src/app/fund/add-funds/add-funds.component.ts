@@ -103,22 +103,9 @@ export class AddFundsComponent {
                         resUser.activeDate = new Date();
                         this.userService.updateUserStatus(this.selectedUser.userId, "active").subscribe(
                           resCre => {
-                            this.userService.getParentReferralChain(this.selectedUser.userId).subscribe(resRefParent => {
-                              console.log(resRefParent);
-                              // const maxLevels = resRefParent.length > 10 ? 10 : resRefParent.length - 1;
-                              resRefParent = resRefParent.filter(item => item.userId !== this.selectedUser.userId);
-
-                              // if (maxLevels > 0) {
-                                console.log(this.selectedUser.userId);
-                                console.log(resRefParent);
-                                console.log(`Applying referral percentages from bottom to top for ${resRefParent.length} levels`);
-                                this.handleReferralPercentage(resRefParent.reverse());  // Reverse the array for bottom-to-top processing
-                              // } else {
-                              //   console.log("No match found or exceeds level limit");
-                              // }
-                            });
-                          }
-                        )
+                            console.log(resCre);
+                            
+                          })
                       }
                     }
                   )
@@ -149,70 +136,6 @@ export class AddFundsComponent {
     )
   }
 
-  handleReferralPercentage(referrals: any[]) {
-    referrals.forEach((referral, i) => {
-      const level = i + 1;  // Determine the level (1-based index)
-      const percentage = this.getReferralPercentage(level);  // Get percentage based on level
-
-      console.log(referral);
-
-      this.paymentService.getUserReferrals(referral.userId).subscribe(resPay => {
-        const userFundRequestAmount = parseFloat(this.selectedUser.transactionAmount) || 0;
-        const additionalAmount = (userFundRequestAmount * (percentage / 100)).toFixed(2);
-        resPay.earnWallet = (parseFloat(resPay.earnWallet) + parseFloat(additionalAmount)).toFixed(2);
-
-        console.log(`Updated earn for referral level ${level}: ${resPay.earnWallet}`);
-
-        // Save the updated payment status
-        this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
-          response => {
-            console.log(`Payment status updated successfully for payId ${resPay.payId}`);
-            const body = {
-              userId: referral.userId,
-              userName: referral.name,
-              paymentType: 'oneTime',
-              transactionAmount: additionalAmount,
-              status: 'paid'
-            };
-            this.transactionService.createTransactionForOneTime(body).subscribe(
-              transCreated => {
-                console.log("Transaction created:", transCreated);
-              },
-              transError => {
-                console.error("Failed to create transaction:", transError);
-              }
-            );
-          },
-          error => {
-            console.error(`Failed to update payment status for payId ${resPay.payId}:`, error);
-          }
-        );
-      });
-    });
-  }
-
-  // Function to determine percentage based on referral level
-  getReferralPercentage(level: number): number {
-    switch (level) {
-      case 1:
-        return 5;
-      case 2:
-        return 3;
-      case 3:
-        return 2;
-      case 4:
-        return 1;
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-      case 9:
-      case 10:
-        return 0.5;
-      default:
-        return 0;
-    }
-  }
 
   closeModal() {
     const modalElement = document.getElementById('packageModal');

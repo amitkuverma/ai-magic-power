@@ -1,5 +1,5 @@
 <div class="container card pb-3">
-    <h5 class="my-3">User Info</h5>
+    <h5 class="my-3">User Lebal Info</h5>
   
     <!-- Success Message -->
     <div *ngIf="successMessage" class="alert alert-success">
@@ -7,9 +7,9 @@
     </div>
   
     <!-- Search Input -->
-    <input type="text" class="form-control mb-3" placeholder="Search by name or email" [(ngModel)]="searchQuery"
+    <!-- <input type="text" class="form-control mb-3" placeholder="Search by name or email" [(ngModel)]="searchQuery"
       (input)="filterUsers()">
-  
+   -->
     <!-- Loading Spinner -->
     <div *ngIf="loading" class="text-center">
       <div class="spinner-border" role="status">
@@ -22,25 +22,18 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>USER ID</th>
-            <th>NAME</th>
-            <th>EMAIL</th>
-            <th>PHONE</th>
-            <th>Reffer Code</th>
-            <th>STATUS</th>
+            <th>LEBAL</th>
+            <th>TOTAL MEMBER</th>
+            <th>TOTAL BUSINESS</th>
+            <th class="ml-2">ACTION</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of filteredUsers | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-            <td>{{ user.userId }}</td>
+          <tr *ngFor="let user of filteredUsers | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index">
+            <td>{{ i + 1 }}</td>
             <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
             <td>{{ user.mobile }}</td>
-            <td>{{ user.referralCode }}</td>
-            <td class="text-capitalize"><span class="d-block">
-                <i class="badge-circle {{ user.status }} f-10 m-r-5"></i>
-                {{ user.status }}
-              </span></td>
+            <td><a class="btn btn-transparent">View Details</a></td>
           </tr>
         </tbody>
       </table>

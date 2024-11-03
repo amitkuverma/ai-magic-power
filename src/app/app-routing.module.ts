@@ -25,9 +25,10 @@ const routes: Routes = [
         path: 'direct-team',
         loadComponent: () => import('./teams/teams.component').then((c) => c.TeamsComponent)
       },
+      
       {
         path: 'leval-team',
-        loadComponent: () => import('./teams/teams.component').then((c) => c.TeamsComponent)
+        loadComponent: () => import('./teams/leval-team/leval-team.component').then((c) => c.LevalTeamComponent)
       },
       {
         path: 'my-profile',
@@ -95,7 +96,7 @@ const routes: Routes = [
       },
       {
         path: 'ai-trade',
-        loadComponent: () => import('./income/ai-income/ai-income.component').then((c) => c.AiIncomeComponent)
+        loadComponent: () => import('./income/ai-trade-report/ai-trade-report.component').then((c) => c.AiTradeComponent)
       },
       {
         path: 'daily-report',
