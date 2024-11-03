@@ -74,13 +74,13 @@ export class DashboardComponent {
   fetchUsers(): void {
     this.usersService.getUserReferrals(this.cookies.decodeToken().userId).subscribe((data: any) => {
       this.users = data.user;
-      console.log(this.users)      
+      console.log(this.users)
       this.totalDirect = data.referrals.filter((item: any) => item.parentUserId === this.users.userId);
       this.activeDirect = data.referrals.filter((item: any) => item.status === 'active' && item.parentUserId === this.users.userId);
       this.filteredUsers = data.referrals;
       this.totalTeam = data.referrals.length;
       this.activeTeam = data.referrals.filter((item: any) => item.status === 'active');
-      this.referralLink = `https://aimagicpower.com/register?referralCode=${this.users.referralCode}`; 
+      this.referralLink = `https://aimagicpower.com/register?referralCode=${this.users.referralCode}`;
     });
   }
 
@@ -102,17 +102,33 @@ export class DashboardComponent {
     }, 2000);
   }
 
-  withdrawal(){
+  withdrawal() {
     this.router.navigate(['/withdrawal']);
   }
-  p2p(){
+  p2p() {
     this.router.navigate(['/transfer']);
   }
-  addFund(){
+  addFund() {
     this.router.navigate(['/fund']);
   }
   copyToClipboard(text: any) {
     this.clipboard.copy(`${environment.UI_URL}register?referralCode=${text}`);
     this.toastr.success("Share URL Coppied successfully!")
+  }
+
+
+  aiEarning(): void {
+    this.usersService.AiEarning().subscribe((data: any) => {
+      console.log(data)
+      this.toastr.success(data.message)
+    });
+  }
+  dailyEarning(): void {
+    this.usersService.DailyEarning().subscribe((data: any) => {
+
+      console.log(data)
+      this.toastr.success(data.message)
+
+    });
   }
 }

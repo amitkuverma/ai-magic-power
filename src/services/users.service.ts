@@ -38,10 +38,10 @@ export class UsersService {
         return this.http.get(`${environment.API_URL}/referral-chain/${this.cookiesService.decodeToken().userId}`);
     }
 
-    getParentReferralChain(userId:any): Observable<any> {
+    getParentReferralChain(userId: any): Observable<any> {
         return this.http.get(`${environment.API_URL}/referral-parent/${userId}`);
     }
-    
+
     getChildrenReferralChain(): Observable<any> {
         return this.http.get(`${environment.API_URL}/referral-children/${this.cookiesService.decodeToken().userId}`);
     }
@@ -61,5 +61,11 @@ export class UsersService {
 
     deleteUser(userId: any): Observable<any> {
         return this.http.delete(`${environment.API_URL}/delete/${userId}`);
+    }
+    AiEarning(): Observable<any> {
+        return this.http.put(`${environment.API_URL}/daily-earnings`, {});
+    }
+    DailyEarning(): Observable<any> {
+        return this.http.put(`${environment.API_URL}/daily-earnings`, {});
     }
 }
