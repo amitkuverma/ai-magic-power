@@ -54,7 +54,7 @@ export default class RegisterComponent {
       mobile: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]], // Mobile number validation
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      referralCode: [''] // Optional
+      referralCode: ['', Validators.required] // Optional
     });
     this.route.queryParamMap.subscribe((params) => {
       const referralCode = params.get('referralCode');

@@ -140,7 +140,7 @@ export class AiPackagesComponent {
           (createTrade) => {
             this.userService.getParentReferralChain(this.cookies.decodeToken().userId).subscribe(resRefParent => {
               resRefParent = resRefParent.filter(item => item.userId !== this.cookies.decodeToken().userId);
-              this.handleReferralPercentage(resRefParent.reverse());
+              this.handleReferralPercentage(resRefParent);
             });
           }
         )

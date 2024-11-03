@@ -120,6 +120,9 @@
         <div><b class="text-black">Joining Date: </b>{{users?.joiningDate | date: 'short'}}</div>
         <hr />
         <div class="text-capitalize"><b class="text-black">Status: </b>{{users?.status}}</div>
+        <hr />
+        <a class="btn btn-transparent d-flex justify-content-center align-items-center" (click)="logout()"><i class="d-flex f-20 pe-3" antIcon theme="outline"
+          type="logout"></i>Logout</a>
       </div>
       <!-- <ul ngbNav #nav="ngbNav" class="nav drp-tabs nav-fill nav-tabs">
         <li ngbNavItem="1">
