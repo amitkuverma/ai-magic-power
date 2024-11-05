@@ -51,7 +51,7 @@ export const NavigationUserItems: NavigationItem[] = [
         icon: 'user',
         breadcrumbs: false
       },
-      
+
       {
         id: 'crypto_address',
         title: 'Manage Crypto',
@@ -83,7 +83,7 @@ export const NavigationUserItems: NavigationItem[] = [
         title: 'Plan PDF',
         type: 'item',
         classes: 'nav-item',
-        icon: 'ant-design',        
+        icon: 'ant-design',
         url: '/plan-pdf',
         breadcrumbs: false
       }
@@ -156,32 +156,14 @@ export const NavigationUserItems: NavigationItem[] = [
         icon: 'wallet',
         breadcrumbs: false
       },
-      {
-        id: 'transfer_deposit',
-        title: 'Transfer to deposit wallte',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/transfer-deposit-wallet',
-        icon: 'ant-design',
-        breadcrumbs: false
-      },
-      {
-        id: 'transfer_deposit_history',
-        title: 'Deposit wallet Report',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/transfer-deposit-wallet-report',
-        icon: 'ant-design',
-        breadcrumbs: false
-      }
     ]
   },
   {
     id: 'income',
-    title: 'Income',
+    title: 'Income Report',
     type: 'group',
     icon: 'icon-navigation',
-    children: [      
+    children: [
       {
         id: 'ai_report',
         title: 'AI Earning',
@@ -263,15 +245,6 @@ export const NavigationUserItems: NavigationItem[] = [
         breadcrumbs: false
       },
       {
-        id: 'add_fund_history',
-        title: 'Add Fund History',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/fund-history',
-        icon: 'ant-design',
-        breadcrumbs: false
-      },
-      {
         id: 'p2p_transfer',
         title: 'P2P Transfer',
         type: 'item',
@@ -281,11 +254,45 @@ export const NavigationUserItems: NavigationItem[] = [
         breadcrumbs: false
       },
       {
+        id: 'transfer_deposit',
+        title: 'Transfer to deposit wallet',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/transfer-deposit-wallet',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+    ]
+  },
+  {
+    id: 'deposit_histey',
+    title: 'Deposit/Credit Report',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
         id: 'p2p_transfer_history',
         title: 'P2P Report',
         type: 'item',
         classes: 'nav-item',
         url: '/p2p-report',
+        icon: 'ant-design',
+        breadcrumbs: false
+      }, {
+        id: 'add_fund_history',
+        title: 'Add Fund History',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/fund-history',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'transfer_deposit_history',
+        title: 'Deposit wallet Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/transfer-deposit-wallet-report',
         icon: 'ant-design',
         breadcrumbs: false
       }

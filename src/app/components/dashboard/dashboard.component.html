@@ -1709,8 +1709,8 @@
                 </div>
             </div>
             <div class="d-flex">
-                <button class="btn btn-primary me-3" (click)="aiEarning()">AI Earning</button>
-                <button class="btn btn-primary" (click)="dailyEarning()">Daily Label Earning</button>
+                <button *ngIf="cookies.isAdmin()" class="btn btn-primary me-3" (click)="aiEarning()">AI Earning</button>
+                <button *ngIf="cookies.isAdmin()" class="btn btn-primary" (click)="dailyEarning()">Daily Label Earning</button>
             </div>
         </div>
     </div>

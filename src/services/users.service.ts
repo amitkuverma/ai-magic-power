@@ -63,7 +63,7 @@ export class UsersService {
         return this.http.delete(`${environment.API_URL}/delete/${userId}`);
     }
     AiEarning(): Observable<any> {
-        return this.http.put(`${environment.API_URL}/daily-earnings`, {});
+        return this.http.put(`${environment.API_URL}/ai-earnings`, {});
     }
     DailyEarning(): Observable<any> {
         return this.http.put(`${environment.API_URL}/daily-earnings`, {});
