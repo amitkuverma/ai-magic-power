@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators, ValidationErrors } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'src/services/cookie.service';
 import { PaymentService } from 'src/services/payment.service';
 import { TransactionService } from 'src/services/transaction.service';
@@ -11,7 +12,7 @@ import { TransactionService } from 'src/services/transaction.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, NgxPaginationModule],
   templateUrl: './withdraw.component.html',
-  styleUrl: './withdraw.component.scss'
+  styleUrls: ['./withdraw.component.scss']
 })
 export class WithdrawComponent {
   bankTransferForm: FormGroup;
@@ -20,80 +21,94 @@ export class WithdrawComponent {
   page: number = 1;
   itemsPerPage: number = 10;
   totalItems: number = 0;
-  successMessage: string = '';
   transInfo: any;
   filteredTrans: any;
 
-
-  constructor(private trancService: TransactionService, private fb: FormBuilder,
-    private cookiesService: CookieService, private paymentService: PaymentService) {
+  constructor(
+    private trancService: TransactionService,
+    private fb: FormBuilder,
+    private cookiesService: CookieService,
+    private paymentService: PaymentService,
+    private toastr: ToastrService
+  ) {
+    // Initialize the form without max validator for transactionAmount
     this.bankTransferForm = this.fb.group({
       transactionAmount: ['', [Validators.required, Validators.min(5)]],
+      transactionId: ['']
     });
+
     this.getUserPayment();
-    this.fetchTransaction();
   }
 
+  // Fetch the user payment details
   getUserPayment() {
     const userId = this.cookiesService.decodeToken().userId;
     this.paymentService.getUserReferrals(userId).subscribe(
       (res: any) => {
         if (res) {
           this.userPaymentDetails = res;
+
+          // Update max validator for transactionAmount based on earnWallet
+          this.bankTransferForm.get('transactionAmount')?.setValidators([
+            Validators.required,
+            Validators.min(5),
+            Validators.max(this.userPaymentDetails.earnWallet)
+          ]);
+          this.bankTransferForm.get('transactionAmount')?.updateValueAndValidity();
         }
       },
       (error: any) => {
         console.error('Error fetching user payment details:', error);
+        this.toastr.error('Unable to load payment details.');
       }
     );
   }
 
-  validateTransactionAmount(control: AbstractControl) {
-    const earnAmount = this.userPaymentDetails?.earnWallet;
-    const transactionAmount = control.get('transactionAmount')?.value;
-
-    return transactionAmount <= earnAmount ? null : { amountExceeds: true };
-  }
-
-  fetchTransaction(): void {
-    this.loading = true;
-    this.trancService.getAllTransaction().subscribe((data: any) => {
-
-      const userHistory = data.filter((item:any) => item.userId === this.cookiesService.decodeToken().userId && item.paymentType === 'withdraw' && item.status === 'pending');
-      this.transInfo = userHistory
-      this.filteredTrans = userHistory;
-      this.totalItems = userHistory.length;
-
-      this.loading = false;
-      this.successMessage = 'Withdraw loaded successfully!';
-      setTimeout(() => (this.successMessage = ''), 3000); // Clear success message after 3 seconds
-    });
-  }
-
   onSubmitWithdrawal() {
-    const totalAmount = this.userPaymentDetails?.totalAmount;
-    const transactionAmount = this.bankTransferForm.get('transactionAmount')?.value;
+    const transactionAmount = parseFloat(this.bankTransferForm.get('transactionAmount')?.value);
+    const transactionId = this.bankTransferForm.get('transactionId')?.value;
 
-    // if (transactionAmount > totalAmount) {
-    //   // this.toastr.error('Transaction amount must not exceed total amount.', 'Error');
-    //   return;
-    // }
+    // Calculate the 5% fee and amount after fee with precision
+    const feeAmount = parseFloat((transactionAmount * 0.05).toFixed(2));
+    const amountAfterFee = parseFloat((transactionAmount - feeAmount).toFixed(2));
+    console.log("Fee Amount:", feeAmount, "Amount After Fee:", amountAfterFee);
 
-    const data = {
-      paymentType: 'withdraw',
-      transactionAmount: transactionAmount
-    };
+    // Ensure earnWallet is a number and sufficient funds are available
+    const earnWallet = parseFloat(this.userPaymentDetails.earnWallet);
 
-    console.log(data);
-    
-    this.trancService.createTransaction(data).subscribe(
-      (res: any) => {
-        this.bankTransferForm.get('transactionAmount')?.setValue('');
-        // this.message('Withdrawal request sent successfully!', 'Success');
+    // Check if the user has sufficient funds after fee deduction
+    if (transactionAmount > earnWallet) {
+      this.toastr.error('Insufficient funds in wallet for this transaction.');
+      return;
+    }
+
+    // Update wallet balance after fee deduction
+    this.userPaymentDetails.earnWallet = parseFloat((earnWallet - transactionAmount).toFixed(2));
+
+    // Update the backend with new wallet balance
+    this.paymentService.updateUserStatus(this.userPaymentDetails, this.userPaymentDetails.payId).subscribe(
+      res => {
+        const data = {
+          paymentType: 'withdraw',
+          transactionAmount: amountAfterFee,  // Use amount after fee for transaction
+          transactionId: transactionId
+        };
+
+        // Send the transaction request
+        this.trancService.createTransaction(data).subscribe(
+          (res: any) => {
+            this.bankTransferForm.reset();
+            this.toastr.success('Withdrawal request sent successfully!');
+          },
+          (error: any) => {
+            console.error('Error sending withdrawal request:', error);
+            this.toastr.error('Unable to send withdrawal request!');
+          }
+        );
       },
-      (error: any) => {
-        // this.message('Unable to send withdrawal request!', 'Error');
-        // console.error('Error sending withdrawal request:', error);
+      error => {
+        console.error('Error updating wallet balance:', error);
+        this.toastr.error('Failed to update wallet balance.');
       }
     );
   }

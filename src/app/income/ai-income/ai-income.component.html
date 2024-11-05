@@ -10,42 +10,36 @@
 
   <!-- Table/Card Layout -->
   <div *ngIf="!loading" class="card">
-    <!-- Standard Table for Desktop -->
-    <div class="d-none d-md-block">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>DATE</th>
-            <th>USER ID</th>
-            <th>NAME</th>
-            <th>AMOUNT</th>
-            <th>STATUS</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-            <td>{{ payment?.createdAt | date: 'short' }}</td>
-            <td>{{ payment?.userId }}</td>
-            <td class="text-capitalize">{{ payment?.userName }}</td>
-            <td class="text-capitalize">{{ payment?.aiEarning }}</td>
-            <td class="text-capitalize">{{ payment?.status }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Mobile Card View -->
-    <div class="d-block d-md-none">
-      <div *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }" class="mobile-card">
-        <p><strong>Date:</strong> {{ payment?.createdAt | date: 'short' }}</p>
-        <p><strong>User ID:</strong> {{ payment?.userId }}</p>
-        <p><strong>Name:</strong> {{ payment?.userName }}</p>
-        <p><strong>Amount:</strong> {{ payment?.aiEarning }}</p>
-        <p><strong>Status:</strong> {{ payment?.status }}</p>
-      </div>
-    </div>
-
-    <!-- Pagination Controls -->
-    <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>DATE</th>
+          <th>USER ID</th>
+          <th>NAME</th>
+          <th>AMOUNT</th>
+          <th>STATUS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+          <td data-label="DATE">{{ payment?.createdAt | date: 'short' }}</td>
+          <td data-label="USER ID">{{ payment?.userId }}</td>
+          <td data-label="USER NAME" class="text-capitalize">{{ payment?.userName }}</td>
+          <td data-label="AI EARNING" class="text-capitalize">{{ payment?.aiEarning }}</td>
+          <td data-label="STATUS" class="text-capitalize">{{ payment?.status }}</td>
+          <!-- <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+              <td>{{ payment?.createdAt | date: 'short' }}</td>
+              <td >{{ payment?.userId }}</td>
+              <td data-label="NAME" class="text-capitalize">{{ payment?.name }}</td>
+              <td data-label="EMAIL" class="text-capitalize">{{ payment?.email }}</td>
+              <td data-label="MOBILE NO" class="text-capitalize">{{ payment?.mobile }}</td>
+              <td data-label="STATUS" class="text-capitalize">{{ payment?.status }}</td>
+            </tr> -->
+        </tr>
+      </tbody>
+    </table>
   </div>
+
+  <!-- Pagination Controls -->
+  <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
 </div>
