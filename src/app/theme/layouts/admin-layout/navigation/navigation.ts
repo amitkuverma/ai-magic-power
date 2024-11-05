@@ -77,6 +77,24 @@ export const NavigationItems: NavigationItem[] = [
         url: '/ai-trade',
         icon: 'ant-design',
         breadcrumbs: false
+      },      
+      {
+        id: 'daily_report',
+        title: 'Daily Earning',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/daily-report',
+        icon: 'wallet',
+        breadcrumbs: false
+      },
+      {
+        id: 'one_time_report',
+        title: 'One Time Earning',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/one-time-earning',
+        icon: 'wallet',
+        breadcrumbs: false
       },
       {
         id: 'fund_credit',

@@ -97,18 +97,6 @@ export class AddFundsComponent {
               resPay.depositWallet = (parseFloat(resPay.depositWallet) + parseFloat(this.selectedUser.transactionAmount)).toFixed(2);
               this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
                 res => {
-                  this.userService.getUserById(this.selectedUser.userId).subscribe(
-                    (resUser: any) => {
-                      if (resUser.status === 'pending') {
-                        resUser.activeDate = new Date();
-                        this.userService.updateUserStatus(this.selectedUser.userId, "active").subscribe(
-                          resCre => {
-                            console.log(resCre);
-                            
-                          })
-                      }
-                    }
-                  )
                   this.closeModal();
                   this.toastr.success('Fund added successfully!');
                   this.fetchTransactions();

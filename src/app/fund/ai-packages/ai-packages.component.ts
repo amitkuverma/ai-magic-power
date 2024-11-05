@@ -25,7 +25,6 @@ export class AiPackagesComponent {
   selectedPackage: any;
   successMessage!: string;
   walletAmount: any = 0;
-  aiStakeForm!: FormGroup;
   showModal = false;
   oneTimeEarning!: any;
   loginUserPayDetails: any;
@@ -51,7 +50,7 @@ export class AiPackagesComponent {
 
   closeModal() {
     const modalElement = document.getElementById('packageModal');
-    if (modalElement) {      
+    if (modalElement) {
       this.walletAmount = 0;
       const modal = (window as any).bootstrap.Modal.getInstance(modalElement); // Get the modal instance
       if (modal) {
@@ -87,7 +86,7 @@ export class AiPackagesComponent {
       this.stakeError = null; // Clear error if validation passes
     }
   }
-  
+
 
   // Handle package selection
   selectPackage(pack: any): void {
@@ -99,117 +98,119 @@ export class AiPackagesComponent {
     return this.oneTimeEarning;
   }
 
-  submitPackage(): void {
+  async activeUser() {
+    try {
+      const userId = this.cookies.decodeToken().userId;
+      const resUser = await this.userService.getUserById(userId).toPromise();
+
+      if (resUser.status === 'pending') {
+        resUser.activeDate = new Date();
+        resUser.status = 'active';
+        await this.userService.updateUserProfile(resUser).toPromise();
+        console.log('User activated:', resUser);
+      }
+    } catch (error) {
+      console.error('Error activating user:', error);
+    }
+  }
+
+  async submitPackage(): Promise<void> {
     this.validateStake();
 
     if (this.stakeError) {
       return; // Prevent submission if there's a validation error
     }
 
-    const currentDate = new Date(); // Get the current date
-    if (this.selectedPackage === 'OPAL AI') {
-      this.daysToAdd = 1000;
-    }
-    else {
-      this.daysToAdd = 750;
-    }
-    const futureDate = new Date(currentDate.getTime() + this.daysToAdd * 24 * 60 * 60 * 1000);
-    this.loginUserPayDetails.plan = this.selectedPackage.name,
-      this.loginUserPayDetails.commission = this.selectedPackage.commission,
-      this.loginUserPayDetails.planStartDate = currentDate,
-      this.loginUserPayDetails.planEndDate = futureDate,
-      this.loginUserPayDetails.depositWallet = (parseFloat(this.loginUserPayDetails.depositWallet) - parseFloat(this.walletAmount)).toFixed(2);
-    this.loginUserPayDetails.selfInvestment = (parseFloat(this.loginUserPayDetails.selfInvestment) + parseFloat(this.walletAmount)).toFixed(2);
+    await this.activeUser(); // Ensure user activation
 
-    this.paymentService.updateUserStatus(this.loginUserPayDetails, this.loginUserPayDetails.payId).subscribe(
-      res => {
-        const body = {
-          paymentType: 'trade',
-          transactionAmount: this.walletAmount,
-          status: 'completed'
-        }
-        this.transactionService.createTransaction(body).subscribe(
-          (createTrade) => {
-            this.userService.getParentReferralChain(this.cookies.decodeToken().userId).subscribe(resRefParent => {
-              resRefParent = resRefParent.filter(item => item.userId !== this.cookies.decodeToken().userId);
-              this.handleReferralPercentage(resRefParent);
-            });
-          }
-        )
-        this.toastr.success('Trading started successfully!', 'Success');
-        this.closeModal(); // Close modal on success
-        this.aiStakeForm.get('aiStake')?.reset(); // Reset the input
-        this.aiStakeForm.get('aiStake')?.updateValueAndValidity(); // Update validation
-      },
-      (error: any) => {
-        this.toastr.error('Failed Trading.', 'Error');
-      }
-    );
+    const currentDate = new Date();
+    this.daysToAdd = this.selectedPackage === 'OPAL AI' ? 1000 : 750;
+    const futureDate = new Date(currentDate.getTime() + this.daysToAdd * 24 * 60 * 60 * 1000);
+
+    this.updateUserPayDetails(currentDate, futureDate);
+
+    try {
+      await this.paymentService.updateUserStatus(this.loginUserPayDetails, this.loginUserPayDetails.payId).toPromise();
+      await this.createTradeTransaction();
+      this.toastr.success('Trading started successfully!', 'Success');
+
+      this.closeModal(); // Close modal on success
+      this.walletAmount = 0; // Reset wallet amount
+    } catch (error) {
+      this.toastr.error('Failed Trading.', 'Error');
+      console.error('Error submitting package:', error);
+    }
   }
 
-  handleReferralPercentage(referrals: any[]) {
-    referrals.forEach((referral, i) => {
-      const level = i + 1;  // Determine the level (1-based index)
-      const percentage = this.getReferralPercentage(level);  // Get percentage based on level
+  updateUserPayDetails(currentDate: Date, futureDate: Date): void {
+    this.loginUserPayDetails.plan = this.selectedPackage.name;
+    this.loginUserPayDetails.commission = this.selectedPackage.commission;
+    this.loginUserPayDetails.planStartDate = currentDate;
+    this.loginUserPayDetails.planEndDate = futureDate;
+    this.loginUserPayDetails.depositWallet = this.loginUserPayDetails.depositWallet - this.walletAmount;
+    this.loginUserPayDetails.selfInvestment = this.loginUserPayDetails.selfInvestment + this.walletAmount;
+  }
 
-      console.log(referral);
+  async createTradeTransaction() {
+    const transactionData = {
+      paymentType: this.selectedPackage.name,
+      transactionAmount: this.walletAmount,
+      status: 'completed',
+    };
 
-      this.paymentService.getUserReferrals(referral.userId).subscribe(resPay => {
-        const userFundRequestAmount = parseFloat(this.walletAmount) || 0;
-        const additionalAmount = (userFundRequestAmount * (percentage / 100)).toFixed(2);
-        resPay.earnWallet = (parseFloat(resPay.earnWallet) + parseFloat(additionalAmount)).toFixed(2);
+    await this.transactionService.createTransaction(transactionData).toPromise();
+
+    const referralChain = await this.userService.getParentReferralChain(this.cookies.decodeToken().userId).toPromise();
+    const filteredReferrals = referralChain.filter(item => item.userId !== this.cookies.decodeToken().userId);
+
+    await this.handleReferralPercentage(filteredReferrals);
+  }
+
+  async handleReferralPercentage(referrals: any[]) {
+    const referralPromises = referrals.map(async (referral, index) => {
+      const level = index + 1;
+      const percentage = this.getReferralPercentage(level);
+
+      try {
+        const resPay = await this.paymentService.getUserReferrals(referral.userId).toPromise();
+        const userFundRequestAmount = this.walletAmount || 0;
+        const additionalAmount = userFundRequestAmount * percentage / 100;
+
+        resPay.earnWallet = resPay.earnWallet + additionalAmount;
+
+        await this.paymentService.updateUserStatus(resPay, resPay.payId).toPromise();
+        await this.createReferralTransaction(referral, additionalAmount);
 
         console.log(`Updated earn for referral level ${level}: ${resPay.earnWallet}`);
-
-        // Save the updated payment status
-        this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
-          response => {
-            console.log(`Payment status updated successfully for payId ${resPay.payId}`);
-            const body = {
-              userId: referral.userId,
-              userName: referral.name,
-              paymentType: 'oneTime',
-              transactionAmount: additionalAmount,
-              status: 'paid'
-            };
-            this.transactionService.createTransactionForOneTime(body).subscribe(
-              transCreated => {
-                console.log("Transaction created:", transCreated);
-                this.walletAmount = 0;
-              },
-              transError => {
-                console.error("Failed to create transaction:", transError);
-              }
-            );
-          },
-          error => {
-            console.error(`Failed to update payment status for payId ${resPay.payId}:`, error);
-          }
-        );
-      });
+      } catch (error) {
+        console.error(`Failed to update referral for userId ${referral.userId}:`, error);
+      }
     });
+
+    await Promise.all(referralPromises); // Wait for all referral updates
   }
 
-  // Function to determine percentage based on referral level
+  async createReferralTransaction(referral: any, additionalAmount: any) {
+    const transactionData = {
+      userId: referral.userId,
+      userName: referral.name,
+      paymentType: 'oneTime',
+      transactionAmount: additionalAmount,
+      status: 'paid',
+    };
+
+    await this.transactionService.createTransactionForOneTime(transactionData).toPromise();
+    console.log("Transaction created for referral:", transactionData);
+  }
+
   getReferralPercentage(level: number): number {
     switch (level) {
-      case 1:
-        return 5;
-      case 2:
-        return 3;
-      case 3:
-        return 2;
-      case 4:
-        return 1;
-      case 5:
-      case 6:
-      case 7:
-      case 8:
-      case 9:
-      case 10:
-        return 0.5;
-      default:
-        return 0;
+      case 1: return 5;
+      case 2: return 3;
+      case 3: return 2;
+      case 4: return 1;
+      case 5: case 6: case 7: case 8: case 9: case 10: return 0.5;
+      default: return 0;
     }
   }
 }

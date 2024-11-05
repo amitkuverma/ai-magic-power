@@ -122,7 +122,7 @@ export class AiPackageListComponent {
     this.paymentService.updateUserStatus(this.selectedUser, this.selectedUser.transId).subscribe(
       (res:any) => {
         if (status === 'active') {
-          this.loginUserPaymetDetails.totalAmount += this.addedAmount;
+          this.loginUserPaymetDetails.earnWallet += this.addedAmount;
           this.paymentService.updateUserStatus(this.loginUserPaymetDetails, this.loginUserPaymetDetails.payId).subscribe(
             (res:any) => {
               this.successMessage = 'Fund added successfully!';

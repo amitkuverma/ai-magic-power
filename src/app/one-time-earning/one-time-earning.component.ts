@@ -36,21 +36,39 @@ export class OneTimeEarningComponent {
 
   fetchUsers(): void {
     this.loading = true;
-    this.transactionServices.geTransactionsByUserId(this.cookies.decodeToken().userId).subscribe(
-      (data: any) => {
-        const adminHistory = data.filter(item=>item.paymentType === 'oneTime');
-  
-        this.transInfo = adminHistory;
-        this.filteredTrans = adminHistory;
-        this.totalItems = adminHistory.length;
-        this.loading = false;
-        this.toastr.success('One time earning Report loaded successfully!');
-      },
-      (error: any) => {
-        this.loading = false;
-        this.toastr.error(error.error.message);
-      }
-    );
+    if (this.cookies.isAdmin()) {
+      this.transactionServices.getAllTransaction().subscribe(
+        (data: any) => {
+          const today = new Date();
+          const adminHistory = data.filter(item=>item.paymentType === 'oneTime')
+          this.transInfo = adminHistory;
+          this.filteredTrans = adminHistory;
+          this.totalItems = adminHistory.length;
+          this.loading = false;
+          this.toastr.success('One time earning Report loaded successfully!');
+        },
+        (error: any) => {
+          this.loading = false;
+          this.toastr.error(error.error.message);
+        }
+      );
+    } else {
+      this.transactionServices.geTransactionsByUserId(this.cookies.decodeToken().userId).subscribe(
+        (data: any) => {
+          const adminHistory = data.filter(item=>item.paymentType === 'oneTime');
+          this.transInfo = adminHistory;
+          this.filteredTrans = adminHistory;
+          this.totalItems = adminHistory.length;
+          this.loading = false;
+          this.toastr.success('One time earning Report loaded successfully!');
+        },
+        (error: any) => {
+          this.loading = false;
+          this.toastr.error(error.error.message);
+        }
+      );
+    }
+
   }
   
   filterUsers() {

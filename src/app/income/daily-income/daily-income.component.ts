@@ -34,21 +34,48 @@ export class DailyIncomeComponent {
 
   fetchUsers(): void {
     this.loading = true;
-    this.dailyEarningService.getDailyEarningByUserId(this.cookies.decodeToken().userId).subscribe(
-      (data: any) => {
-        const adminHistory = data;
-        this.transInfo = adminHistory;
-        this.filteredTrans = adminHistory;
-        this.totalItems = adminHistory.length;
-        this.loading = false;
-        this.toastr.success('Fund data loaded successfully!');
-      },
-      (error:any)=>{
-        this.loading = false;
-        this.toastr.error(error.error.message)
-      }
-    );
+    if (this.cookies.isAdmin()) {
+      this.dailyEarningService.getAllDailyEarning().subscribe(
+        (data: any) => {
+          const today = new Date();
+          const adminHistory = data.filter((item: any) => {
+            const createdAtDate = new Date(item.createdAt);
+            return (
+              createdAtDate.getDate() === today.getDate() &&
+              createdAtDate.getMonth() === today.getMonth() &&
+              createdAtDate.getFullYear() === today.getFullYear()
+            );
+          });
+          this.transInfo = adminHistory;
+          this.filteredTrans = adminHistory;
+          this.totalItems = adminHistory.length;
+          this.loading = false;
+          this.toastr.success('Fund data loaded successfully!');
+        },
+        (error: any) => {
+          this.loading = false;
+          this.toastr.error(error.error.message);
+        }
+      );
+    } else {
+      this.dailyEarningService.getDailyEarningByUserId(this.cookies.decodeToken().userId).subscribe(
+        (data: any) => {
+          const adminHistory = data;
+          this.transInfo = adminHistory;
+          this.filteredTrans = adminHistory;
+          this.totalItems = adminHistory.length;
+          this.loading = false;
+          this.toastr.success('Fund data loaded successfully!');
+        },
+        (error: any) => {
+          this.loading = false;
+          this.toastr.error(error.error.message);
+        }
+      );
+    }
+
   }
+
 
   filterUsers() {
     this.filteredTrans = this.transInfo.filter(
