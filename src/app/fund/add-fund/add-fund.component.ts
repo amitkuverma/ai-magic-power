@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { AccountDetailsService } from 'src/services/account.service';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-fund',
@@ -42,7 +43,7 @@ export class AddFundComponent {
 
   constructor(private uploadService: UploadService, private fb: FormBuilder, private accountService: AccountDetailsService,
     private cookiesService: CookieService, private transactionService: TransactionService, private clipboard: Clipboard,
-    private toster: ToastrService
+    private toster: ToastrService, private route: Router
   ) {
     this.envImg = environment.IMAGE_URL
   }
@@ -171,7 +172,7 @@ export class AddFundComponent {
             this.toster.success('Fund resquest send successfully!');
             this.isImageUploaded = true; // Mark image as uploaded
             this.loading = false;
-            this.closeModal();
+            this.route.navigate(['/fund-history'])
           },
           error => {
             this.successMessage = 'Error uploading file';

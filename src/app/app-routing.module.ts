@@ -96,7 +96,7 @@ const routes: Routes = [
       },
       {
         path: 'ai-trade',
-        loadComponent: () => import('./income/ai-trade-report/ai-trade-report.component').then((c) => c.AiTradeComponent)
+        loadComponent: () => import('./income/ai-income/ai-income.component').then((c) => c.AiIncomeComponent)
       },
       {
         path: 'daily-report',
