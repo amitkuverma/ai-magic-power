@@ -6,6 +6,7 @@ import { PaymentService } from 'src/services/payment.service';
 import { ToastrService } from 'ngx-toastr';
 import { UsersService } from 'src/services/users.service';
 import { TransactionService } from 'src/services/transaction.service';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-ai-packages',
@@ -23,18 +24,17 @@ export class AiPackagesComponent {
 
   selectedPackage: any;
   successMessage!: string;
-  walletAmount: any;
+  walletAmount: any = 0;
   aiStakeForm!: FormGroup;
   showModal = false;
   oneTimeEarning!: any;
   loginUserPayDetails: any;
+  stakeError: string | null = null;
+  modalRef?: NgbModalRef;
 
   constructor(private paymentService: PaymentService, private cookies: CookieService, private fb: FormBuilder, private toastr: ToastrService,
-    private userService: UsersService, private transactionService: TransactionService
+    private userService: UsersService, private transactionService: TransactionService, private modalService: NgbModal
   ) {
-    this.aiStakeForm = this.fb.group({
-      aiStake: ['', [Validators.required, this.aiStakeValidator]]
-    });
     this.fatchTransDetails();
   }
 
@@ -49,13 +49,10 @@ export class AiPackagesComponent {
     )
   }
 
-  openModal() {
-    this.showModal = true;
-  }
-
   closeModal() {
     const modalElement = document.getElementById('packageModal');
-    if (modalElement) {
+    if (modalElement) {      
+      this.walletAmount = 0;
       const modal = (window as any).bootstrap.Modal.getInstance(modalElement); // Get the modal instance
       if (modal) {
         modal.hide(); // Hide the modal using Bootstrap's method
@@ -76,36 +73,25 @@ export class AiPackagesComponent {
 
 
 
-  // Custom validator for AI Stake
-  aiStakeValidator(control: AbstractControl): ValidationErrors | null {
-    const stakeValue = control.value;
-
-    if (stakeValue === null || stakeValue === '') {
-      return null; // Skip validation if empty, handled by 'required'
+  validateStake() {
+    // Check if walletAmount is greater than depositWallet
+    if (this.walletAmount > this.loginUserPayDetails.depositWallet) {
+      this.stakeError = "Entered amount exceeds available deposit wallet.";
     }
-
-    // Check range based on selected package
-    if (this.selectedPackage?.name === 'OPAL AI' && (stakeValue < 12 || stakeValue > 999)) {
-      return { invalidStake: true };
+    // Additional conditions based on package
+    else if (this.selectedPackage?.name === 'OPAL AI' && (this.walletAmount < 12 || this.walletAmount > 999)) {
+      this.stakeError = "Stake must be between 12 and 999 for OPAL AI package.";
+    } else if (this.selectedPackage?.name === 'JASPER AI' && (this.walletAmount < 1000 || this.walletAmount > 9999)) {
+      this.stakeError = "Stake must be between 1000 and 9999 for JASPER AI package.";
+    } else {
+      this.stakeError = null; // Clear error if validation passes
     }
-
-    if (this.selectedPackage?.name === 'JASPER AI' && (stakeValue < 1000 || stakeValue > 9999)) {
-      return { invalidStake: true };
-    }
-
-    return null; // Valid stake
   }
-
-
-  // Getter for easy access to form fields
-  get f() {
-    return this.aiStakeForm.controls;
-  }
+  
 
   // Handle package selection
   selectPackage(pack: any): void {
     this.selectedPackage = pack;
-    this.openModal();
   }
 
   oneTimeEarnings(): any {
@@ -114,6 +100,12 @@ export class AiPackagesComponent {
   }
 
   submitPackage(): void {
+    this.validateStake();
+
+    if (this.stakeError) {
+      return; // Prevent submission if there's a validation error
+    }
+
     const currentDate = new Date(); // Get the current date
     if (this.selectedPackage === 'OPAL AI') {
       this.daysToAdd = 1000;
@@ -183,6 +175,7 @@ export class AiPackagesComponent {
             this.transactionService.createTransactionForOneTime(body).subscribe(
               transCreated => {
                 console.log("Transaction created:", transCreated);
+                this.walletAmount = 0;
               },
               transError => {
                 console.error("Failed to create transaction:", transError);

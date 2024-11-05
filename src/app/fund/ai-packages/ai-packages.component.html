@@ -28,7 +28,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
+  <div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -42,11 +42,14 @@
           <p><strong>Days:</strong> {{ selectedPackage?.days }}</p>
           <div class="d-flex mb-3">
             <label for="aiStake"><strong>Enter AI Stake</strong></label>
-            <input id="aiStake" [(ngModel)]="walletAmount" type="number" placeholder="Enter amount">
+            <input class="form-control wallet" id="aiStake" [(ngModel)]="walletAmount" (ngModelChange)="validateStake()" type="number" placeholder="Enter amount">
+          </div>
+          <div *ngIf="stakeError" class="alert alert-danger">
+            {{ stakeError }}
           </div>
           <div class="modal-footer">
             <button type="submit" class="btn btn-secondary" (click)="closeModal()">Close</button>
-            <button type="submit" class="btn btn-success" (click)="submitPackage()">Start Trading</button>
+            <button type="submit" class="btn btn-success" (click)="submitPackage()" [disabled]="stakeError">Start Trading</button>
           </div>
         </div>
       </div>

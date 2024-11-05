@@ -176,7 +176,7 @@ export class P2pTransferComponent {
       userId: this.cookiesService.decodeToken().userId,
       userName: this.cookiesService.decodeToken().userName,
       receiverName: this.internalTransferForm.get('memberId')?.value,
-      paymentType: 'internal',
+      paymentType: 'p2p',
       transactionAmount: transactionAmount
     };
 

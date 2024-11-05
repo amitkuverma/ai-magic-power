@@ -135,6 +135,14 @@ const routes: Routes = [
         loadComponent: () => import('./deposit-wallet-report/deposit-wallet-report.component').then((c) => c.DepositWalletReportComponent)
       },
       {
+        path: 'transfer-deposit-wallet',
+        loadComponent: () => import('./withdraw/transfer-to-deposit/transfer-to-deposit.component').then((c) => c.TransferToDepositComponent)
+      },
+      {
+        path: 'transfer-deposit-wallet-report',
+        loadComponent: () => import('./deposit-wallet-report/deposit-wallet-report.component').then((c) => c.DepositWalletReportComponent)
+      },
+      {
         path: 'total-turnover',
         loadComponent: () => import('./total-turnover-report/total-turnover-report.component').then((c) => c.TotalTurnoverReportComponent)
       },

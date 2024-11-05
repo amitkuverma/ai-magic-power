@@ -1,0 +1,22 @@
+<div class="card p-4">
+    <div class="wallet-balance">
+        <h3 class="text-primary">Transfer Earn Wallet to Deposit.</h3>
+        <p class="mb-2"><strong>Earnings Wallet: </strong> <span class="text-primary">{{ userPaymentDetails?.earnWallet }}</span> </p>
+        <p class="mb-2"><strong>Deposit Wallet: </strong> <span class="text-primary">{{ userPaymentDetails?.depositWallet }}</span></p>
+    </div>
+
+    <div class="transfer-section">
+        <label for="transferAmount"><strong>Enter Transfer Amount (10% fee applies):</strong></label>
+        <input id="transferAmount" type="number" [(ngModel)]="transferAmount" placeholder="Enter amount to transfer"
+            (ngModelChange)="validateTransferAmount()" />
+
+        <button (click)="onSubmitWithdrawal()"
+            [disabled]="!transferAmount || transferInProgress">
+            Transfer to Deposit Wallet
+        </button>
+
+        <div *ngIf="transferError" class="text-danger">
+            {{ transferError }}
+        </div>
+    </div>
+</div>

@@ -157,11 +157,20 @@ export const NavigationUserItems: NavigationItem[] = [
         breadcrumbs: false
       },
       {
-        id: 'transfer_deposit_history',
+        id: 'transfer_deposit',
         title: 'Transfer to deposit wallte',
         type: 'item',
         classes: 'nav-item',
-        url: '/transfer-deposit-wallte',
+        url: '/transfer-deposit-wallet',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },
+      {
+        id: 'transfer_deposit_history',
+        title: 'Deposit wallet Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/transfer-deposit-wallet-report',
         icon: 'ant-design',
         breadcrumbs: false
       }

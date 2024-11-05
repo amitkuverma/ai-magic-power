@@ -28,7 +28,7 @@ export class DepositWalletReportComponent {
   successMessage: string = '';
   totalDepositWallet: string = '';
 
-  constructor(private paymentServices: PaymentService, public cookies: CookieService, private toastr: ToastrService) { }
+  constructor(private transactionService: TransactionService, public cookies: CookieService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -36,29 +36,24 @@ export class DepositWalletReportComponent {
 
   fetchUsers(): void {
     this.loading = true;
-    this.paymentServices.getAllReferUser().subscribe(
-      (data: any) => {
-        const adminHistory = data.filter(item=> item.status !== 'admin');
-  
-        // Calculate total depositWallet
-        const totalDepositWallet = adminHistory.reduce((total: number, item: any) => {
-          return total + parseFloat(item.depositWallet);
-        }, 0);
-  
+    this.transactionService.getAllTransaction().subscribe((data: any) => {
+      if (this.cookies.isAdmin()) {
+        const adminHistory = data.filter((item:any) => item.paymentType === 'e2d' );
         this.transInfo = adminHistory;
         this.filteredTrans = adminHistory;
         this.totalItems = adminHistory.length;
-        this.totalDepositWallet = totalDepositWallet; // Store the total for display
-        this.loading = false;
-        this.toastr.success('Earn wallet report loaded successfully!');
-      },
-      (error: any) => {
-        this.loading = false;
-        this.toastr.error(error.error.message);
+
+      } else {
+        const userHistory = data.filter((item:any) => item.userId === this.cookies.decodeToken().userId && item.paymentType === 'e2d' );
+        this.transInfo = userHistory
+        this.filteredTrans = userHistory;
+        this.totalItems = userHistory.length;
       }
-    );
+      this.loading = false;
+      this.toastr.success('Fund data loaded successfully!');
+    });
   }
-  
+
   filterUsers() {
     this.filteredTrans = this.transInfo.filter(
       (user) =>

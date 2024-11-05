@@ -1,6 +1,5 @@
 <div class="container card">
-    <h5 class="my-3">Deposit Wallet Report</h5>
-    <p>Earn Wallet: <span class="text-primary">{{totalDepositWallet}}</span></p>
+    <h5 class="my-3">Earn to Deposit Wallet Report</h5>
     <div *ngIf="loading" class="text-center">
       <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
@@ -14,7 +13,7 @@
             <th>DATE</th>
             <th>USER ID</th>
             <th>NAME</th>
-            <th>DEPOSIT WALLET</th>
+            <th>AMOUNT</th>
             <th>STATUS</th>
           </tr>
         </thead>
@@ -23,7 +22,7 @@
             <td>{{ payment?.createdAt | date: 'short' }}</td>
             <td>{{ payment?.userId }}</td>
             <td class="text-capitalize">{{ payment?.userName }}</td>
-            <td class="text-capitalize">{{ payment?.depositWallet }}</td>
+            <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
             <td class="text-capitalize">{{ payment?.status }}</td>
           </tr>
         </tbody>

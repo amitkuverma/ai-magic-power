@@ -36,21 +36,22 @@ export class P2PReportComponent {
 
   fetchUsers(): void {
     this.loading = true;
-    this.transactionServices.getAllTransaction().subscribe(
-      (data: any) => {
-        const adminHistory = data.filter(item=>item.paymentType === 'p2p');
-  
+    this.transactionServices.getAllTransaction().subscribe((data: any) => {
+      if (this.cookies.isAdmin()) {
+        const adminHistory = data.filter((item:any) => item.paymentType === 'p2p' );
         this.transInfo = adminHistory;
         this.filteredTrans = adminHistory;
         this.totalItems = adminHistory.length;
-        this.loading = false;
-        this.toastr.success('P2P Report loaded successfully!');
-      },
-      (error: any) => {
-        this.loading = false;
-        this.toastr.error(error.error.message);
+
+      } else {
+        const userHistory = data.filter((item:any) => item.userId === this.cookies.decodeToken().userId && item.paymentType === 'p2p' );
+        this.transInfo = userHistory
+        this.filteredTrans = userHistory;
+        this.totalItems = userHistory.length;
       }
-    );
+      this.loading = false;
+      this.toastr.success('P2P data loaded successfully!');
+    });
   }
   
   filterUsers() {
