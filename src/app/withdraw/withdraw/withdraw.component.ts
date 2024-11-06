@@ -34,7 +34,6 @@ export class WithdrawComponent {
     // Initialize the form without max validator for transactionAmount
     this.bankTransferForm = this.fb.group({
       transactionAmount: ['', [Validators.required, Validators.min(5)]],
-      transactionId: ['']
     });
 
     this.getUserPayment();

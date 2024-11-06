@@ -13,6 +13,7 @@
             <th>USER ID</th>
             <th>NAME</th>
             <th>TYPE</th>
+            <th>Transaction Id</th>
             <th>AMOUNT</th>
             <th>STATUS</th>
             <th>RECEIPT</th>
@@ -23,6 +24,7 @@
             <td>{{ payment?.userId }}</td>
             <td class="text-capitalize">{{ payment?.userName }}</td>
             <td class="text-capitalize">{{ payment?.paymentType }}</td>
+            <td class="text-capitalize">{{ payment?.transactionId || 'NA' }}</td>
             <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
             <td class="text-capitalize">{{ payment?.status }}</td>
             <td>

@@ -37,6 +37,7 @@ export class AddFundComponent {
   selectedUserInTransaction: any;
   fundInfo: any;
   fundAmount!: number;
+  transactionId:any;
   envImg: any;
   @ViewChild('userDetailsModal') userDetailsModal!: ElementRef;
 
@@ -108,6 +109,7 @@ export class AddFundComponent {
     this.loading = true;
     const data = {
       paymentType: 'fund',
+      transactionId: this.transactionId,
       transactionAmount: this.fundAmount
     };
 

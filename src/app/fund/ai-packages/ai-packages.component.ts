@@ -93,17 +93,13 @@ export class AiPackagesComponent {
     this.selectedPackage = pack;
   }
 
-  oneTimeEarnings(): any {
-    this.oneTimeEarning = (this.walletAmount * 5) % 100;
-    return this.oneTimeEarning;
-  }
   activeUser() {
     try {
       const userId = this.cookies.decodeToken().userId;
       this.userService.getUserById(userId).subscribe(
         (resUser) => {
           console.log(resUser);
-          
+
           if (resUser.status === 'pending') {
             resUser.activeDate = new Date();
             resUser.status = 'active';
@@ -119,29 +115,26 @@ export class AiPackagesComponent {
       console.error('Error activating user:', error);
     }
   }
-  
+
   submitPackage(): void {
     this.validateStake();
-  
+
     if (this.stakeError) {
       return; // Prevent submission if there's a validation error
     }
-  
+
     this.activeUser(); // Ensure user activation
-  
+
     const currentDate = new Date();
     this.daysToAdd = this.selectedPackage === 'OPAL AI' ? 1000 : 750;
     const futureDate = new Date(currentDate.getTime() + this.daysToAdd * 24 * 60 * 60 * 1000);
-  
+
     this.updateUserPayDetails(currentDate, futureDate);
-  
+
     this.paymentService.updateUserStatus(this.loginUserPayDetails, this.loginUserPayDetails.payId).subscribe(
       () => {
         this.createTradeTransaction();
         this.toastr.success('Trading started successfully!', 'Success');
-  
-        this.closeModal(); // Close modal on success
-        this.walletAmount = 0; // Reset wallet amount
       },
       (error) => {
         this.toastr.error('Failed Trading.', 'Error');
@@ -149,7 +142,7 @@ export class AiPackagesComponent {
       }
     );
   }
-  
+
   updateUserPayDetails(currentDate: Date, futureDate: Date): void {
     this.loginUserPayDetails.plan = this.selectedPackage.name;
     this.loginUserPayDetails.commission = this.selectedPackage.commission;
@@ -158,7 +151,7 @@ export class AiPackagesComponent {
     this.loginUserPayDetails.depositWallet = this.loginUserPayDetails.depositWallet - this.walletAmount;
     this.loginUserPayDetails.selfInvestment = this.loginUserPayDetails.selfInvestment + this.walletAmount;
   }
-  
+
   createTradeTransaction() {
     const transactionData = {
       paymentType: 'trade',
@@ -166,7 +159,7 @@ export class AiPackagesComponent {
       transactionAmount: this.walletAmount,
       status: 'completed',
     };
-  
+
     this.transactionService.createTransaction(transactionData).subscribe(
       () => {
         this.userService.getParentReferralChain(this.cookies.decodeToken().userId).subscribe(
@@ -180,19 +173,20 @@ export class AiPackagesComponent {
       (error) => console.error('Error creating transaction:', error)
     );
   }
-  
+
   handleReferralPercentage(referrals: any[]) {
     referrals.forEach((referral, index) => {
       const level = index + 1;
       const percentage = this.getReferralPercentage(level);
-  
+
       this.paymentService.getUserReferrals(referral.userId).subscribe(
         (resPay) => {
           const userFundRequestAmount = this.walletAmount || 0;
           const additionalAmount = userFundRequestAmount * percentage / 100;
-  
+
           resPay.earnWallet = resPay.earnWallet + additionalAmount;
-  
+          resPay.dailyLevelEarning = resPay.dailyLevelEarning + additionalAmount;
+
           this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
             () => {
               this.createReferralTransaction(referral, additionalAmount);
@@ -205,7 +199,7 @@ export class AiPackagesComponent {
       );
     });
   }
-  
+
   createReferralTransaction(referral: any, additionalAmount: any) {
     const transactionData = {
       userId: referral.userId,
@@ -214,13 +208,17 @@ export class AiPackagesComponent {
       transactionAmount: additionalAmount,
       status: 'paid',
     };
-  
+
     this.transactionService.createTransactionForOneTime(transactionData).subscribe(
-      () => console.log("Transaction created for referral:", transactionData),
+      () => {
+        this.closeModal(); // Close modal on success
+        this.walletAmount = 0; // Reset wallet amount
+        console.log("Transaction created for referral:", transactionData)
+      },
       (error) => console.error('Error creating referral transaction:', error)
     );
   }
-  
+
   getReferralPercentage(level: number): number {
     switch (level) {
       case 1: return 5;
@@ -231,5 +229,5 @@ export class AiPackagesComponent {
       default: return 0;
     }
   }
-  
+
 }
