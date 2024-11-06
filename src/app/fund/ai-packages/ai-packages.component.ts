@@ -97,51 +97,59 @@ export class AiPackagesComponent {
     this.oneTimeEarning = (this.walletAmount * 5) % 100;
     return this.oneTimeEarning;
   }
-
-  async activeUser() {
+  activeUser() {
     try {
       const userId = this.cookies.decodeToken().userId;
-      const resUser = await this.userService.getUserById(userId).toPromise();
-
-      if (resUser.status === 'pending') {
-        resUser.activeDate = new Date();
-        resUser.status = 'active';
-        await this.userService.updateUserProfile(resUser).toPromise();
-        console.log('User activated:', resUser);
-      }
+      this.userService.getUserById(userId).subscribe(
+        (resUser) => {
+          console.log(resUser);
+          
+          if (resUser.status === 'pending') {
+            resUser.activeDate = new Date();
+            resUser.status = 'active';
+            this.userService.updateUserProfile(resUser).subscribe(
+              (res) => console.log('User activated:', resUser),
+              (error) => console.error('Error updating user profile:', error)
+            );
+          }
+        },
+        (error) => console.error('Error fetching user:', error)
+      );
     } catch (error) {
       console.error('Error activating user:', error);
     }
   }
-
-  async submitPackage(): Promise<void> {
+  
+  submitPackage(): void {
     this.validateStake();
-
+  
     if (this.stakeError) {
       return; // Prevent submission if there's a validation error
     }
-
-    await this.activeUser(); // Ensure user activation
-
+  
+    this.activeUser(); // Ensure user activation
+  
     const currentDate = new Date();
     this.daysToAdd = this.selectedPackage === 'OPAL AI' ? 1000 : 750;
     const futureDate = new Date(currentDate.getTime() + this.daysToAdd * 24 * 60 * 60 * 1000);
-
+  
     this.updateUserPayDetails(currentDate, futureDate);
-
-    try {
-      await this.paymentService.updateUserStatus(this.loginUserPayDetails, this.loginUserPayDetails.payId).toPromise();
-      await this.createTradeTransaction();
-      this.toastr.success('Trading started successfully!', 'Success');
-
-      this.closeModal(); // Close modal on success
-      this.walletAmount = 0; // Reset wallet amount
-    } catch (error) {
-      this.toastr.error('Failed Trading.', 'Error');
-      console.error('Error submitting package:', error);
-    }
+  
+    this.paymentService.updateUserStatus(this.loginUserPayDetails, this.loginUserPayDetails.payId).subscribe(
+      () => {
+        this.createTradeTransaction();
+        this.toastr.success('Trading started successfully!', 'Success');
+  
+        this.closeModal(); // Close modal on success
+        this.walletAmount = 0; // Reset wallet amount
+      },
+      (error) => {
+        this.toastr.error('Failed Trading.', 'Error');
+        console.error('Error submitting package:', error);
+      }
+    );
   }
-
+  
   updateUserPayDetails(currentDate: Date, futureDate: Date): void {
     this.loginUserPayDetails.plan = this.selectedPackage.name;
     this.loginUserPayDetails.commission = this.selectedPackage.commission;
@@ -150,47 +158,55 @@ export class AiPackagesComponent {
     this.loginUserPayDetails.depositWallet = this.loginUserPayDetails.depositWallet - this.walletAmount;
     this.loginUserPayDetails.selfInvestment = this.loginUserPayDetails.selfInvestment + this.walletAmount;
   }
-
-  async createTradeTransaction() {
+  
+  createTradeTransaction() {
     const transactionData = {
-      paymentType: this.selectedPackage.name,
+      paymentType: 'trade',
+      transactionId: this.walletAmount * this.selectedPackage.commission / 100,
       transactionAmount: this.walletAmount,
       status: 'completed',
     };
-
-    await this.transactionService.createTransaction(transactionData).toPromise();
-
-    const referralChain = await this.userService.getParentReferralChain(this.cookies.decodeToken().userId).toPromise();
-    const filteredReferrals = referralChain.filter(item => item.userId !== this.cookies.decodeToken().userId);
-
-    await this.handleReferralPercentage(filteredReferrals);
+  
+    this.transactionService.createTransaction(transactionData).subscribe(
+      () => {
+        this.userService.getParentReferralChain(this.cookies.decodeToken().userId).subscribe(
+          (referralChain) => {
+            const filteredReferrals = referralChain.filter(item => item.userId !== this.cookies.decodeToken().userId);
+            this.handleReferralPercentage(filteredReferrals);
+          },
+          (error) => console.error('Error fetching referral chain:', error)
+        );
+      },
+      (error) => console.error('Error creating transaction:', error)
+    );
   }
-
-  async handleReferralPercentage(referrals: any[]) {
-    const referralPromises = referrals.map(async (referral, index) => {
+  
+  handleReferralPercentage(referrals: any[]) {
+    referrals.forEach((referral, index) => {
       const level = index + 1;
       const percentage = this.getReferralPercentage(level);
-
-      try {
-        const resPay = await this.paymentService.getUserReferrals(referral.userId).toPromise();
-        const userFundRequestAmount = this.walletAmount || 0;
-        const additionalAmount = userFundRequestAmount * percentage / 100;
-
-        resPay.earnWallet = resPay.earnWallet + additionalAmount;
-
-        await this.paymentService.updateUserStatus(resPay, resPay.payId).toPromise();
-        await this.createReferralTransaction(referral, additionalAmount);
-
-        console.log(`Updated earn for referral level ${level}: ${resPay.earnWallet}`);
-      } catch (error) {
-        console.error(`Failed to update referral for userId ${referral.userId}:`, error);
-      }
+  
+      this.paymentService.getUserReferrals(referral.userId).subscribe(
+        (resPay) => {
+          const userFundRequestAmount = this.walletAmount || 0;
+          const additionalAmount = userFundRequestAmount * percentage / 100;
+  
+          resPay.earnWallet = resPay.earnWallet + additionalAmount;
+  
+          this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
+            () => {
+              this.createReferralTransaction(referral, additionalAmount);
+              console.log(`Updated earn for referral level ${level}: ${resPay.earnWallet}`);
+            },
+            (error) => console.error(`Failed to update referral for userId ${referral.userId}:`, error)
+          );
+        },
+        (error) => console.error(`Error fetching user referrals for userId ${referral.userId}:`, error)
+      );
     });
-
-    await Promise.all(referralPromises); // Wait for all referral updates
   }
-
-  async createReferralTransaction(referral: any, additionalAmount: any) {
+  
+  createReferralTransaction(referral: any, additionalAmount: any) {
     const transactionData = {
       userId: referral.userId,
       userName: referral.name,
@@ -198,11 +214,13 @@ export class AiPackagesComponent {
       transactionAmount: additionalAmount,
       status: 'paid',
     };
-
-    await this.transactionService.createTransactionForOneTime(transactionData).toPromise();
-    console.log("Transaction created for referral:", transactionData);
+  
+    this.transactionService.createTransactionForOneTime(transactionData).subscribe(
+      () => console.log("Transaction created for referral:", transactionData),
+      (error) => console.error('Error creating referral transaction:', error)
+    );
   }
-
+  
   getReferralPercentage(level: number): number {
     switch (level) {
       case 1: return 5;
@@ -213,4 +231,5 @@ export class AiPackagesComponent {
       default: return 0;
     }
   }
+  
 }
