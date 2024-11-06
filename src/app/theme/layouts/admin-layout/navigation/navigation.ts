@@ -79,6 +79,15 @@ export const NavigationItems: NavigationItem[] = [
         breadcrumbs: false
       },      
       {
+        id: 'ai_trade_report',
+        title: 'AI Plan Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/ai-plan-report',
+        icon: 'ant-design',
+        breadcrumbs: false
+      },      
+      {
         id: 'daily_report',
         title: 'Daily Earning',
         type: 'item',

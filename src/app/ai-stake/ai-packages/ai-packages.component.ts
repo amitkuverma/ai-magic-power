@@ -157,6 +157,9 @@ export class AiPackagesComponent {
       paymentType: 'trade',
       transactionId: this.walletAmount * this.selectedPackage.commission / 100,
       transactionAmount: this.walletAmount,
+      filename: this.selectedPackage.name,
+      filepath: this.selectedPackage.commission,
+      mimetype: this.walletAmount,
       status: 'completed',
     };
 

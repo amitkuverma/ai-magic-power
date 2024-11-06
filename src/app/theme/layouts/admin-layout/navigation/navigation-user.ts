@@ -109,7 +109,7 @@ export const NavigationUserItems: NavigationItem[] = [
         title: 'AI Plan Report',
         type: 'item',
         classes: 'nav-item',
-        url: '/ai-trade',
+        url: '/ai-plan-report',
         icon: 'wallet',
         breadcrumbs: false
       },

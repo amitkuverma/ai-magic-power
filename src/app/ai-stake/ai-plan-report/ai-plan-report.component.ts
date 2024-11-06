@@ -8,16 +8,16 @@ import { CookieService } from 'src/services/cookie.service';
 import { PaymentService } from 'src/services/payment.service';
 
 @Component({
-  selector: 'app-ai-package-list',
+  selector: 'app-ai-plan-report',
   standalone: true,
   imports: [CommonModule, NgxPaginationModule, FormsModule],
-  templateUrl: './ai-package-list.component.html',
-  styleUrl: './ai-package-list.component.scss'
+  templateUrl: './ai-plan-report.component.html',
+  styleUrl: './ai-plan-report.component.scss'
 })
 
 
 
-export class AiPackageListComponent {
+export class AiPlanReportComponent {
   transInfo: any[] = [];
   filteredTrans: any[] = [];
   searchQuery: string = '';
@@ -57,21 +57,21 @@ export class AiPackageListComponent {
 
   fetchTransactions(): void {
     this.loading = true;
-    this.paymentService.getAllReferUser().subscribe((data: any) => {
+    this.transactionService.getAllTransaction().subscribe((data: any) => {
       if (this.cookies.isAdmin()) {
-        const adminHistory = data.filter((item:any) => item.status === 'new')
+        const adminHistory = data.filter((item:any) => item.paymentType === 'trade')
         this.transInfo = adminHistory;
         this.filteredTrans = adminHistory;
         this.totalItems = adminHistory.length;
 
       } else {
-        const userHistory = data.filter((item:any) => item.userId === this.cookies.decodeToken().userId && item.paymentType === 'fund' && item.status === 'pending');
+        const userHistory = data.filter((item:any) => item.userId === this.cookies.decodeToken().userId && item.paymentType === 'trade' );
         this.transInfo = userHistory
         this.filteredTrans = userHistory;
         this.totalItems = userHistory.length;
       }
       this.loading = false;
-      this.successMessage = 'Fund history data loaded successfully!';
+      this.successMessage = 'AI Plan history loaded successfully!';
       setTimeout(() => (this.successMessage = ''), 3000); // Clear success message after 3 seconds
     });
   }

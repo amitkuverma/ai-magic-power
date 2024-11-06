@@ -24,27 +24,21 @@
           <th>USER ID</th>
           <th>NAME</th>
           <th>PLAN</th>
+          <th>%</th>
+          <th>AMOUNT</th>
           <th>COMMISSION</th>
-          <th>ADD AMOUNT</th>
           <th>STATUS</th>
-          <th>RECEIPT</th>
-          <th>ACTION</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
           <td>{{ payment?.userId }}</td>
           <td class="text-capitalize">{{ payment?.userName }}</td>
-          <td class="text-capitalize">{{ payment?.plan }}</td>
-          <td class="text-capitalize">{{ payment?.commission }}</td>
+          <td class="text-capitalize">{{ payment?.filename || 'NA' }}</td>
+          <td class="text-capitalize">{{ payment?.filepath || 0 }}%</td>
+          <td class="text-capitalize">${{ payment?.mimetype || 0 }}</td>
+          <td class="text-capitalize">${{ payment?.transactionId || 0 }}</td>
           <td class="text-capitalize">{{ payment?.status }}</td>
-          <td>
-            <a *ngIf="payment?.filepath" [href]="envImg + payment?.filepath" target="_blank" class="view_rec">View Receipt</a>
-            <span *ngIf="!payment?.filepath">NA</span>
-          </td>
-          <td>
-            <button class="btn btn-primary" (click)="viewUserDetails(payment)">View Details</button>
-          </td>
         </tr>
       </tbody>
     </table>

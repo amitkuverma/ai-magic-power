@@ -15,7 +15,7 @@ const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadComponent: () => import('./components/dashboard/dashboard.component').then((c) => c.DashboardComponent)
+        loadComponent: () => import('./dashboard/dashboard.component').then((c) => c.DashboardComponent)
       },
       {
         path: 'users',
@@ -72,27 +72,27 @@ const routes: Routes = [
       },
       {
         path: 'transfer',
-        loadComponent: () => import('./p2p-transfer/p2p-transfer.component').then((c) => c.P2pTransferComponent)
+        loadComponent: () => import('./deposit/p2p-transfer/p2p-transfer.component').then((c) => c.P2pTransferComponent)
       },
       {
-        path: 'ai-packages-list',
-        loadComponent: () => import('./fund/package-list/ai-package-list.component').then((c) => c.AiPackageListComponent)
+        path: 'ai-plan-report',
+        loadComponent: () => import('./ai-stake/ai-plan-report/ai-plan-report.component').then((c) => c.AiPlanReportComponent)
       },
       {
         path: 'packages',
-        loadComponent: () => import('./fund/ai-packages/ai-packages.component').then((c) => c.AiPackagesComponent)
+        loadComponent: () => import('./ai-stake/ai-packages/ai-packages.component').then((c) => c.AiPackagesComponent)
       },
       {
         path: 'fund',
-        loadComponent: () => import('./fund/add-fund/add-fund.component').then((c) => c.AddFundComponent)
+        loadComponent: () => import('./deposit/add-fund/add-fund.component').then((c) => c.AddFundComponent)
       },
       {
         path: 'funds',
-        loadComponent: () => import('./fund/add-funds/add-funds.component').then((c) => c.AddFundsComponent)
+        loadComponent: () => import('./deposit/add-funds/add-funds.component').then((c) => c.AddFundsComponent)
       },
       {
         path: 'fund-history',
-        loadComponent: () => import('./fund/add-fund-history/add-fund-history.component').then((c) => c.AddFundHistoryComponent)
+        loadComponent: () => import('./deposit-history/add-fund-history/add-fund-history.component').then((c) => c.AddFundHistoryComponent)
       },
       {
         path: 'ai-trade',
@@ -124,15 +124,15 @@ const routes: Routes = [
       },
       {
         path: 'today-joining',
-        loadComponent: () => import('./today-joining/today-joining.component').then((c) => c.TodayJoiningComponent)
+        loadComponent: () => import('./profile/today-joining/today-joining.component').then((c) => c.TodayJoiningComponent)
       },
       {
         path: 'earn-wallet',
-        loadComponent: () => import('./earn-wallet-report/earn-wallet-report.component').then((c) => c.EarnWalletReportComponent)
+        loadComponent: () => import('./profile/earn-wallet-report/earn-wallet-report.component').then((c) => c.EarnWalletReportComponent)
       },
       {
         path: 'deposit-wallet',
-        loadComponent: () => import('./deposit-wallet-report/deposit-wallet-report.component').then((c) => c.DepositWalletReportComponent)
+        loadComponent: () => import('./deposit-history/deposit-wallet-report/deposit-wallet-report.component').then((c) => c.DepositWalletReportComponent)
       },
       {
         path: 'transfer-deposit-wallet',
@@ -140,23 +140,23 @@ const routes: Routes = [
       },
       {
         path: 'transfer-deposit-wallet-report',
-        loadComponent: () => import('./deposit-wallet-report/deposit-wallet-report.component').then((c) => c.DepositWalletReportComponent)
+        loadComponent: () => import('./deposit-history/deposit-wallet-report/deposit-wallet-report.component').then((c) => c.DepositWalletReportComponent)
       },
       {
         path: 'total-turnover',
-        loadComponent: () => import('./total-turnover-report/total-turnover-report.component').then((c) => c.TotalTurnoverReportComponent)
+        loadComponent: () => import('./profile/total-turnover-report/total-turnover-report.component').then((c) => c.TotalTurnoverReportComponent)
       },
       {
         path: 'p2p-report',
-        loadComponent: () => import('./p2p-report/p2p-report.component').then((c) => c.P2PReportComponent)
+        loadComponent: () => import('./deposit-history/p2p-report/p2p-report.component').then((c) => c.P2PReportComponent)
       },
       {
         path: 'fund-deposit',
-        loadComponent: () => import('./fund-deposit-report/fund-deposit-report.component').then((c) => c.FundDepositReportComponent)
+        loadComponent: () => import('./deposit-history/fund-deposit-report/fund-deposit-report.component').then((c) => c.FundDepositReportComponent)
       },
       {
         path: 'one-time-earning',
-        loadComponent: () => import('./one-time-earning/one-time-earning.component').then((c) => c.OneTimeEarningComponent)
+        loadComponent: () => import('./income/one-time-earning/one-time-earning.component').then((c) => c.OneTimeEarningComponent)
       },
       {
         path: 'payment-status/:userId',
@@ -170,11 +170,11 @@ const routes: Routes = [
     children: [
       {
         path: 'login',
-        loadComponent: () => import('./components/authentication/login/login.component')
+        loadComponent: () => import('./authentication/login/login.component')
       },
       {
         path: 'register',
-        loadComponent: () => import('./components/authentication/register/register.component')
+        loadComponent: () => import('./authentication/register/register.component')
       }
     ]
   },
