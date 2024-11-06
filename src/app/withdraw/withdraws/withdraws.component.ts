@@ -94,11 +94,9 @@ export class WithdrawRequestComponent {
       (res) => {
         if (status === 'approved') {
           this.paymentService.getUserReferrals(this.selectedUser.userId).subscribe(
-            res => {
-              console.log(this.selectedUser.transactionAmount);
-              
-              res.earnWallet = (parseFloat(res.earnWallet) - parseFloat(this.selectedUser.transactionAmount)).toFixed(2);
-              res.totalWithdraw = (parseFloat(res.totalWithdraw) + parseFloat(this.selectedUser.transactionAmount)).toFixed(2);
+            res => {              
+              res.earnWallet = res.earnWallet - (this.selectedUser.transactionAmount + (this.selectedUser.transactionAmount * 0.1));
+              res.totalWithdraw = res.totalWithdraw + this.selectedUser.transactionAmount;
               console.log(res)
               this.paymentService.updateUserStatus(res, res.payId).subscribe(
                 res => {

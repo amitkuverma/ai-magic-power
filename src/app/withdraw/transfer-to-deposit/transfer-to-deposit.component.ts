@@ -65,17 +65,17 @@ export class TransferToDepositComponent {
     }
 
     // Calculate the 10% fee and amount after fee with precision
-    const feeAmount = parseFloat((this.transferAmount * 0.1).toFixed(10));
-    const amountAfterFee = parseFloat((this.transferAmount - feeAmount).toFixed(10));
+    const feeAmount = this.transferAmount * 0.03;
+    const amountAfterFee = this.transferAmount - feeAmount;
     console.log("Fee Amount:", feeAmount, "Amount After Fee:", amountAfterFee);
 
     // Convert wallets to numbers to ensure accurate arithmetic
-    const earnWallet = parseFloat(this.userPaymentDetails.earnWallet);
-    const depositWallet = parseFloat(this.userPaymentDetails.depositWallet);
+    const earnWallet = this.userPaymentDetails.earnWallet;
+    const depositWallet = this.userPaymentDetails.depositWallet;
 
     // Update wallet balances
-    this.userPaymentDetails.earnWallet = parseFloat((earnWallet - this.transferAmount).toFixed(10));
-    this.userPaymentDetails.depositWallet = parseFloat((depositWallet + amountAfterFee).toFixed(10));
+    this.userPaymentDetails.earnWallet = earnWallet - this.transferAmount;
+    this.userPaymentDetails.depositWallet = depositWallet + amountAfterFee;
 
     console.log("Updated Earn Wallet:", this.userPaymentDetails.earnWallet);
     console.log("Updated Deposit Wallet:", this.userPaymentDetails.depositWallet);

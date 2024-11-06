@@ -169,47 +169,44 @@ export class AiPackagesComponent {
   }
 
 
-  handleReferralPercentage(referrals: any[]) {
-    referrals.forEach((referral, index) => {
+  async handleReferralPercentage(referrals: any[]) {
+    for (let index = 0; index < referrals.length; index++) {
+      const referral = referrals[index];
       const level = index + 1;
       const percentage = this.getReferralPercentage(level);
-console.log(percentage);
+      console.log(percentage);
 
-      this.paymentService.getUserReferrals(referral.userId).subscribe(
-        (resPay) => {
-          
-          const additionalAmount = (this.walletAmount * percentage) / 100;
+      try {
+        const resPay = await this.paymentService.getUserReferrals(referral.userId).toPromise();
 
+        const additionalAmount = (this.walletAmount * percentage) / 100;
+        resPay.earnWallet = resPay.earnWallet + additionalAmount;
+        resPay.dailyLevelEarning = resPay.dailyLevelEarning + additionalAmount;
 
-          resPay.earnWallet = resPay.earnWallet + additionalAmount;
-          resPay.dailyLevelEarning = resPay.dailyLevelEarning + additionalAmount;
+        await this.paymentService.updateUserStatus(resPay, resPay.payId).toPromise();
 
-          this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
-            () => {              
-              const transactionData = {
-                userId: referral.userId,
-                userName: referral.name,
-                receiverName: this.cookies.decodeToken().userName,
-                paymentType: 'oneTime',
-                transactionAmount: additionalAmount,
-                status: 'paid',
-              };
-          
-              this.transactionService.createTransactionForOneTime(transactionData).subscribe(
-                () => {
-                  console.log("Transaction created for referral:", transactionData)
-                },
-                (error) => console.error('Error creating referral transaction:', error)
-              );
-              console.log(`Updated earn for referral level ${level}: ${resPay.earnWallet}`);
-            },
-            (error) => console.error(`Failed to update referral for userId ${referral.userId}:`, error)
-          );
-        },
-        (error) => console.error(`Error fetching user referrals for userId ${referral.userId}:`, error)
-      );
-    });
+        const transactionData = {
+          userId: referral.userId,
+          userName: referral.name,
+          receiverName: this.cookies.decodeToken().userName,
+          paymentType: 'oneTime',
+          transactionAmount: additionalAmount,
+          status: 'paid',
+        };
+
+        await this.transactionService.createTransactionForOneTime(transactionData).toPromise();
+        console.log("Transaction created for referral:", transactionData);
+        console.log(`Updated earn for referral level ${level}: ${resPay.earnWallet}`);
+
+      } catch (error) {
+        console.error(`Error in processing referral at level ${level}:`, error);
+      }
+    }
+
+    // Close modal after all referrals are processed
+    this.closeModal();
   }
+
 
 
   getReferralPercentage(level: number): number {

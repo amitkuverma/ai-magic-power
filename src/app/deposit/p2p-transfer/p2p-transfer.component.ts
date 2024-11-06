@@ -108,16 +108,16 @@ export class P2pTransferComponent {
 
 
   validateTransactionAmount(control: AbstractControl) {
-    const earnWallet = this.userPaymentDetails?.earnWallet || 0;
+    const depositWallet = this.userPaymentDetails?.depositWallet || 0;
     const transactionAmount = control.get('transactionAmount')?.value;
 
-    return transactionAmount <= earnWallet ? null : { amountExceeds: true };
+    return transactionAmount <= depositWallet ? null : { amountExceeds: true };
   }
 
   transactionAmountExceeds(): boolean {
-    const earnWallet = this.userPaymentDetails?.earnWallet || 0;
+    const depositWallet = this.userPaymentDetails?.depositWallet || 0;
     const transactionAmount = this.internalTransferForm.get('transactionAmount')?.value || 0;
-    return transactionAmount > earnWallet;
+    return transactionAmount > depositWallet;
   }
 
   openShareDialog() {
@@ -164,10 +164,10 @@ export class P2pTransferComponent {
   }
 
   onInternalSubmit() {
-    const earnWallet = this.userPaymentDetails?.earnWallet || 0;
+    const depositWallet = this.userPaymentDetails?.depositWallet || 0;
     const transactionAmount = this.internalTransferForm.get('transactionAmount')?.value;
 
-    if (transactionAmount > earnWallet) {
+    if (transactionAmount > depositWallet) {
       // this.toastr.error('Transaction amount must not exceed total amount.', 'Error');
       return;
     }
@@ -186,13 +186,13 @@ export class P2pTransferComponent {
     
     this.trancService.createTransaction(body).subscribe(
       (transUpdate) => {
-        senderUser.earnWallet -= transactionAmount;
-        receiverUser.earnWallet += transactionAmount;
+        senderUser.depositWallet -= transactionAmount;
+        receiverUser.depositWallet += transactionAmount;
         
         this.updateUserStatus(senderUser, receiverUser);
         const userInfo = this.userDetails.find((item: any) => item.userId === receiverUser.userId);
         
-        if (userInfo.status !== 'active' && receiverUser.earnWallet >= 5) {
+        if (userInfo.status !== 'active' && receiverUser.depositWallet >= 5) {
           this.activateUserIfTransferExceeds300(receiverUser);
           this.userService.getUserById(this.selectedUser.userId).subscribe(
             (resUser: any) => {
