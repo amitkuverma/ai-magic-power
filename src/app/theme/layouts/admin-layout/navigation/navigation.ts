@@ -212,7 +212,7 @@ export const NavigationItems: NavigationItem[] = [
     children: [
       {
         id: 'add_funds',
-        title: 'Add Funds',
+        title: 'Add Fund Request',
         type: 'item',
         classes: 'nav-item',
         url: '/funds',
@@ -221,7 +221,7 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'add_funds_history',
-        title: 'Add Funds History',
+        title: 'Add Fund Report',
         type: 'item',
         classes: 'nav-item',
         url: '/fund-history',

@@ -113,12 +113,26 @@ export class WithdrawRequestComponent {
               )
             },
             error => {
-              this.successMessage = 'Fund rejected successfully!';
+              this.successMessage = 'Unable to withdraw amount!';
             }
           )
-
         } else {
-          this.successMessage = 'Fund rejected successfully!';
+          this.paymentService.getUserReferrals(this.selectedUser.userId).subscribe(
+            res => {              
+              res.earnWallet = res.earnWallet + this.selectedUser.transactionAmount;
+              this.paymentService.updateUserStatus(res, res.payId).subscribe(
+                res => {
+                  this.successMessage = 'Fund rejected successfully!';
+                },
+                error => {
+                  this.successMessage = 'Unable to add fund!';
+                }
+              )
+            },
+            error => {
+              this.successMessage = 'Unable to withdraw amount!';
+            }
+          )
         }
 
       },

@@ -94,7 +94,7 @@ export class AddFundsComponent {
         if (status === 'approved') {
           this.paymentService.getUserReferrals(this.selectedUser.userId).subscribe(
             resPay => {
-              resPay.depositWallet = (parseFloat(resPay.depositWallet) + parseFloat(this.selectedUser.transactionAmount)).toFixed(2);
+              resPay.depositWallet = resPay.depositWallet + this.selectedUser.transactionAmount;
               this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
                 res => {
                   this.closeModal();

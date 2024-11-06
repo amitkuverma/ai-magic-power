@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { UsersService } from 'src/services/users.service';
 
 @Component({
   selector: 'app-change-password',
@@ -12,13 +14,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 export class ChangePasswordComponent {
   changePasswordForm!:FormGroup;
 
-  constructor(private fb:FormBuilder) { 
+  constructor(private fb:FormBuilder, private userService: UsersService, private toastr: ToastrService) { 
     this.initForms();
   }
 
   initForms() {
     this.changePasswordForm = this.fb.group({
-      oldPassword: ['', Validators.required],
       newPassword: ['', Validators.required],
       confirmPassword: ['', Validators.required]
     });
@@ -26,14 +27,14 @@ export class ChangePasswordComponent {
 
   onChangePassword() {
     if (this.changePasswordForm.valid) {
-      const { oldPassword, newPassword, confirmPassword } = this.changePasswordForm.value;
+      const { newPassword, confirmPassword } = this.changePasswordForm.value;
       if (newPassword === confirmPassword) {
-        // this.userService.changePassword({ oldPassword, newPassword }).subscribe(
-        //   () => this.snackBar.open('Password changed successfully!', 'Close', { duration: 3000 }),
-        //   (error) => this.snackBar.open('Error changing password.', 'Close', { duration: 3000 })
-        // );
+        this.userService.changePassword({ newPassword }).subscribe(
+          () => this.toastr.success('Password changed successfully!'),
+          (error) => this.toastr.error('Error changing password.')
+        );
       } else {
-        // this.snackBar.open('Passwords do not match.', 'Close', { duration: 3000 });
+        this.toastr.warning('Passwords do not match.');
       }
     }
   }

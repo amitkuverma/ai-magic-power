@@ -24,9 +24,7 @@
 
     <!-- referral-link.component.html -->
     <div>
-
-
-        <div class="referral-link-container card">
+        <div *ngIf="!cookies.isAdmin()" class="referral-link-container card">
             <label for="referralLink"><b>Your Referral Link:</b></label>
             <div class="referral-link-box">
                 <input id="referralLink" type="text" [value]="referralLink" readonly class="referral-input" />
