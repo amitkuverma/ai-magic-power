@@ -33,7 +33,7 @@
           <td class="text-capitalize">{{ payment?.userName }}</td>
           <td class="text-capitalize">{{ payment?.filename || 'NA' }}</td>
           <td class="text-capitalize">{{ payment?.filepath || 0 }}%</td>
-          <td class="text-capitalize">${{ payment?.mimetype || 0 }}</td>
+          <td class="text-capitalize">${{ payment?.transactionAmount || 0 }}</td>
           <td class="text-capitalize">${{ payment?.transactionId || 0 }}</td>
           <td class="text-capitalize">{{ payment?.status }}</td>
         </tr>

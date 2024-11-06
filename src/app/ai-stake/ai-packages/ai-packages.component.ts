@@ -51,7 +51,6 @@ export class AiPackagesComponent {
   closeModal() {
     const modalElement = document.getElementById('packageModal');
     if (modalElement) {
-      this.walletAmount = 0;
       const modal = (window as any).bootstrap.Modal.getInstance(modalElement); // Get the modal instance
       if (modal) {
         modal.hide(); // Hide the modal using Bootstrap's method
@@ -129,12 +128,38 @@ export class AiPackagesComponent {
     this.daysToAdd = this.selectedPackage === 'OPAL AI' ? 1000 : 750;
     const futureDate = new Date(currentDate.getTime() + this.daysToAdd * 24 * 60 * 60 * 1000);
 
-    this.updateUserPayDetails(currentDate, futureDate);
+    this.loginUserPayDetails.plan = this.selectedPackage.name;
+    this.loginUserPayDetails.commission = this.selectedPackage.commission;
+    this.loginUserPayDetails.planStartDate = currentDate;
+    this.loginUserPayDetails.planEndDate = futureDate;
+    this.loginUserPayDetails.depositWallet = this.loginUserPayDetails.depositWallet - this.walletAmount;
+    this.loginUserPayDetails.selfInvestment = this.loginUserPayDetails.selfInvestment + this.walletAmount;
 
     this.paymentService.updateUserStatus(this.loginUserPayDetails, this.loginUserPayDetails.payId).subscribe(
       () => {
-        this.createTradeTransaction();
-        this.toastr.success('Trading started successfully!', 'Success');
+        const transactionData = {
+          paymentType: 'trade',
+          transactionId: this.walletAmount * this.selectedPackage.commission / 100,
+          transactionAmount: this.walletAmount,
+          filename: this.selectedPackage.name,
+          filepath: this.selectedPackage.commission,
+          status: 'completed',
+        };
+
+        this.transactionService.createTransaction(transactionData).subscribe(
+          (aiData) => {
+            this.userService.getParentReferralChain(this.cookies.decodeToken().userId).subscribe(
+              (referralChain) => {
+                const filteredReferrals = referralChain.filter(item => item.userId !== this.cookies.decodeToken().userId);
+                this.handleReferralPercentage(filteredReferrals);
+                this.closeModal(); // Close modal on success
+              },
+              (error) => console.error('Error fetching referral chain:', error)
+            );
+
+          },
+          (error) => console.error('Error creating transaction:', error)
+        );
       },
       (error) => {
         this.toastr.error('Failed Trading.', 'Error');
@@ -143,56 +168,39 @@ export class AiPackagesComponent {
     );
   }
 
-  updateUserPayDetails(currentDate: Date, futureDate: Date): void {
-    this.loginUserPayDetails.plan = this.selectedPackage.name;
-    this.loginUserPayDetails.commission = this.selectedPackage.commission;
-    this.loginUserPayDetails.planStartDate = currentDate;
-    this.loginUserPayDetails.planEndDate = futureDate;
-    this.loginUserPayDetails.depositWallet = this.loginUserPayDetails.depositWallet - this.walletAmount;
-    this.loginUserPayDetails.selfInvestment = this.loginUserPayDetails.selfInvestment + this.walletAmount;
-  }
-
-  createTradeTransaction() {
-    const transactionData = {
-      paymentType: 'trade',
-      transactionId: this.walletAmount * this.selectedPackage.commission / 100,
-      transactionAmount: this.walletAmount,
-      filename: this.selectedPackage.name,
-      filepath: this.selectedPackage.commission,
-      mimetype: this.walletAmount,
-      status: 'completed',
-    };
-
-    this.transactionService.createTransaction(transactionData).subscribe(
-      () => {
-        this.userService.getParentReferralChain(this.cookies.decodeToken().userId).subscribe(
-          (referralChain) => {
-            const filteredReferrals = referralChain.filter(item => item.userId !== this.cookies.decodeToken().userId);
-            this.handleReferralPercentage(filteredReferrals);
-          },
-          (error) => console.error('Error fetching referral chain:', error)
-        );
-      },
-      (error) => console.error('Error creating transaction:', error)
-    );
-  }
 
   handleReferralPercentage(referrals: any[]) {
     referrals.forEach((referral, index) => {
       const level = index + 1;
       const percentage = this.getReferralPercentage(level);
+console.log(percentage);
 
       this.paymentService.getUserReferrals(referral.userId).subscribe(
         (resPay) => {
-          const userFundRequestAmount = this.walletAmount || 0;
-          const additionalAmount = userFundRequestAmount * percentage / 100;
+          
+          const additionalAmount = (this.walletAmount * percentage) / 100;
+
 
           resPay.earnWallet = resPay.earnWallet + additionalAmount;
           resPay.dailyLevelEarning = resPay.dailyLevelEarning + additionalAmount;
 
           this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
-            () => {
-              this.createReferralTransaction(referral, additionalAmount);
+            () => {              
+              const transactionData = {
+                userId: referral.userId,
+                userName: referral.name,
+                receiverName: this.cookies.decodeToken().userName,
+                paymentType: 'oneTime',
+                transactionAmount: additionalAmount,
+                status: 'paid',
+              };
+          
+              this.transactionService.createTransactionForOneTime(transactionData).subscribe(
+                () => {
+                  console.log("Transaction created for referral:", transactionData)
+                },
+                (error) => console.error('Error creating referral transaction:', error)
+              );
               console.log(`Updated earn for referral level ${level}: ${resPay.earnWallet}`);
             },
             (error) => console.error(`Failed to update referral for userId ${referral.userId}:`, error)
@@ -203,24 +211,6 @@ export class AiPackagesComponent {
     });
   }
 
-  createReferralTransaction(referral: any, additionalAmount: any) {
-    const transactionData = {
-      userId: referral.userId,
-      userName: referral.name,
-      paymentType: 'oneTime',
-      transactionAmount: additionalAmount,
-      status: 'paid',
-    };
-
-    this.transactionService.createTransactionForOneTime(transactionData).subscribe(
-      () => {
-        this.closeModal(); // Close modal on success
-        this.walletAmount = 0; // Reset wallet amount
-        console.log("Transaction created for referral:", transactionData)
-      },
-      (error) => console.error('Error creating referral transaction:', error)
-    );
-  }
 
   getReferralPercentage(level: number): number {
     switch (level) {
