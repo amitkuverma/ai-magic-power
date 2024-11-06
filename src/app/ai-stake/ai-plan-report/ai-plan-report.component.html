@@ -1,13 +1,10 @@
 <div class="container card">
-  <h5 class="my-3">Add Funds</h5>
+  <h5 class="my-3">AI Plan Report</h5>
 
   <!-- Success Message -->
   <div *ngIf="successMessage" class="alert alert-success">
     {{ successMessage }}
   </div>
-
-  <!-- Search Input -->
-  <!-- <input type="text" class="form-control mb-3" placeholder="Search by name or email" [(ngModel)]="searchQuery" (input)="filterUsers()"> -->
 
   <!-- Loading Spinner -->
   <div *ngIf="loading" class="text-center">
@@ -24,9 +21,9 @@
           <th>USER ID</th>
           <th>NAME</th>
           <th>PLAN</th>
-          <th>%</th>
-          <th>AMOUNT</th>
           <th>COMMISSION</th>
+          <th>AMOUNT</th>
+          <th>EARN AMOUNT</th>
           <th>STATUS</th>
         </tr>
       </thead>

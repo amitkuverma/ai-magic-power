@@ -25,7 +25,7 @@
           <td data-label="DATE">{{ payment?.createdAt | date: 'short' }}</td>
           <td data-label="USER ID">{{ payment?.userId }}</td>
           <td data-label="USER NAME" class="text-capitalize">{{ payment?.userName }}</td>
-          <td data-label="AI EARNING" class="text-capitalize">{{ payment?.aiEarning }}</td>
+          <td data-label="AI EARNING" class="text-capitalize">${{ payment?.aiEarning || 0 }}</td>
           <td data-label="STATUS" class="text-capitalize">{{ payment?.status }}</td>
         </tr>
       </tbody>
