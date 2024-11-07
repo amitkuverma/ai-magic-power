@@ -17,15 +17,12 @@
       <div *ngFor="let account of accountDetailsList" class="account-card col-12">
         <div class="account-details" *ngIf="!isEditing">
           <h4 class="pb-2">Manage Crypto</h4>
-          <table>
-            <tr class="alert alert-info">
-              <th class="pl-2">Crypto Address:</th>
-              <td>{{ account.accountNumber }}</td>
-            </tr>
-          </table>
+          <div class="alert alert-info">
+            <p class="pb-0 mb-0">{{ account.accountNumber }}</p>
+          </div>
           <div class="account-actions">
-            <button class="btn btn-danger mr-3 px-4" (click)="deleteAccount(account.accId)">Delete</button>
-            <button class="btn btn-primary px-5" (click)="editAccount(account)">Edit</button>
+            <!-- <button class="btn btn-danger mr-3 px-4" (click)="deleteAccount(account.accId)">Delete</button> -->
+            <button class="btn btn-primary px-5 w-100" (click)="editAccount(account)">Edit</button>
           </div>
         </div>
       </div>
@@ -46,8 +43,8 @@
 
       <!-- Form buttons -->
       <div class="form-actions">
-        <button class="btn btn-secondary mr-3" type="button" (click)="cancelEdit()">Cancel</button>
-        <button class="btn btn-primary" type="submit">{{ formType }}</button>
+        <button class="btn btn-secondary me-3 w-50" type="button" (click)="cancelEdit()">Cancel</button>
+        <button class="btn btn-primary w-50" type="submit">{{ formType }}</button>
       </div>
     </form>
   </div>
