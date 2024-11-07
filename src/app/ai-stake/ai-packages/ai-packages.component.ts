@@ -181,7 +181,7 @@ export class AiPackagesComponent {
 
         const additionalAmount = (this.walletAmount * percentage) / 100;
         resPay.earnWallet = resPay.earnWallet + additionalAmount;
-        resPay.dailyLevelEarning = resPay.dailyLevelEarning + additionalAmount;
+        resPay.oneTimeEarning = resPay.oneTimeEarning + additionalAmount;
 
         await this.paymentService.updatePaymentDetails(resPay, resPay.payId).toPromise();
 

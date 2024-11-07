@@ -64,16 +64,16 @@ export class WithdrawComponent {
   }
 
   onSubmitWithdrawal() {
-    const transactionAmount = parseFloat(this.bankTransferForm.get('transactionAmount')?.value);
+    const transactionAmount = this.bankTransferForm.get('transactionAmount')?.value;
     const transactionId = this.bankTransferForm.get('transactionId')?.value;
 
-    // Calculate the 5% fee and amount after fee with precision
-    const feeAmount = parseFloat((transactionAmount * 0.05).toFixed(2));
-    const amountAfterFee = parseFloat((transactionAmount - feeAmount).toFixed(2));
+    // Calculate the 10% fee and amount after fee with precision
+    const feeAmount = transactionAmount * 0.1;
+    const amountAfterFee = transactionAmount - feeAmount;
     console.log("Fee Amount:", feeAmount, "Amount After Fee:", amountAfterFee);
 
     // Ensure earnWallet is a number and sufficient funds are available
-    const earnWallet = parseFloat(this.userPaymentDetails.earnWallet);
+    const earnWallet = this.userPaymentDetails.earnWallet;
 
     // Check if the user has sufficient funds after fee deduction
     if (transactionAmount > earnWallet) {
@@ -82,7 +82,7 @@ export class WithdrawComponent {
     }
 
     // Update wallet balance after fee deduction
-    this.userPaymentDetails.earnWallet = parseFloat((earnWallet - transactionAmount).toFixed(2));
+    this.userPaymentDetails.earnWallet = earnWallet - transactionAmount;
 
     // Update the backend with new wallet balance
     this.paymentService.updatePaymentDetails(this.userPaymentDetails, this.userPaymentDetails.payId).subscribe(

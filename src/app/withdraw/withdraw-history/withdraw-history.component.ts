@@ -33,13 +33,13 @@ export class WithdrawHistoryComponent {
     this.loading = true;
     this.transactionService.getAllTransaction().subscribe((data: any) => {
       if(this.cookies.isAdmin()){
-        const adminHistory = data.filter((item:any) => item.paymentType === 'withdraw' &&  (item.status === 'approved' || item.status === 'rejected'))
+        const adminHistory = data.filter((item:any) => item.paymentType === 'withdraw')
         this.transInfo = adminHistory;        
         this.filteredTrans = adminHistory;
         this.totalItems = adminHistory.length;
         
       }else{
-        const userHistory = data.filter((item:any) => item.userId === this.cookies.decodeToken().userId && item.paymentType === 'withdraw' &&  (item.status === 'approved' || item.status === 'rejected'));
+        const userHistory = data.filter((item:any) => item.userId === this.cookies.decodeToken().userId && item.paymentType === 'withdraw');
         this.transInfo = userHistory
         this.filteredTrans = userHistory;
         this.totalItems = userHistory.length;

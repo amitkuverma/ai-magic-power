@@ -155,7 +155,16 @@ export const NavigationUserItems: NavigationItem[] = [
         url: '/withdrawal',
         icon: 'wallet',
         breadcrumbs: false
-      },
+      },      
+      {
+        id: 'withdrawal-history',
+        title: 'Withdrawal User Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/withdrawal-history',
+        icon: 'wallet',
+        breadcrumbs: false
+      }
     ]
   },
   {
