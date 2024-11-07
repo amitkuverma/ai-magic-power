@@ -98,7 +98,7 @@ export class WithdrawRequestComponent {
               res.earnWallet = res.earnWallet - (this.selectedUser.transactionAmount + (this.selectedUser.transactionAmount * 0.1));
               res.totalWithdraw = res.totalWithdraw + this.selectedUser.transactionAmount;
               console.log(res)
-              this.paymentService.updateUserStatus(res, res.payId).subscribe(
+              this.paymentService.updatePaymentDetails(res, res.payId).subscribe(
                 res => {
                   this.successMessage = 'Fund added successfully!';
                   // this.fetchTransactions();
@@ -118,7 +118,7 @@ export class WithdrawRequestComponent {
           this.paymentService.getUserReferrals(this.selectedUser.userId).subscribe(
             res => {              
               res.earnWallet = res.earnWallet + this.selectedUser.transactionAmount;
-              this.paymentService.updateUserStatus(res, res.payId).subscribe(
+              this.paymentService.updatePaymentDetails(res, res.payId).subscribe(
                 res => {
                   this.successMessage = 'Fund rejected successfully!';
                 },

@@ -135,7 +135,7 @@ export class AiPackagesComponent {
     this.loginUserPayDetails.depositWallet = this.loginUserPayDetails.depositWallet - this.walletAmount;
     this.loginUserPayDetails.selfInvestment = this.loginUserPayDetails.selfInvestment + this.walletAmount;
 
-    this.paymentService.updateUserStatus(this.loginUserPayDetails, this.loginUserPayDetails.payId).subscribe(
+    this.paymentService.updatePaymentDetails(this.loginUserPayDetails, this.loginUserPayDetails.payId).subscribe(
       () => {
         const transactionData = {
           paymentType: 'trade',
@@ -183,7 +183,7 @@ export class AiPackagesComponent {
         resPay.earnWallet = resPay.earnWallet + additionalAmount;
         resPay.dailyLevelEarning = resPay.dailyLevelEarning + additionalAmount;
 
-        await this.paymentService.updateUserStatus(resPay, resPay.payId).toPromise();
+        await this.paymentService.updatePaymentDetails(resPay, resPay.payId).toPromise();
 
         const transactionData = {
           userId: referral.userId,

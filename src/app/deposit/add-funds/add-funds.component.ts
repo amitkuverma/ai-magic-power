@@ -95,7 +95,7 @@ export class AddFundsComponent {
           this.paymentService.getUserReferrals(this.selectedUser.userId).subscribe(
             resPay => {
               resPay.depositWallet = resPay.depositWallet + this.selectedUser.transactionAmount;
-              this.paymentService.updateUserStatus(resPay, resPay.payId).subscribe(
+              this.paymentService.updatePaymentDetails(resPay, resPay.payId).subscribe(
                 res => {
                   this.closeModal();
                   this.toastr.success('Fund added successfully!');

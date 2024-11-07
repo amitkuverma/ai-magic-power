@@ -68,7 +68,7 @@ export class PaymentStatusComponent {
 
   addPayment(): void {
     this.isLoading = true;
-    this.paymentService.updateUserStatus(this.paymentDetails, this.paymentDetails.payId).subscribe(
+    this.paymentService.updatePaymentDetails(this.paymentDetails, this.paymentDetails.payId).subscribe(
       (res: any) => {
         this.isLoading = false;
         this.closeDialog();

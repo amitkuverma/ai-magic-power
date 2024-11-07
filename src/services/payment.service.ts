@@ -28,7 +28,7 @@ export class PaymentService {
         return this.http.get(`${environment.API_URL}/payment/${userId}`);
     }
     
-    updateUserStatus(body:any, payId:any): Observable<any> {                
+    updatePaymentDetails(body:any, payId:any): Observable<any> {                
         return this.http.put(`${environment.API_URL}/payment/${payId}`, body);
     }
 

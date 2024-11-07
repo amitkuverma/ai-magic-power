@@ -96,7 +96,7 @@ export class TransferToDepositComponent {
         console.log("Transaction created successfully:", res);
 
         // Update user status with updated wallets
-        this.paymentService.updateUserStatus(this.userPaymentDetails, this.userPaymentDetails.payId).subscribe(
+        this.paymentService.updatePaymentDetails(this.userPaymentDetails, this.userPaymentDetails.payId).subscribe(
           (res: any) => {
             console.log("User status updated successfully:", res);
 

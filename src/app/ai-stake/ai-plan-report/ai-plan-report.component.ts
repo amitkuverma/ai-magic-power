@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { TransactionService } from 'src/services/transaction.service';
 import { CookieService } from 'src/services/cookie.service';
 import { PaymentService } from 'src/services/payment.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-ai-plan-report',
@@ -33,27 +34,14 @@ export class AiPlanReportComponent {
   selectedImage!: File;
   imagePreviewUrl!: any;
 
-  constructor(private transactionService: TransactionService, private cookies: CookieService, private paymentService: PaymentService) {
+  constructor(private transactionService: TransactionService, private cookies: CookieService, private toastr: ToastrService) {
     this.envImg = environment.IMAGE_URL
   }
 
   ngOnInit(): void {
     this.fetchTransactions();
-    this.fetchPaymentDetails();
   }
 
-  fetchPaymentDetails() {
-    this.paymentService.getAllReferUser().subscribe(
-      res => {
-        console.log(this.cookies.decodeToken().userId)
-        this.loginUserPaymetDetails = res.filter((item:any) => item.userId === this.cookies.decodeToken().userId);
-        console.log(this.loginUserPaymetDetails)
-      },
-      error => {
-
-      }
-    )
-  }
 
   fetchTransactions(): void {
     this.loading = true;
@@ -71,9 +59,13 @@ export class AiPlanReportComponent {
         this.totalItems = userHistory.length;
       }
       this.loading = false;
-      this.successMessage = 'AI Plan history loaded successfully!';
+      this.toastr.success('AI Plan history loaded successfully!');
       setTimeout(() => (this.successMessage = ''), 3000); // Clear success message after 3 seconds
-    });
+    },
+    error=>{
+      this.toastr.error('No data found!!');
+    }
+  );
   }
 
   filterUsers() {
@@ -85,63 +77,4 @@ export class AiPlanReportComponent {
     this.totalItems = this.filteredTrans.length;
   }
 
-  viewUserDetails(user: any): void {
-    this.selectedUser = user;
-  }
-
-  closeModal(): void {
-    this.selectedUser = null;
-  }
-
-  onFileSelected(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    if (target.files && target.files.length > 0) {
-      this.selectedImage = target.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreviewUrl = reader.result;
-      };
-      reader.readAsDataURL(this.selectedImage);
-    }
-  }
-
-  updateStatus(status: any) {
-    
-    const currentDate = Date.now();
-
-    // Calculate 1000 days in milliseconds (1000 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds)
-    const daysToAdd = this.selectedUser.plan === ''? 1000 * 24 * 60 * 60 * 1000 : 750 * 24 * 60 * 60 * 1000;
-
-    // Create a new date by adding 1000 days
-    const newDate = new Date(currentDate + daysToAdd);
-
-    this.selectedUser.planStartDate = currentDate;
-    this.selectedUser.planEndDate = newDate;
-    this.selectedUser.status = status;
-
-    this.paymentService.updateUserStatus(this.selectedUser, this.selectedUser.transId).subscribe(
-      (res:any) => {
-        if (status === 'active') {
-          this.loginUserPaymetDetails.earnWallet += this.addedAmount;
-          this.paymentService.updateUserStatus(this.loginUserPaymetDetails, this.loginUserPaymetDetails.payId).subscribe(
-            (res:any) => {
-              this.successMessage = 'Fund added successfully!';
-              this.fetchTransactions();
-
-            },
-            (error:any) => {
-              this.successMessage = 'Unable to add fund!';
-              this.fetchTransactions();
-
-            }
-          )
-        }
-        this.successMessage = 'Fund rejected successfully!';
-
-      },
-      (error: any) => {
-        this.successMessage = 'Unable to update status';
-      }
-    )
-  }
 }

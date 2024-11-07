@@ -219,9 +219,9 @@ export class P2pTransferComponent {
   }
 
   updateUserStatus(senderUser: any, receiverUser: any) {
-    this.paymentService.updateUserStatus(senderUser, senderUser.payId).subscribe(
+    this.paymentService.updatePaymentDetails(senderUser, senderUser.payId).subscribe(
       () => {
-        this.paymentService.updateUserStatus(receiverUser, receiverUser.payId).subscribe(
+        this.paymentService.updatePaymentDetails(receiverUser, receiverUser.payId).subscribe(
           () => {
             this.internalTransferForm.get('transactionAmount')?.setValue('');
             this.getUserPayment();

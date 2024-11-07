@@ -112,7 +112,7 @@ export class UpdateIncomeReportComponent {
       this.updating = true; // Set updating to true when the update starts
       const updatedData = this.editForm.value;
       
-      this.paymentService.updateUserStatus(updatedData, this.payInfo.payId).subscribe(
+      this.paymentService.updatePaymentDetails(updatedData, this.payInfo.payId).subscribe(
         res => {
           this.updating = false; // Reset updating flag
           this.toastr.success('Data updated successfully!');

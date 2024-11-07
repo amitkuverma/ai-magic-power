@@ -85,7 +85,7 @@ export class WithdrawComponent {
     this.userPaymentDetails.earnWallet = parseFloat((earnWallet - transactionAmount).toFixed(2));
 
     // Update the backend with new wallet balance
-    this.paymentService.updateUserStatus(this.userPaymentDetails, this.userPaymentDetails.payId).subscribe(
+    this.paymentService.updatePaymentDetails(this.userPaymentDetails, this.userPaymentDetails.payId).subscribe(
       res => {
         const data = {
           paymentType: 'withdraw',
