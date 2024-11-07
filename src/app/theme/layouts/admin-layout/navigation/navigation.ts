@@ -149,6 +149,15 @@ export const NavigationItems: NavigationItem[] = [
         url: '/p2p-report',
         icon: 'ant-design',
         breadcrumbs: false
+      },
+      {
+        id: 'income_report',
+        title: 'Update Income Reports',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/income-reports',
+        icon: 'ant-design',
+        breadcrumbs: false
       }
     ]
   },

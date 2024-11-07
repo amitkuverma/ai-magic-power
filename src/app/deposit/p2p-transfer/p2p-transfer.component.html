@@ -3,12 +3,13 @@
     <form [formGroup]="internalTransferForm">
       <div class="form-grid">
         <!-- Total Amount Display -->
-        <div class="form-group">
-          <span for="totalAmount">Wallet Balance: </span>
-          {{userPaymentDetails?.earnWallet}}
+        <div>
+          <h3>Deposit Wallet Balance:
+            <span class="text-primary">{{userPaymentDetails?.depositWallet}}</span>
+          </h3>
         </div>
 
-        <div class="form-group">
+        <div class="form-group pt-2">
           <label for="memberId">Member Id</label>
           <input class="form-control" id="memberId" type="text" formControlName="memberId" placeholder="Enter Member Id"
             (blur)="onMemberIdBlur()" />
@@ -34,8 +35,8 @@
       </div>
 
       <!-- Submit Button -->
-      <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#packageModal"
+      <div class="">
+        <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#packageModal"
           (click)="openShareDialog()"
           [disabled]="internalTransferForm.invalid || transactionAmountExceeds()">Transfer</button>
       </div>

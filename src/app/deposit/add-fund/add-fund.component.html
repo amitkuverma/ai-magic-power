@@ -1,112 +1,40 @@
-<div class="container card">
-
-  <h5 class="my-3">Add Funds</h5>
-  <div>
-    <div class="modal-header">
-      <h5 class="modal-title">Upload payment receipt details</h5>
-    </div>
-    <div class="modal-body">
-      <div>
-        <div class="card p-3">
-          <b>Admin Crypto address:</b> <span class="text-primary">{{accountDetails?.accountNumber || 'NA'}}</span>
-          <button class="btn btn-primary" (click)="copyToClipboard(accountDetails?.accountNumber)">Copy</button>
-        </div>
-        <div class="form-group mb-3">
-          <label class="form-label" for="transactionAmount">Fund Amount</label>
-          <input type="number" class="form-control" id="transactionAmount" [(ngModel)]="fundAmount"
-            placeholder="Fund Amount" />
-        </div>
-        <div class="form-group row">
-          <label for="transactionId" class="form-label">Transaction ID</label>
-          <div>
-              <input type="text" class="form-control" id="transactionId"
-               [(ngModel)]="transactionId" placeholder="Enter transaction ID"
-                  required="required">
-          </div>
-      </div>
-      </div>
-      <input type="file" class="form-control-file mb-2" (change)="onFileSelected($event)" />
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-primary" (click)="upload()" data-bs-dismiss="modal" [disabled]="!selectedImage">Upload
-        Profile</button>
-    </div>
-  </div>
-
-
-  <!-- Success Message -->
-  <!-- <div *ngIf="successMessage" class="alert alert-success">
-    {{ successMessage }}
-  </div> -->
-
-
-  <!-- Loading Spinner -->
-  <!-- <div *ngIf="loading" class="text-center">
-    <div class="spinner-border" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
-  </div> -->
-
-  <!-- User Table -->
-  <!-- <div *ngIf="!loading" class="card mt-3">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>USER ID</th>
-          <th>NAME</th>
-          <th>TYPE</th>
-          <th>FUND AMOUNT</th>
-          <th>STATUS</th>
-          <th>RECEIPT</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-          <td>{{ payment?.userId }}</td>
-          <td class="text-capitalize">{{ payment?.userName }}</td>
-          <td class="text-capitalize">{{ payment?.paymentType }}</td>
-          <td class="text-capitalize">{{ payment?.transactionAmount }}</td>
-          <td class="text-capitalize">{{ payment?.status }}</td>
-          <td>
-            <a *ngIf="payment?.filepath" [href]="envImg + payment?.filepath" target="_blank" class="view_rec">View
-              Receipt</a>
-            <span *ngIf="!payment?.filepath">NA</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
-  </div> -->
-
-  <!-- User Details Modal -->
-  <!-- <div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Upload payment receipt details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div>
-            <div class="card p-3">
-              <b>Admin Crypto address:</b> <span class="text-primary">{{accountDetails?.accountNumber || 'NA'}}</span>
-              <button class="btn btn-primary"
-                (click)="copyToClipboard(accountDetails?.accountNumber)">Copy</button>
-            </div>
-            <div class="form-group mb-3">
-              <label class="form-label" for="transactionAmount">Fund Amount</label>
-              <input type="number" class="form-control" id="transactionAmount" [(ngModel)]="fundAmount"
-                placeholder="Fund Amount" />
+<div class="pb-4">
+  <div class="container card pt-3 px-4">
+    <h3 class="my-3">Add Fund</h3>
+    <div>
+      <div class="modal-body">
+        <div>
+          <div class="pt-2">
+            <h4><b>Admin Crypto address:</b></h4>
+            <div class="row">
+              <div class="col-12 col-md-10 pe-md-0">
+                <h4 class="text-success alert alert-success m-0">{{accountDetails?.accountNumber || 'NA'}}</h4>
+              </div>
+              <div class="col-12 col-md-2 ps-md-0">
+                <button class="btn btn-success h-100 w-100"
+                  (click)="copyToClipboard(accountDetails?.accountNumber)">Copy</button>
+              </div>
             </div>
           </div>
-          <input type="file" class="form-control-file mb-2" (change)="onFileSelected($event)" />
+          <div class="form-group mt-2 mb-3">
+            <label class="form-label" for="transactionAmount">Fund Amount</label>
+            <input type="number" class="form-control" id="transactionAmount" [(ngModel)]="fundAmount"
+              placeholder="Fund Amount" />
+          </div>
+          <div class="form-group row">
+            <label for="transactionId" class="form-label">Transaction ID</label>
+            <div>
+              <input type="text" class="form-control" id="transactionId" [(ngModel)]="transactionId"
+                placeholder="Enter transaction ID" required="required">
+            </div>
+          </div>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary" (click)="upload()" data-bs-dismiss="modal" [disabled]="!selectedImage">Upload
-            Profile</button>
-        </div>
+        <input type="file" class="form-control-file mb-2" (change)="onFileSelected($event)" />
+      </div>
+      <div class="modal-footer my-4">
+        <button class="btn btn-primary w-100" (click)="upload()" data-bs-dismiss="modal"
+          [disabled]="!selectedImage">Request</button>
       </div>
     </div>
   </div>
-</div> -->
+</div>

@@ -147,6 +147,14 @@ const routes: Routes = [
         loadComponent: () => import('./profile/total-turnover-report/total-turnover-report.component').then((c) => c.TotalTurnoverReportComponent)
       },
       {
+        path: 'income-reports',
+        loadComponent: () => import('./profile/payment-list/payment-list.component').then((c) => c.PaymentListComponent)
+      },
+      {
+        path: 'update-payment/:userId',
+        loadComponent: () => import('./profile/update-income-report/update-income-report.component').then((c) => c.UpdateIncomeReportComponent)
+      },
+      {
         path: 'p2p-report',
         loadComponent: () => import('./deposit-history/p2p-report/p2p-report.component').then((c) => c.P2PReportComponent)
       },

@@ -1,0 +1,83 @@
+<div class="container card">
+  <h5 class="my-3">Update Payment Details: {{userId}}</h5>
+
+  <form [formGroup]="editForm" (ngSubmit)="onSubmitEdit()">
+    <!-- Basic Fields -->
+    <div class="form-group">
+      <label for="userName">Name</label>
+      <input type="text" id="userName" formControlName="userName" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="earnWallet">Earn Wallet</label>
+      <input type="number" id="earnWallet" formControlName="earnWallet" class="form-control">
+    </div>
+
+    <!-- Additional Fields -->
+    <div class="form-group">
+      <label for="depositWallet">Deposit Wallet</label>
+      <input type="number" id="depositWallet" formControlName="depositWallet" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="referralEarning">Referral Earning</label>
+      <input type="number" id="referralEarning" formControlName="referralEarning" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="selfInvestment">Self Investment</label>
+      <input type="number" id="selfInvestment" formControlName="selfInvestment" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="levelEarning">Level Earning</label>
+      <input type="number" id="levelEarning" formControlName="levelEarning" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="aiEarning">AI Earning</label>
+      <input type="number" id="aiEarning" formControlName="aiEarning" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="royalty">Royalty</label>
+      <input type="number" id="royalty" formControlName="royalty" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="totalWithdraw">Total Withdraw</label>
+      <input type="number" id="totalWithdraw" formControlName="totalWithdraw" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="dailyLevelEarning">Daily Level Earning</label>
+      <input type="number" id="dailyLevelEarning" formControlName="dailyLevelEarning" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="leadershipEarning">Leadership Earning</label>
+      <input type="number" id="leadershipEarning" formControlName="leadershipEarning" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="oneTimeEarning">One Time Earning</label>
+      <input type="number" id="oneTimeEarning" formControlName="oneTimeEarning" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="starEarning">Star Earning</label>
+      <input type="number" id="starEarning" formControlName="starEarning" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="totalAmount">Total Amount</label>
+      <input type="number" id="totalAmount" formControlName="totalAmount" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="plan">Plan</label>
+      <input type="text" id="plan" formControlName="plan" class="form-control" readonly>
+    </div>
+    <div class="form-group">
+      <label for="commission">Commission</label>
+      <input type="number" id="commission" formControlName="commission" class="form-control" readonly>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+
+    <!-- Show spinner if updating is true -->
+    <div *ngIf="updating" class="text-center mt-3">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Updating...</span>
+      </div>
+      <p>Updating data, please wait...</p>
+    </div>
+  </form>
+</div>

@@ -22,8 +22,8 @@ export class P2pTransferComponent {
   payResult: any;
   transResult: any;
   userPaymentInfo: any;
-  loginUser:any;
-  InvaliedUser:string;
+  loginUser: any;
+  InvaliedUser: string;
 
   constructor(
     private fb: FormBuilder,
@@ -54,15 +54,15 @@ export class P2pTransferComponent {
 
   getUserData(formattedId: string): void {
     console.log(this.userDetails);
-    
+
     this.selectedUser = this.userDetails.find((user: any) => user.userId === formattedId);
-    if(this.selectedUser){
+    if (this.selectedUser) {
       this.InvaliedUser = this.selectedUser.name
-    }else{
+    } else {
       this.InvaliedUser = "Mamber Id not found."
     }
     console.log(this.selectedUser);
-    
+
   }
 
   loadUsers() {
@@ -183,35 +183,37 @@ export class P2pTransferComponent {
     const selectedUserId = this.internalTransferForm.get('memberId')?.value;
     const senderUser = this.userPaymentInfo.find((user: any) => user.userId === this.cookiesService.decodeToken().userId);
     const receiverUser = this.userPaymentInfo.find((user: any) => user.userId === selectedUserId);
-    
+
     this.trancService.createTransaction(body).subscribe(
       (transUpdate) => {
         senderUser.depositWallet -= transactionAmount;
         receiverUser.depositWallet += transactionAmount;
-        
+
         this.updateUserStatus(senderUser, receiverUser);
         const userInfo = this.userDetails.find((item: any) => item.userId === receiverUser.userId);
-        
+
         if (userInfo.status !== 'active' && receiverUser.depositWallet >= 5) {
           this.activateUserIfTransferExceeds300(receiverUser);
           this.userService.getUserById(this.selectedUser.userId).subscribe(
             (resUser: any) => {
               if (resUser.status === 'pending') {
                 this.userService.updateUserStatus(this.selectedUser.userId, "active").subscribe(
-                  resCre=>{
-                      console.log(resCre);
-                      
+                  resCre => {
+                    console.log(resCre);
+
                   }
                 )
               }
             }
           )
-          this.closeModal();
         }
       },
       (error) => {
         // this.toastr.error('Failed to create internal transfer.', 'Error');
         console.error('Error creating internal transfer:', error);
+        setTimeout(() => {
+          this.closeModal();
+        })
       }
     );
   }
@@ -222,6 +224,10 @@ export class P2pTransferComponent {
         this.paymentService.updateUserStatus(receiverUser, receiverUser.payId).subscribe(
           () => {
             this.internalTransferForm.get('transactionAmount')?.setValue('');
+            this.getUserPayment();
+            setTimeout(() => {
+              this.closeModal();
+            })
           },
           (error) => {
             // this.toastr.error('Failed to update receiver status.', 'Error');

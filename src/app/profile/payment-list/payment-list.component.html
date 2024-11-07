@@ -1,0 +1,114 @@
+<div class="container card">
+  <h5 class="my-3">All User Payment</h5>
+  <p>All User Payment <span class="text-primary">{{ totalDepositWallet }}</span></p>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Table / Card View for Turnover Data -->
+  <div *ngIf="!loading" class="card">
+    <div class="d-none d-md-block overflow-auto">
+      <!-- Standard Table View for Desktop -->
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>DATE</th>
+            <th>USER ID</th>
+            <th>NAME</th>
+            <th>EARN WALLET</th>
+            <th>DEPOSIT WALLET</th>
+            <th>REFERRAL EARNING</th>
+            <th>SELF INVESTMENT</th>
+            <th>LEVEL EARNING</th>
+            <th>AI EARNING</th>
+            <th>ROYALTY</th>
+            <th>TOTAL WITHDRAW</th>
+            <th>DAILY LEVEL EARNING</th>
+            <th>LEADERSHIP EARNING</th>
+            <th>ONE TIME EARNING</th>
+            <th>STAR EARNING</th>
+            <th>TOTAL AMOUNT</th>
+            <th>PLAN</th>
+            <th>COMMISSION</th>
+            <th>PLAN START DATE</th>
+            <th>PLAN END DATE</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+            <td>{{ payment?.createdAt | date: 'short' }}</td>
+            <td>{{ payment?.userId }}</td>
+            <td class="text-capitalize">{{ payment?.userName }}</td>
+            <td>{{ payment?.earnWallet }}</td>
+            <td>{{ payment?.depositWallet }}</td>
+            <td>{{ payment?.referralEarning }}</td>
+            <td>{{ payment?.selfInvestment }}</td>
+            <td>{{ payment?.levelEarning }}</td>
+            <td>{{ payment?.aiEarning }}</td>
+            <td>{{ payment?.royalty }}</td>
+            <td>{{ payment?.totalWithdraw }}</td>
+            <td>{{ payment?.dailyLevelEarning }}</td>
+            <td>{{ payment?.leadershipEarning }}</td>
+            <td>{{ payment?.oneTimeEarning }}</td>
+            <td>{{ payment?.starEarning }}</td>
+            <td>{{ payment?.totalAmount }}</td>
+            <td>{{ payment?.plan }}</td>
+            <td>{{ payment?.commission }}</td>
+            <td>{{ payment?.planStartDate | date: 'short' }}</td>
+            <td>{{ payment?.planEndDate | date: 'short' }}</td>
+            <td>
+              <button class="btn btn-primary btn-sm" [routerLink]="['/update-payment', payment.userId]">Edit</button>
+              <!-- <button class="btn btn-danger btn-sm" >Delete</button> -->
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="text-right"><strong>Totals:</strong></td>
+            <td>{{ totalDepositWallet }}</td>
+            <td>{{ totalAiIncome }}</td>
+            <td>{{ totalDailyIncome }}</td>
+            <td>{{ totalDailyLevelEarning }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <!-- Card View for Mobile -->
+    <div class="d-block d-md-none">
+      <div *ngFor="let payment of filteredTrans | paginate: { itemsPerPage: itemsPerPage, currentPage: page }" class="mobile-card mb-3 p-3 border">
+        <p><strong>Date:</strong> {{ payment?.createdAt | date: 'short' }}</p>
+        <p><strong>User ID:</strong> {{ payment?.userId }}</p>
+        <p><strong>Name:</strong> {{ payment?.userName }}</p>
+        <p><strong>Earn Wallet:</strong> {{ payment?.earnWallet }}</p>
+        <p><strong>Deposit Wallet:</strong> {{ payment?.depositWallet }}</p>
+        <p><strong>Referral Earning:</strong> {{ payment?.referralEarning }}</p>
+        <p><strong>Self Investment:</strong> {{ payment?.selfInvestment }}</p>
+        <p><strong>Level Earning:</strong> {{ payment?.levelEarning }}</p>
+        <p><strong>AI Earning:</strong> {{ payment?.aiEarning }}</p>
+        <p><strong>Royalty:</strong> {{ payment?.royalty }}</p>
+        <p><strong>Total Withdraw:</strong> {{ payment?.totalWithdraw }}</p>
+        <p><strong>Daily Level Earning:</strong> {{ payment?.dailyLevelEarning }}</p>
+        <p><strong>Leadership Earning:</strong> {{ payment?.leadershipEarning }}</p>
+        <p><strong>One Time Earning:</strong> {{ payment?.oneTimeEarning }}</p>
+        <p><strong>Star Earning:</strong> {{ payment?.starEarning }}</p>
+        <p><strong>Total Amount:</strong> {{ payment?.totalAmount }}</p>
+        <p><strong>Plan:</strong> {{ payment?.plan }}</p>
+        <p><strong>Commission:</strong> {{ payment?.commission }}</p>
+        <p><strong>Plan Start Date:</strong> {{ payment?.planStartDate | date: 'short' }}</p>
+        <p><strong>Plan End Date:</strong> {{ payment?.planEndDate | date: 'short' }}</p>
+        <p><strong>Status:</strong> {{ payment?.status }}</p>
+        <button class="btn btn-primary btn-sm" (click)="openEditForm(payment)">Edit</button>
+        <!-- <button class="btn btn-danger btn-sm" (click)="deleteRecord(payment)">Delete</button> -->
+      </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <pagination-controls (pageChange)="page = $event" class="d-flex justify-content-end"></pagination-controls>
+  </div>
+</div>
