@@ -66,9 +66,9 @@ export class AddFundComponent {
   }
 
   fetchAdminAccount() {
-    this.accountService.getAccountById(1).subscribe(
+    this.accountService.getAllAccounts().subscribe(
       (res) => {
-        this.accountDetails = res;
+        this.accountDetails = res.find(item=>item.bankName === 'admin');
       },
       (error: any) => {
         console.log(error);

@@ -33,16 +33,12 @@ export class AccountDetailsService {
   saveAccount(account: any): Observable<any> {
     account.userId = this.userId;
     account.userName = this.userName;
-
     return this.http.post(`${environment.API_URL}/account`, account);
-
   }
   
   updateAccount(account: any, accId: number): Observable<any> {
     account.userId = this.userId;
     account.userName = this.userName;
-
-
     return this.http.put(`${environment.API_URL}/account/${accId}`, account);
 
   }
