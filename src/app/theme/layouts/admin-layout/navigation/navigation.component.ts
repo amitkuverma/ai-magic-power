@@ -28,8 +28,8 @@ export class NavigationComponent {
 
   // public method
   navCollapseMob() {
-    if (this.windowWidth < 1025) {
-      this.NavCollapsedMob.emit();
-    }
+    // if (this.windowWidth < 1025) {
+    //   this.NavCollapsedMob.emit();
+    // }
   }
 }

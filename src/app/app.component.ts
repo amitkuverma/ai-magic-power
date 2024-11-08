@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   // public props
-  title = 'mantis-free-version';
+  title = 'ai-magic-power';
 }
