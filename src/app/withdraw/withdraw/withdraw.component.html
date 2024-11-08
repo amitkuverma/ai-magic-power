@@ -3,40 +3,46 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="form-header text-uppercase">
-                        Withdrawal Request
-                    </h4>
-                    <form [formGroup]="bankTransferForm">
+                    <h4 class="form-header text-uppercase">Withdrawal Request</h4>
+                    <form [formGroup]="bankTransferForm" (ngSubmit)="onSubmitWithdrawal()">
                         <div class="alert alert-dismissible alert-icon-info px-0 pb-0" role="alert">
                             <div class="alert-message alert alert-info">
-                                <span><strong>Wallet Balance : </strong>{{userPaymentDetails?.earnWallet || 0}}</span>
+                                <p><strong>Wallet Balance : </strong>{{ userPaymentDetails?.earnWallet || 0 }}</p>
+                                <span>
+                                    <strong>Withdrawal Balance : </strong>{{ userPaymentDetails?.earnWallet -
+                                    (userPaymentDetails?.earnWallet * 0.1) || 0 }}
+                                </span>
                             </div>
                         </div>
 
                         <!-- Transaction Amount Field -->
                         <div class="form-group row">
-                            <label for="transactionAmount" class="form-label">Enter Withdrawal Amount(10% fee applies)</label>
+                            <label for="transactionAmount" class="form-label">
+                                Enter Withdrawal Amount (10% fee applies)
+                            </label>
                             <div>
-                                <input type="text" class="form-control" id="transactionId"
+                                <input type="text" class="form-control" id="transactionAmount"
                                     formControlName="transactionAmount" placeholder="Enter Withdrawal amount"
-                                    required="required">
+                                    required="required" />
                             </div>
 
-                            <div>
-                                <div *ngIf="bankTransferForm.get('transactionAmount')?.invalid && bankTransferForm.get('transactionAmount')?.touched"
-                                    class="error-message text-danger">
-                                    Withdrawal amount is required and must be $5.
+                            <!-- Validation Error Messages -->
+                            <div *ngIf="bankTransferForm.get('transactionAmount')?.touched"
+                                class="error-message text-danger">
+                                <div *ngIf="bankTransferForm.get('transactionAmount')?.hasError('required')">
+                                    Withdrawal amount is required.
                                 </div>
-                                <div *ngIf="bankTransferForm.hasError('amountExceeds') && bankTransferForm.get('transactionAmount')?.touched"
-                                    class="error-message text-danger">
-                                    Withdrawal amount must not exceed total amount.
+                                <div *ngIf="bankTransferForm.get('transactionAmount')?.hasError('min')">
+                                    Withdrawal amount must be at least {{minWithdrawalValue }}.
+                                </div>
+                                <div *ngIf="bankTransferForm.get('transactionAmount')?.hasError('amountExceeds')">
+                                    Withdrawal amount must not exceed available balance.
                                 </div>
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-success"
-                                (click)="onSubmitWithdrawal()">Request</button>
+                            <button type="submit" class="btn btn-success">Request</button>
                         </div>
                     </form>
                 </div>

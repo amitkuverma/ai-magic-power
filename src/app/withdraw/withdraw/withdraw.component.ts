@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators, ValidationErrors } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
 import { CookieService } from 'src/services/cookie.service';
@@ -14,15 +14,11 @@ import { TransactionService } from 'src/services/transaction.service';
   templateUrl: './withdraw.component.html',
   styleUrls: ['./withdraw.component.scss']
 })
-export class WithdrawComponent {
+export class WithdrawComponent implements OnInit {
   bankTransferForm: FormGroup;
   userPaymentDetails: any;
-  loading: boolean = false;
-  page: number = 1;
-  itemsPerPage: number = 10;
-  totalItems: number = 0;
   transInfo: any;
-  filteredTrans: any;
+  minWithdrawalValue: number = 5;
 
   constructor(
     private trancService: TransactionService,
@@ -35,11 +31,39 @@ export class WithdrawComponent {
     this.bankTransferForm = this.fb.group({
       transactionAmount: ['', [Validators.required, Validators.min(5)]],
     });
-
-    this.getUserPayment();
   }
 
-  // Fetch the user payment details
+  ngOnInit() {
+    this.getUserPayment();
+    this.fetchTransaction();
+  }
+
+  fetchTransaction() {
+    this.trancService.getAllTransaction().subscribe((res) => {
+      this.transInfo = res.filter(
+        (item) =>
+          item.userId === this.cookiesService.decodeToken().userId &&
+          item.paymentType === 'withdraw'
+      );
+      this.updateMinValue(this.transInfo.length);  // Update the minimum value after fetching transactions
+    });
+  }
+  
+  updateMinValue(length: number) {
+    const transactionAmountControl = this.bankTransferForm.get('transactionAmount');
+    // Calculate the new minimum value by multiplying the withdrawal count by 5
+    this.minWithdrawalValue = 5 * Math.pow(5, length - 1);  // Minimum value increases by a factor of 5 after each withdrawal
+    transactionAmountControl.setValidators([
+      Validators.required,
+      Validators.min(this.minWithdrawalValue),  // Set the new dynamic min value
+      this.balanceValidator.bind(this),
+    ]);
+    transactionAmountControl.updateValueAndValidity();
+  }
+  
+
+
+  // Fetch the user payment details and update max validator
   getUserPayment() {
     const userId = this.cookiesService.decodeToken().userId;
     this.paymentService.getUserReferrals(userId).subscribe(
@@ -47,12 +71,15 @@ export class WithdrawComponent {
         if (res) {
           this.userPaymentDetails = res;
 
-          // Update max validator for transactionAmount based on earnWallet
-          this.bankTransferForm.get('transactionAmount')?.setValidators([
-            Validators.required,
-            Validators.min(5),
-            Validators.max(this.userPaymentDetails.earnWallet)
-          ]);
+          // Set max validator based on user's available balance
+          const maxWithdrawable = this.userPaymentDetails.earnWallet * 0.9; // 10% fee deducted
+          this.bankTransferForm
+            .get('transactionAmount')
+            ?.setValidators([
+              Validators.required,
+              Validators.min(5),
+              Validators.max(maxWithdrawable),
+            ]);
           this.bankTransferForm.get('transactionAmount')?.updateValueAndValidity();
         }
       },
@@ -63,52 +90,59 @@ export class WithdrawComponent {
     );
   }
 
+  // Custom validator to ensure withdrawal amount does not exceed balance
+  balanceValidator(control: AbstractControl): ValidationErrors | null {
+    const maxWithdrawable = this.userPaymentDetails.earnWallet * 0.9;
+    return control.value && control.value > maxWithdrawable
+      ? { amountExceeds: true }
+      : null;
+  }
+
   onSubmitWithdrawal() {
+    if (this.bankTransferForm.invalid) {
+      this.bankTransferForm.markAllAsTouched();
+      return;
+    }
+
     const transactionAmount = this.bankTransferForm.get('transactionAmount')?.value;
-    const transactionId = this.bankTransferForm.get('transactionId')?.value;
+    const amountAfterFee = transactionAmount * 0.9; // Adjust for 10% fee
 
-    // Calculate the 10% fee and amount after fee with precision
-    const feeAmount = transactionAmount * 0.1;
-    const amountAfterFee = transactionAmount - feeAmount;
-    console.log("Fee Amount:", feeAmount, "Amount After Fee:", amountAfterFee);
-
-    // Ensure earnWallet is a number and sufficient funds are available
-    const earnWallet = this.userPaymentDetails.earnWallet;
-
-    // Check if the user has sufficient funds after fee deduction
-    if (transactionAmount > earnWallet) {
+    // Check if sufficient funds are available
+    if (transactionAmount > this.userPaymentDetails.earnWallet * 0.9) {
       this.toastr.error('Insufficient funds in wallet for this transaction.');
       return;
     }
 
-    // Update wallet balance after fee deduction
-    this.userPaymentDetails.earnWallet = earnWallet - transactionAmount;
-
-    // Update the backend with new wallet balance
-    this.paymentService.updatePaymentDetails(this.userPaymentDetails, this.userPaymentDetails.payId).subscribe(
-      res => {
-        const data = {
-          paymentType: 'withdraw',
-          transactionAmount: amountAfterFee,  // Use amount after fee for transaction
-          transactionId: transactionId
-        };
-
-        // Send the transaction request
-        this.trancService.createTransaction(data).subscribe(
-          (res: any) => {
-            this.bankTransferForm.reset();
-            this.toastr.success('Withdrawal request sent successfully!');
-          },
-          (error: any) => {
-            console.error('Error sending withdrawal request:', error);
-            this.toastr.error('Unable to send withdrawal request!');
-          }
-        );
-      },
-      error => {
-        console.error('Error updating wallet balance:', error);
-        this.toastr.error('Failed to update wallet balance.');
-      }
-    );
+    this.paymentService
+      .updatePaymentDetails(
+        { ...this.userPaymentDetails, earnWallet: this.userPaymentDetails.earnWallet - transactionAmount },
+        this.userPaymentDetails.payId
+      )
+      .subscribe(
+        (res) => {
+          this.trancService
+            .createTransaction({
+              paymentType: 'withdraw',
+              transactionAmount: amountAfterFee,
+              transactionId: this.bankTransferForm.get('transactionId')?.value,
+            })
+            .subscribe(
+              () => {
+                this.bankTransferForm.reset();
+                this.getUserPayment();
+                this.fetchTransaction();
+                this.toastr.success('Withdrawal request sent successfully!');
+              },
+              (error) => {
+                console.error('Error sending withdrawal request:', error);
+                this.toastr.error('Unable to send withdrawal request!');
+              }
+            );
+        },
+        (error) => {
+          console.error('Error updating wallet balance:', error);
+          this.toastr.error('Failed to update wallet balance.');
+        }
+      );
   }
 }
