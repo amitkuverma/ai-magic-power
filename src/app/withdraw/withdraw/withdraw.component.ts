@@ -52,7 +52,7 @@ export class WithdrawComponent implements OnInit {
   updateMinValue(length: number) {
     const transactionAmountControl = this.bankTransferForm.get('transactionAmount');
     // Calculate the new minimum value by multiplying the withdrawal count by 5
-    this.minWithdrawalValue = 5 * Math.pow(5, length - 1);  // Minimum value increases by a factor of 5 after each withdrawal
+    this.minWithdrawalValue = 5 * length;  // Minimum value increases by a factor of 5 after each withdrawal
     transactionAmountControl.setValidators([
       Validators.required,
       Validators.min(this.minWithdrawalValue),  // Set the new dynamic min value

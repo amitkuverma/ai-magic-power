@@ -95,7 +95,6 @@ export class WithdrawRequestComponent {
         if (status === 'approved') {
           this.paymentService.getUserReferrals(this.selectedUser.userId).subscribe(
             res => {              
-              res.earnWallet = res.earnWallet - (this.selectedUser.transactionAmount + (this.selectedUser.transactionAmount * 0.1));
               res.totalWithdraw = res.totalWithdraw + this.selectedUser.transactionAmount;
               console.log(res)
               this.paymentService.updatePaymentDetails(res, res.payId).subscribe(
@@ -117,7 +116,7 @@ export class WithdrawRequestComponent {
         } else {
           this.paymentService.getUserReferrals(this.selectedUser.userId).subscribe(
             res => {              
-              res.earnWallet = res.earnWallet + this.selectedUser.transactionAmount;
+              res.earnWallet = res.earnWallet + this.selectedUser.transactionAmount + this.selectedUser.transactionAmount * 0.1;
               this.paymentService.updatePaymentDetails(res, res.payId).subscribe(
                 res => {
                   this.successMessage = 'Fund rejected successfully!';
