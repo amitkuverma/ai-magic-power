@@ -2,14 +2,15 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-body">
+                <div *ngIf="isAccountAdded" class="card-body">
                     <h4 class="form-header text-uppercase">Withdrawal Request</h4>
+                    <!-- <p>Please verify your{{ accountDetails}}</p> -->
                     <form [formGroup]="bankTransferForm" (ngSubmit)="onSubmitWithdrawal()">
                         <div class="alert alert-dismissible alert-icon-info px-0 pb-0" role="alert">
                             <div class="alert-message alert alert-info">
                                 <p><strong>Wallet Balance : </strong>{{ userPaymentDetails?.earnWallet || 0 }}</p>
                                 <span>
-                                    <strong>Withdrawal Balance : </strong>{{ userPaymentDetails?.earnWallet -
+                                    <strong>Withdrawal Balance : </strong>{{ userPaymentDetails?.earnWallet - 
                                     (userPaymentDetails?.earnWallet * 0.1) || 0 }}
                                 </span>
                             </div>
@@ -50,6 +51,11 @@
                             </button>
                         </div>
                     </form>
+                </div>
+
+                <div *ngIf="!isAccountAdded" class="card-body">
+                    <p>First, add your crypto account. After that, you can withdraw the amount.</p>
+                    <button class="btn btn-primary w-100" routerLink ="/my-crypto">Add Crypto Address</button>
                 </div>
             </div>
         </div>

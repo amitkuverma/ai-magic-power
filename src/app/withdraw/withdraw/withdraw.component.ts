@@ -4,14 +4,18 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, 
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime } from 'rxjs';
+import { AccountDetailsService } from 'src/services/account.service';
 import { CookieService } from 'src/services/cookie.service';
 import { PaymentService } from 'src/services/payment.service';
 import { TransactionService } from 'src/services/transaction.service';
+import { AccountComponent } from "../../account/account/account.component";
+import { SharedModule } from 'src/app/theme/shared/shared.module';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-withdraw',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgxPaginationModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxPaginationModule, AccountComponent, SharedModule, RouterModule],
   templateUrl: './withdraw.component.html',
   styleUrls: ['./withdraw.component.scss']
 })
@@ -22,13 +26,16 @@ export class WithdrawComponent implements OnInit {
   minWithdrawalValue: number = 5;
   errorValue: boolean = false;
   amountExceeds: boolean = false;
+  accountDetails: any;
+  isAccountAdded: boolean = false;
 
   constructor(
     private trancService: TransactionService,
     private fb: FormBuilder,
     private cookiesService: CookieService,
     private paymentService: PaymentService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private accountService: AccountDetailsService
   ) {
     // Initialize the form with base validators
     this.bankTransferForm = this.fb.group({
@@ -37,6 +44,7 @@ export class WithdrawComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.fetchAccount(this.cookiesService.decodeToken().userId);
     this.getUserPayment();
     this.fetchTransaction();
 
@@ -48,7 +56,18 @@ export class WithdrawComponent implements OnInit {
       });
   }
 
-  // Fetch user transactions for withdrawal info
+  fetchAccount(userId: any): void {
+    this.accountService.getAccountByUserId(userId).subscribe(
+      res => {
+        this.accountDetails = res;
+        this.isAccountAdded = true;
+      },
+      error => {
+        this.isAccountAdded = false;
+      }
+    );
+  }
+
   fetchTransaction() {
     this.trancService.getAllTransaction().subscribe((res) => {
       this.transInfo = res.filter(
@@ -59,7 +78,6 @@ export class WithdrawComponent implements OnInit {
     });
   }
 
-  // Fetch and set user payment details and update the max validator dynamically
   getUserPayment() {
     const userId = this.cookiesService.decodeToken().userId;
     this.paymentService.getUserReferrals(userId).subscribe(
@@ -87,20 +105,17 @@ export class WithdrawComponent implements OnInit {
     );
   }
 
-  // Custom validator to check if the transaction amount is a multiple of 5
   multipleOfFiveValidator(control: AbstractControl): ValidationErrors | null {
     const value = Number(control.value);
     return !isNaN(value) && value % 5 === 0 ? null : { notMultipleOfFive: true };
   }
 
-  // Update error flags based on current validator errors
   updateErrorFlags() {
     const transactionAmountControl = this.bankTransferForm.get('transactionAmount');
     this.errorValue = !!transactionAmountControl?.hasError('notMultipleOfFive');
     this.amountExceeds = !!transactionAmountControl?.hasError('max');
   }
 
-  // Submit withdrawal request after validation
   onSubmitWithdrawal() {
     if (this.bankTransferForm.invalid) {
       this.bankTransferForm.markAllAsTouched();
@@ -127,7 +142,6 @@ export class WithdrawComponent implements OnInit {
             .createTransaction({
               paymentType: 'withdraw',
               transactionAmount: this.bankTransferForm.get('transactionAmount')?.value,
-              transactionId: this.bankTransferForm.get('transactionId')?.value,
             })
             .subscribe(
               () => {

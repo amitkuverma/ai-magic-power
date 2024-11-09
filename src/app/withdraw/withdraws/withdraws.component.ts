@@ -40,7 +40,7 @@ export class WithdrawRequestComponent implements OnInit {
   }
 
   fetchAccount(userId: any): void {
-    this.accountService.getAccountById(userId).subscribe(
+    this.accountService.getAccountByUserId(userId).subscribe(
       res => {
         this.accountDetails = res;
       },
