@@ -32,7 +32,7 @@ export class NavBarComponent {
   // eslint-disable-next-line
   onResize(event: any): void {
     this.windowWidth = event.target.innerWidth;
-    this.navCollapseMob();
+    // this.navCollapseMob();
   }
 
   // public method
