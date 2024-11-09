@@ -76,7 +76,7 @@ nav {
 
 .sidebar-header {
   padding: 20px; /* Padding for the sidebar header */
-  background-color: var(--theme-color-dark) !important;
+  background: linear-gradient(to right, #e8e8f8, #f65353) !important;
   border-bottom: 1px solid #ddd; /* Border below the header */
 }
 
@@ -87,7 +87,7 @@ nav {
   justify-content: start !important;
 }
 .dropdown-menu {
-  background-color: var(--theme-color-dark) !important;
+  background-color: pink;
   color: var(--text-color);
 }
 
@@ -175,7 +175,9 @@ nav {
   min-width: 290px;
   max-width: 100%;
 }
-
+#bg-clr{
+  background: pink !important;
+}
 .pc-header .dropdown-user-profile .drp-tabs {
   border-bottom: 0;
   display: flex;
