@@ -94,12 +94,12 @@
       width: 100%;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
       img{
         width: 150px;
       }
       @media (min-width: 992px) {
-        
+        justify-content: space-between;        
       }
     }
   }
