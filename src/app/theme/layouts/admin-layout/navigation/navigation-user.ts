@@ -91,13 +91,13 @@ export const NavigationUserItems: NavigationItem[] = [
   },
   {
     id: 'ai_stake',
-    title: 'AI Stake',
+    title: 'AI Package',
     type: 'group',
     icon: 'icon-navigation',
     children: [
       {
         id: 'ai_plan',
-        title: 'AI Plan',
+        title: 'AI Stake',
         type: 'item',
         classes: 'nav-item',
         url: '/packages',
@@ -106,7 +106,7 @@ export const NavigationUserItems: NavigationItem[] = [
       },
       {
         id: 'ai_report',
-        title: 'AI Plan Report',
+        title: 'AI Stake Report',
         type: 'item',
         classes: 'nav-item',
         url: '/ai-plan-report',
