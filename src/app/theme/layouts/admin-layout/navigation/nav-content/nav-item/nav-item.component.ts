@@ -42,8 +42,8 @@ export class NavItemComponent {
         last_parent.classList.add('active');
       }
     }
-    if ((document.querySelector('app-navigation.pc-sidebar') as HTMLDivElement).classList.contains('mob-open')) {
-      (document.querySelector('app-navigation.pc-sidebar') as HTMLDivElement).classList.remove('mob-open');
-    }
+    // if ((document.querySelector('app-navigation.pc-sidebar') as HTMLDivElement).classList.contains('mob-open')) {
+    //   (document.querySelector('app-navigation.pc-sidebar') as HTMLDivElement).classList.remove('mob-open');
+    // }
   }
 }
