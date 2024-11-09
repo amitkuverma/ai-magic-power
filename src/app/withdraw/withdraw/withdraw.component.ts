@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ToastrService } from 'ngx-toastr';
+import { debounceTime } from 'rxjs';
 import { CookieService } from 'src/services/cookie.service';
 import { PaymentService } from 'src/services/payment.service';
 import { TransactionService } from 'src/services/transaction.service';
@@ -19,6 +20,8 @@ export class WithdrawComponent implements OnInit {
   userPaymentDetails: any;
   transInfo: any;
   minWithdrawalValue: number = 5;
+  errorValue: boolean = false;
+  amountExceeds: boolean = false;
 
   constructor(
     private trancService: TransactionService,
@@ -27,17 +30,25 @@ export class WithdrawComponent implements OnInit {
     private paymentService: PaymentService,
     private toastr: ToastrService
   ) {
-    // Initialize the form without max validator for transactionAmount
+    // Initialize the form with base validators
     this.bankTransferForm = this.fb.group({
-      transactionAmount: ['', [Validators.required, Validators.min(5)]],
+      transactionAmount: ['', [Validators.required, Validators.min(this.minWithdrawalValue), this.multipleOfFiveValidator]],
     });
   }
 
   ngOnInit() {
     this.getUserPayment();
     this.fetchTransaction();
+
+    // Listen to real-time changes and validate fields accordingly
+    this.bankTransferForm.get('transactionAmount')?.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe(() => {
+        this.updateErrorFlags();
+      });
   }
 
+  // Fetch user transactions for withdrawal info
   fetchTransaction() {
     this.trancService.getAllTransaction().subscribe((res) => {
       this.transInfo = res.filter(
@@ -45,40 +56,26 @@ export class WithdrawComponent implements OnInit {
           item.userId === this.cookiesService.decodeToken().userId &&
           item.paymentType === 'withdraw'
       );
-      this.updateMinValue(this.transInfo.length);  // Update the minimum value after fetching transactions
     });
   }
-  
-  updateMinValue(length: number) {
-    const transactionAmountControl = this.bankTransferForm.get('transactionAmount');
-    // Calculate the new minimum value by multiplying the withdrawal count by 5
-    this.minWithdrawalValue = 5 * length;  // Minimum value increases by a factor of 5 after each withdrawal
-    transactionAmountControl.setValidators([
-      Validators.required,
-      Validators.min(this.minWithdrawalValue),  // Set the new dynamic min value
-      this.balanceValidator.bind(this),
-    ]);
-    transactionAmountControl.updateValueAndValidity();
-  }
-  
 
-
-  // Fetch the user payment details and update max validator
+  // Fetch and set user payment details and update the max validator dynamically
   getUserPayment() {
     const userId = this.cookiesService.decodeToken().userId;
     this.paymentService.getUserReferrals(userId).subscribe(
       (res: any) => {
         if (res) {
           this.userPaymentDetails = res;
-
-          // Set max validator based on user's available balance
           const maxWithdrawable = this.userPaymentDetails.earnWallet * 0.9; // 10% fee deducted
+
+          // Set the dynamic max validator based on the user's available balance
           this.bankTransferForm
             .get('transactionAmount')
             ?.setValidators([
               Validators.required,
-              Validators.min(5),
+              Validators.min(this.minWithdrawalValue),
               Validators.max(maxWithdrawable),
+              this.multipleOfFiveValidator
             ]);
           this.bankTransferForm.get('transactionAmount')?.updateValueAndValidity();
         }
@@ -90,14 +87,20 @@ export class WithdrawComponent implements OnInit {
     );
   }
 
-  // Custom validator to ensure withdrawal amount does not exceed balance
-  balanceValidator(control: AbstractControl): ValidationErrors | null {
-    const maxWithdrawable = this.userPaymentDetails.earnWallet * 0.9;
-    return control.value && control.value > maxWithdrawable
-      ? { amountExceeds: true }
-      : null;
+  // Custom validator to check if the transaction amount is a multiple of 5
+  multipleOfFiveValidator(control: AbstractControl): ValidationErrors | null {
+    const value = Number(control.value);
+    return !isNaN(value) && value % 5 === 0 ? null : { notMultipleOfFive: true };
   }
 
+  // Update error flags based on current validator errors
+  updateErrorFlags() {
+    const transactionAmountControl = this.bankTransferForm.get('transactionAmount');
+    this.errorValue = !!transactionAmountControl?.hasError('notMultipleOfFive');
+    this.amountExceeds = !!transactionAmountControl?.hasError('max');
+  }
+
+  // Submit withdrawal request after validation
   onSubmitWithdrawal() {
     if (this.bankTransferForm.invalid) {
       this.bankTransferForm.markAllAsTouched();
@@ -123,7 +126,7 @@ export class WithdrawComponent implements OnInit {
           this.trancService
             .createTransaction({
               paymentType: 'withdraw',
-              transactionAmount: amountAfterFee,
+              transactionAmount: this.bankTransferForm.get('transactionAmount')?.value,
               transactionId: this.bankTransferForm.get('transactionId')?.value,
             })
             .subscribe(

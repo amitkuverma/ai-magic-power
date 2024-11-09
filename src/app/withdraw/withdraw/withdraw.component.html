@@ -21,7 +21,7 @@
                                 Enter Withdrawal Amount (10% fee applies)
                             </label>
                             <div>
-                                <input type="text" class="form-control" id="transactionAmount"
+                                <input type="number" class="form-control" id="transactionAmount"
                                     formControlName="transactionAmount" placeholder="Enter Withdrawal amount"
                                     required="required" />
                             </div>
@@ -33,16 +33,21 @@
                                     Withdrawal amount is required.
                                 </div>
                                 <div *ngIf="bankTransferForm.get('transactionAmount')?.hasError('min')">
-                                    Withdrawal amount must be at least {{minWithdrawalValue }}.
+                                    Withdrawal amount must be at least {{ minWithdrawalValue }}.
                                 </div>
-                                <div *ngIf="bankTransferForm.get('transactionAmount')?.hasError('amountExceeds')">
-                                    Withdrawal amount must not exceed available balance.
+                                <div *ngIf="bankTransferForm.get('transactionAmount')?.hasError('max')">
+                                    Withdrawal amount must not exceed the available balance.
+                                </div>
+                                <div *ngIf="bankTransferForm.get('transactionAmount')?.hasError('notMultipleOfFive')">
+                                    Withdrawal amount must be a multiple of 5 (e.g., 5, 10, 50).
                                 </div>
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-success">Request</button>
+                            <button type="submit" class="btn btn-success" [disabled]="bankTransferForm.invalid">
+                                Request
+                            </button>
                         </div>
                     </form>
                 </div>
