@@ -38,14 +38,14 @@ export class NavBarComponent {
   // public method
   navCollapse() {
     // if (this.windowWidth >= 1025) {
-      this.navCollapsed = !this.navCollapsed;
-      this.NavCollapse.emit();
+      // this.navCollapsed = !this.navCollapsed;
+      // this.NavCollapse.emit();
     // }
   }
 
   navCollapseMob() {
     // if (this.windowWidth < 1025) {
-      this.NavCollapsedMob.emit();
+      // this.NavCollapsedMob.emit();
     // }
   }
 }
