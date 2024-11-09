@@ -102,10 +102,10 @@ export class NavContentComponent implements OnInit {
     }
   }
 
-  // navMob() {
-  //   const navbar = document.querySelector('app-navigation.coded-navbar');
-  //   if (this.windowWidth < 1025 && navbar && navbar.classList.contains('mob-open')) {
-  //     this.NavCollapsedMob.emit();
-  //   }
-  // }
+  navMob() {
+    const navbar = document.querySelector('app-navigation.coded-navbar');
+    if (this.windowWidth < 1025 && navbar && navbar.classList.contains('mob-open')) {
+      this.NavCollapsedMob.emit();
+    }
+  }
 }
