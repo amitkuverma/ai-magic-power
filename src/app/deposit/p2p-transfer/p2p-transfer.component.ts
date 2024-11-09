@@ -5,6 +5,7 @@ import { UsersService } from 'src/services/users.service';
 import { PaymentService } from 'src/services/payment.service';
 import { CookieService } from 'src/services/cookie.service';
 import { TransactionService } from 'src/services/transaction.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-p2p-transfer',
@@ -30,7 +31,8 @@ export class P2pTransferComponent {
     private userService: UsersService,
     private paymentService: PaymentService,
     public cookiesService: CookieService,
-    private trancService: TransactionService
+    private trancService: TransactionService,
+    private toastr: ToastrService
   ) {
     this.getAllUserPaymentDetails();
     this.internalTransferForm = this.fb.group({
@@ -92,17 +94,17 @@ export class P2pTransferComponent {
     );
   }
 
-  activateUserIfTransferExceeds300(receiver: any) {
-    this.userService.updateUserStatus(receiver.userId, 'active').subscribe(
-      (res) => {
-        // this.toastr.success(`${receiver.userName} is active.`, 'success');
-      },
-      (error: any) => {
-        // this.toastr.error('Failed to update user status.', 'Error');
-        console.error('Error fetching user payment details:', error);
-      }
-    );
-  }
+  // activateUserIfTransferExceeds300(receiver: any) {
+  //   this.userService.updateUserStatus(receiver.userId, 'active').subscribe(
+  //     (res) => {
+  //       // this.toastr.success(`${receiver.userName} is active.`, 'success');
+  //     },
+  //     (error: any) => {
+  //       // this.toastr.error('Failed to update user status.', 'Error');
+  //       console.error('Error fetching user payment details:', error);
+  //     }
+  //   );
+  // }
 
 
 
@@ -168,7 +170,7 @@ export class P2pTransferComponent {
     const transactionAmount = this.internalTransferForm.get('transactionAmount')?.value;
 
     if (transactionAmount > depositWallet) {
-      // this.toastr.error('Transaction amount must not exceed total amount.', 'Error');
+       this.toastr.error('Transaction amount must not exceed total amount.', 'Error');
       return;
     }
 
@@ -191,26 +193,9 @@ export class P2pTransferComponent {
         receiverUser.depositWallet += transactionAmount;
 
         this.updateUserStatus(senderUser, receiverUser);
-        const userInfo = this.userDetails.find((item: any) => item.userId === receiverUser.userId);
-
-        if (userInfo.status !== 'active' && receiverUser.depositWallet >= 5) {
-          this.activateUserIfTransferExceeds300(receiverUser);
-          this.userService.getUserById(this.selectedUser.userId).subscribe(
-            (resUser: any) => {
-              if (resUser.status === 'pending') {
-                this.userService.updateUserStatus(this.selectedUser.userId, "active").subscribe(
-                  resCre => {
-                    console.log(resCre);
-
-                  }
-                )
-              }
-            }
-          )
-        }
       },
       (error) => {
-        // this.toastr.error('Failed to create internal transfer.', 'Error');
+        this.toastr.error('Failed to create internal transfer.', 'Error');
         console.error('Error creating internal transfer:', error);
         setTimeout(() => {
           this.closeModal();
@@ -226,18 +211,20 @@ export class P2pTransferComponent {
           () => {
             this.internalTransferForm.get('transactionAmount')?.setValue('');
             this.getUserPayment();
+            
+            this.toastr.error('Amount transfer successfully!', 'Error');
             setTimeout(() => {
               this.closeModal();
             })
           },
           (error) => {
-            // this.toastr.error('Failed to update receiver status.', 'Error');
+            this.toastr.error('Failed to update receiver status.', 'Error');
             console.error('Error updating receiver status:', error);
           }
         );
       },
       (error) => {
-        // this.toastr.error('Failed to update sender status.', 'Error');
+        this.toastr.error('Failed to update sender status.', 'Error');
         console.error('Error updating sender status:', error);
       }
     );
